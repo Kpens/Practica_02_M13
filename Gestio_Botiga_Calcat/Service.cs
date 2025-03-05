@@ -30,6 +30,32 @@ namespace Gestio_Botiga_Calcat
             var cates = collection.Find(new BsonDocument()).ToList();
             return cates;
         }
+        public BsonDocument GetCate(ObjectId oid)
+        {
+            var collection = _database.GetCollection<BsonDocument>("Categoria");
+            var result = collection.Find(Builders<BsonDocument>.Filter.Eq("_id", oid)).FirstOrDefault();
+            return result;
+        }
+        public List<BsonDocument> GetCatesPare()
+        {
+            var collection = _database.GetCollection<BsonDocument>("Categoria");
+            var result = collection.Find(Builders<BsonDocument>.Filter.Exists("cate_pare", false)).ToList();
+            return result;
+        }
+
+
+        public List<BsonDocument> GetCatesFill(ObjectId oid)
+        {
+            var collection = _database.GetCollection<BsonDocument>("Categoria");
+            var result = collection.Find(Builders<BsonDocument>.Filter.And(
+                Builders<BsonDocument>.Filter.Ne("_id", oid),
+                Builders<BsonDocument>.Filter.Exists("cate_pare", true)
+            )).ToList();
+
+            return result;
+        }
+
+
         public List<BsonDocument> GetAllIVA()
         {
             var collection = _database.GetCollection<BsonDocument>("IVA");

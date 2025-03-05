@@ -11,32 +11,33 @@ using System.Windows.Shapes;
 
 namespace Gestio_Botiga_Calcat;
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
 public partial class MainWindow : Window
 {
-    private Service _mongoService;
+    private Service mdbService;
     public MainWindow()
     {
         InitializeComponent();
-        _mongoService = new Service("Botiga");
-    }
+        mdbService = new Service("Botiga");
 
-    private void CargarUsuariosButton_Click(object sender, RoutedEventArgs e)
-    {
-        var usuarios = _mongoService.GetAllUsers();
+        var cates = mdbService.GetCatesPare();
+        spCates.Children.Clear();
 
-        UsuariosListBox.Items.Clear();
-
-        foreach (var usuario in usuarios)
+        foreach (var cate in cates)
         {
-            
-            var nombre = usuario["login"].ToString(); 
+            var nom = cate["nom"].ToString();
 
-            var userString = $"Nombre: {nombre}";
+            var button = new Button
+            {
+                Content = nom,
+                Background = new SolidColorBrush(Colors.White),
+                Margin = new Thickness(10),
+                HorizontalAlignment = HorizontalAlignment.Left
+            };
 
-            UsuariosListBox.Items.Add(userString);
+            spCates.Children.Add(button);
         }
+
+
     }
+
 }
