@@ -1,43 +1,82 @@
-﻿using System.Text;
+﻿using MongoDB.Bson;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Collections.Generic;
+using Gestio_Botiga_Calcat.model;
 
-namespace Gestio_Botiga_Calcat;
-
-public partial class MainWindow : Window
+namespace Gestio_Botiga_Calcat
 {
-    private Service mdbService;
-    public MainWindow()
+    public partial class MainWindow : Window
     {
-        InitializeComponent();
-        mdbService = new Service("Botiga");
-
-        var cates = mdbService.GetCatesPare();
-        spCates.Children.Clear();
-
-        foreach (var cate in cates)
+        private Service mdbService;
+        public MainWindow()
         {
-            var nom = cate["nom"].ToString();
+            InitializeComponent();
+            mdbService = new Service("Botiga");
 
-            var button = new Button
+
+            List<CategoriaMDB> cats = mdbService.GetCatesPare();
+            spCates.Children.Clear();
+
+
+
+            foreach (CategoriaMDB cate in cats)
             {
-                Content = nom,
-                Background = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(10),
-                HorizontalAlignment = HorizontalAlignment.Left
-            };
 
-            spCates.Children.Add(button);
+                var button = new Button
+                {
+                    Content = cate.Name,
+                    Background = new SolidColorBrush(Colors.White),
+                    Margin = new Thickness(10),
+                    HorizontalAlignment = HorizontalAlignment.Left
+                };
+
+                    
+                button.MouseEnter += (s, e) =>
+                {
+                    lvFilles.ItemsSource = null;
+                    List<string> list = new List<string>();
+
+                    foreach (CategoriaMDB cat in mdbService.GetCatesFill(cate.Id))
+                    {
+                        list.Add(cat.Name);
+                    }
+
+                    lvFilles.ItemsSource = list;
+                    if (list.Count > 0) 
+                    { 
+                        lvFilles.Visibility = Visibility.Visible;
+                    }
+                                       
+
+                    lvProds.ItemsSource = null;
+                    lvProds.ItemsSource = mdbService.GetProdsDeCate(cate.Id);
+
+                };
+                button.MouseLeave += (s, e) =>
+                {
+
+                    lvFilles.Visibility = Visibility.Collapsed;
+
+                };
+
+                spCates.Children.Add(button);
+            }
+
         }
 
+        private void lvFilles_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            /*if(lvFilles.SelectedValue is String selected)
+            {
+                lvProds.ItemsSource = null;
+                lvProds.ItemsSource = selected.ToList();
+            }*/
 
+        }
     }
-
 }
