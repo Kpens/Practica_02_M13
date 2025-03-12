@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Gestio_Botiga_Calcat"
+        xmlns:local="clr-namespace:Gestio_Botiga_Calcat" xmlns:view="clr-namespace:Gestio_Botiga_Calcat.View"
         Background="LightGray"
         mc:Ignorable="d"
         Title="Bambes_Boom" Height="450" Width="800"
@@ -13,16 +13,30 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Label Content="Bambes Boom" FontSize="35" Grid.Row="0" HorizontalAlignment="Center" FontFamily="Baskerville Old Face" FontWeight="Bold"/>
+        <TextBlock Text="Inici" Grid.Row="0" FontFamily="Agency FB" x:Name="breadcr"/>
+        <Label Content="Bambes Boom" FontSize="35" Grid.Row="1" HorizontalAlignment="Center" FontFamily="Baskerville Old Face" FontWeight="Bold"/>
         <!--<Image Source="/imgs/slider-home-adidas.png" Grid.Row="2"/>-->
-        <StackPanel Orientation="Horizontal" x:Name="spCates" Grid.Row="1" HorizontalAlignment="Center"/>
-        <ListView x:Name="lvFilles" SelectionChanged="lvFilles_SelectionChanged" Grid.Row="2" Margin="10 0 10 10" Visibility="Collapsed"/>
-        <ListView x:Name="lvProds" Grid.Row="3" Margin="10">
+        <StackPanel Orientation="Horizontal" x:Name="spCates" Grid.Row="2" HorizontalAlignment="Center"/>
+        <ListView x:Name="lvFilles" SelectionChanged="lvFilles_SelectionChanged" Grid.Row="3" Margin="10 0 10 10" Visibility="Collapsed">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Nom}" HorizontalAlignment="Right"/>
+                    <TextBlock Text="{Binding Name}" HorizontalAlignment="Right"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <ListView x:Name="lvProds" Grid.Row="4" Margin="10">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <!--<TextBlock Text="{Binding Nom}" HorizontalAlignment="Right"/>-->
+                    <view:UiProducte Prod="{Binding}"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

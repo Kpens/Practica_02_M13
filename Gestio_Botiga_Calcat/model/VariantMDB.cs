@@ -11,6 +11,7 @@ namespace Gestio_Botiga_Calcat.model
         public string Color { get; set; }
 
         public double Preu { get; set; }
+        //public List fotos
 
         public int DescomptePercent { get; set; }
 

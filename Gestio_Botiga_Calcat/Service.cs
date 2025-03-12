@@ -131,25 +131,6 @@ namespace Gestio_Botiga_Calcat
         }
 
 
-        /*public List<BsonDocument> GetProdsDeCate(ObjectId oid)
-        {
-            var collection = _database.GetCollection<BsonDocument>("Producte");
-            List<BsonDocument> result = collection.Find(Builders<BsonDocument>.Filter.Eq("categories", oid)).ToList();
-            if(result.Count == 0)
-            {
-                List<BsonDocument> cates = GetCatesFill(oid);
-                foreach (BsonDocument c in cates)
-                {
-                    result = collection.Find(Builders<BsonDocument>.Filter.Eq("categories", ((ObjectId)c))).ToList();
-                    if (result.Count == 0)
-                    {
-                        break;
-                    }
-                }
-            }
-
-            return result;
-        }*/
         public List<ProducteMDB> GetProdsDeCate(ObjectId oid)
         {
             var collection = _database.GetCollection<BsonDocument>("Producte");
