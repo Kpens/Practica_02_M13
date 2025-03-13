@@ -93,17 +93,17 @@ namespace Gestio_Botiga_Calcat.View
         private void carregar_info()
         {
             imgSel.Source = new BitmapImage(new Uri(Variant_Sel.Fotos.First()));
-            double discountAmount = (Variant_Sel.Preu * Variant_Sel.DescomptePercent) / 100;
-            tbDesc.Text = (Variant_Sel.Preu - discountAmount).ToString("F4");
+            double descompte = (Variant_Sel.Preu * Variant_Sel.DescomptePercent) / 100;
+            tbDesc.Text = (Variant_Sel.Preu - descompte).ToString("F4");
             tbBase.Text = Variant_Sel.Preu + "";
 
         }
 
         private void imgs_variants_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(imgs_variants.SelectedIndex is int selected)
+            if((imgs_variants.SelectedIndex <= Images.Count)&& (imgs_variants.SelectedIndex >= 0))
             {
-                Variant_Sel = Variants[selected];
+                Variant_Sel = Variants[imgs_variants.SelectedIndex];
                 carregar_info();
             }
         }

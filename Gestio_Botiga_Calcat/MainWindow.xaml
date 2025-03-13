@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gestio_Botiga_Calcat" xmlns:view="clr-namespace:Gestio_Botiga_Calcat.View"
-        Background="LightGray"
         mc:Ignorable="d"
         Title="Bambes_Boom" Height="450" Width="800"
         x:Name="usc">
@@ -16,12 +15,10 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Inici" Grid.Row="0" FontFamily="Agency FB" x:Name="breadcr"/>
-        <Label Content="Bambes Boom" FontSize="35" Grid.Row="1" HorizontalAlignment="Center" FontFamily="Baskerville Old Face" FontWeight="Bold"/>
-        <!--<Image Source="/imgs/slider-home-adidas.png" Grid.Row="2"/>-->
-        <StackPanel Orientation="Horizontal" x:Name="spCates" Grid.Row="2" HorizontalAlignment="Center"/><!--Botons cate pare-->
-
-        <!-- fills-->
+        <TextBlock Text="Inici" FontSize="20" Grid.Row="0" FontFamily="Agency FB" x:Name="breadcr"/>
+        <Label Content="Bambes Boom" FontSize="45" Grid.Row="1" HorizontalAlignment="Center" FontFamily="Agency FB" FontWeight="Bold"/>
+        <StackPanel Orientation="Horizontal" x:Name="spCates" Grid.Row="2" HorizontalAlignment="Center"/>
+        
         <ListView x:Name="lvFilles" SelectionChanged="lvFilles_SelectionChanged" Margin="10 0 10 10" Visibility="Collapsed">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -36,15 +33,15 @@
         </ListView>
         <StackPanel x:Name="spCatesFill" Orientation="Vertical" Grid.Row="3"/>
 
-        <ListView x:Name="lvProds" Grid.Row="4" Margin="10">
+        <ListView x:Name="lvProds" SelectionChanged="lvProds_SelectionChanged" Grid.Row="4" Margin="10">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <!--<TextBlock Text="{Binding Nom}" HorizontalAlignment="Right"/>-->
                     <view:UiProducte Prod="{Binding}"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
 
+        <ContentControl x:Name="MainContentControl" Grid.RowSpan="5" Grid.Row="4" Margin="10"/>
 
     </Grid>
 </Window>

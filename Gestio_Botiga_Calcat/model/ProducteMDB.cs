@@ -10,7 +10,8 @@ namespace Gestio_Botiga_Calcat.model
     public class ProducteMDB
     {
         public ObjectId Id { get; set; }
-        public string Nom{ get; set; }
+        public string Marca { get; set; }
+        public string Nom { get; set; }
         public string Desc { get; set; }
         public List<ObjectId> Categories { get; set; }
         public ObjectId Tipus_IVA { get; set; }

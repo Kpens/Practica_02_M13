@@ -7,8 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              x:Name="usc"
-             Background="LightBlue">
-    <Grid Margin="20" Width="320" Height="300">
+             Background="White">
+    <Grid Margin="10" Width="260" Height="340">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
@@ -23,7 +23,7 @@
         <!--<TextBlock Background="DarkBlue" Text="{Binding Path=, FallbackValue=30%}" Foreground="White" Grid.Column="0" Grid.Row="0"/>
         <Image Source="{Binding ElementName=usc, Path=Image_sel}" Grid.Column="0" HorizontalAlignment="Center" Grid.ColumnSpan="3" Grid.Row="0"/>-->
         <Image x:Name="imgSel" Grid.Column="0" HorizontalAlignment="Center" Grid.ColumnSpan="3" Grid.Row="0"/>
-        <ListView x:Name="imgs_variants" SelectionChanged="imgs_variants_SelectionChanged" HorizontalAlignment="Center" Margin="0 10 0 10" Grid.ColumnSpan="3" Grid.Row="1" Grid.Column="0">
+        <ListView x:Name="imgs_variants" FontFamily="Agency FB" SelectionChanged="imgs_variants_SelectionChanged" HorizontalAlignment="Center" Margin="0 10 0 10" Grid.ColumnSpan="3" Grid.Row="1" Grid.Column="0">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Horizontal"/>
@@ -31,15 +31,15 @@
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Image Source="{Binding}" Height="45" Width="45"/>
+                    <Image Source="{Binding}" Height="50" Width="50"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <TextBlock FontWeight="Bold" Text="{Binding ElementName=usc, Path=Prod.Nom, FallbackValue=Wave_Stealth_Neo_2}" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Grid.Row="2" FontSize="15"/>
-        <TextBlock Text="{Binding ElementName=usc, Path=Desc, FallbackValue=Wave_Stealth_Neo_2}" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3" VerticalAlignment="Center"/>
+        <TextBlock FontWeight="Bold" FontFamily="Agency FB" Text="{Binding ElementName=usc, Path=Prod.Nom, FallbackValue=Wave_Stealth_Neo_2}" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Center" Grid.Row="2" FontSize="20"/>
+        <TextBlock FontFamily="Agency FB" Text="{Binding ElementName=usc, Path=Desc, FallbackValue=Wave_Stealth_Neo_2}" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3" VerticalAlignment="Center" FontSize="15"/>
         <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="2" HorizontalAlignment="Right">
-            <TextBlock x:Name="tbDesc" FontWeight="Bold" Margin="0 0 10 0" FontSize="15"/>
-            <TextBlock x:Name="tbBase" Foreground="Gray" TextDecorations="Strikethrough" VerticalAlignment="Center"/>
+            <TextBlock x:Name="tbDesc" FontWeight="Bold" FontFamily="Agency FB" Margin="0 0 10 0" FontSize="20"/>
+            <TextBlock x:Name="tbBase" Foreground="Gray" FontFamily="Agency FB" TextDecorations="Strikethrough" VerticalAlignment="Center" FontSize="15"/>
         </StackPanel>
 
     </Grid>

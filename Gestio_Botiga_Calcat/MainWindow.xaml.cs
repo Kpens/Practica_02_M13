@@ -10,6 +10,7 @@ using Gestio_Botiga_Calcat.model;
 using SharpCompress.Readers;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Windows.Controls.Primitives;
+using Gestio_Botiga_Calcat.View;
 
 namespace Gestio_Botiga_Calcat
 {
@@ -21,18 +22,7 @@ namespace Gestio_Botiga_Calcat
 
         private void carregar_cates_fill(CategoriaMDB cate) {
             List<CategoriaMDB> cates = mdbService.GetCatesFill(cate.Id);
-            /*lvFilles.ItemsSource = null;
-            lvFilles.ItemsSource = cates;
-            if (cates.Count > 0)
-            {
-                lvFilles.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                lvFilles.Visibility = Visibility.Collapsed;
-            }*/
 
-            //spCatesFill.Children.Clear();
             StackPanel spfilles = new StackPanel();
             spfilles.Orientation = Orientation.Horizontal;
 
@@ -49,9 +39,11 @@ namespace Gestio_Botiga_Calcat
                 var button = new Button
                 {
                     Content = cat.Name,
-                    Background = new SolidColorBrush(Colors.White),
                     Margin = new Thickness(10),
-                    HorizontalAlignment = HorizontalAlignment.Left
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    Background = new SolidColorBrush(Colors.Black),
+                    Foreground = new SolidColorBrush(Colors.White),
+                    Padding = new Thickness(5)
                 };
                 button.Click += (s, e) =>
                 {
@@ -86,9 +78,11 @@ namespace Gestio_Botiga_Calcat
                 var button = new Button
                 {
                     Content = cate.Name,
-                    Background = new SolidColorBrush(Colors.White),
                     Margin = new Thickness(10),
-                    HorizontalAlignment = HorizontalAlignment.Left
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    Background = new SolidColorBrush(Colors.Black),
+                    Foreground = new SolidColorBrush(Colors.White),
+                    Padding = new Thickness(5)
                 };
 
                 button.Click += (s, e) => {
@@ -130,6 +124,18 @@ namespace Gestio_Botiga_Calcat
                     breadcr.Text = breadcr.Text.Remove(breadcr.Text.LastIndexOf('/'));
                 }
                 lvProds.ItemsSource = null;
+            }
+        }
+
+        private void lvProds_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lvProds.SelectedValue is ProducteMDB selected)
+            {
+                var newWindow = new UIProducte_info(selected);
+
+                this.Close();
+
+                newWindow.Show();
             }
         }
     }

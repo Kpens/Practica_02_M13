@@ -200,6 +200,7 @@ namespace Gestio_Botiga_Calcat
                 ObjectId id = ((ObjectId)p["_id"]);
                 prod.Id = id;
                 prod.Nom = (string)p["nom"];
+                prod.Marca = (string)p["marca"];
                 prod.Desc = (string)p["desc"];
 
                 var categories = p["categories"].AsBsonArray.Select(c => c.AsObjectId).ToList();
