@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using Gestio_Botiga_Calcat.model;
 using SharpCompress.Readers;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Windows.Controls.Primitives;
 
 namespace Gestio_Botiga_Calcat
 {
@@ -17,6 +18,59 @@ namespace Gestio_Botiga_Calcat
         private Service mdbService;
         private string inici = "Inici";
         private bool sel_cate_fill = false;
+
+        private void carregar_cates_fill(CategoriaMDB cate) {
+            List<CategoriaMDB> cates = mdbService.GetCatesFill(cate.Id);
+            /*lvFilles.ItemsSource = null;
+            lvFilles.ItemsSource = cates;
+            if (cates.Count > 0)
+            {
+                lvFilles.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                lvFilles.Visibility = Visibility.Collapsed;
+            }*/
+
+            //spCatesFill.Children.Clear();
+            StackPanel spfilles = new StackPanel();
+            spfilles.Orientation = Orientation.Horizontal;
+
+            if (spCatesFill.Children.Count == 1) {
+                sel_cate_fill = false;
+            }
+            else
+            {
+                sel_cate_fill = true;
+            }
+
+            foreach (CategoriaMDB cat in cates)
+            {
+                var button = new Button
+                {
+                    Content = cat.Name,
+                    Background = new SolidColorBrush(Colors.White),
+                    Margin = new Thickness(10),
+                    HorizontalAlignment = HorizontalAlignment.Left
+                };
+                button.Click += (s, e) =>
+                {
+                    lvProds.ItemsSource = null;
+                    lvProds.ItemsSource = mdbService.GetProdsDeCate(cat.Id);
+                    carregar_cates_fill(cat);
+                    if (breadcr.Text.LastIndexOf('/') > 0 && sel_cate_fill)
+                    {
+                        breadcr.Text = breadcr.Text.Remove(breadcr.Text.LastIndexOf('/'));
+                    }
+                    breadcr.Text = breadcr.Text + "/" + cat.Name;
+                    lvProds.ItemsSource = null;
+                    lvProds.ItemsSource = mdbService.GetProdsDeCate(cat.Id);
+                };
+                spfilles.Children.Add(button);
+            }
+            spCatesFill.Children.Add(spfilles);
+            
+        }
         public MainWindow()
         {
             InitializeComponent();
@@ -25,8 +79,6 @@ namespace Gestio_Botiga_Calcat
 
             List<CategoriaMDB> cats = mdbService.GetCatesPare();
             spCates.Children.Clear();
-
-
 
             foreach (CategoriaMDB cate in cats)
             {
@@ -43,18 +95,9 @@ namespace Gestio_Botiga_Calcat
                     breadcr.Text = inici+"/"+cate.Name;
                     lvProds.ItemsSource = null;
                     lvProds.ItemsSource = mdbService.GetProdsDeCate(cate.Id);
-                
-                    lvFilles.ItemsSource = null;
-                    List<CategoriaMDB> cates = mdbService.GetCatesFill(cate.Id);
-                    lvFilles.ItemsSource = cates;
-                    if (cates.Count > 0) 
-                    { 
-                        lvFilles.Visibility = Visibility.Visible;
-                    }
-                    else
-                    {
-                        lvFilles.Visibility = Visibility.Collapsed;
-                    }
+                    spCatesFill.Children.Clear();
+                    carregar_cates_fill(cate);
+
                 };
                 spCates.Children.Add(button);
             }
@@ -63,7 +106,12 @@ namespace Gestio_Botiga_Calcat
 
         private void lvFilles_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(lvFilles.SelectedValue is CategoriaMDB selected)
+            click_filles();
+
+        }
+        private void click_filles()
+        {
+            if (lvFilles.SelectedValue is CategoriaMDB selected)
             {
                 if (breadcr.Text.LastIndexOf('/') > 0 && sel_cate_fill)
                 {
@@ -72,18 +120,17 @@ namespace Gestio_Botiga_Calcat
                 breadcr.Text = breadcr.Text + "/" + selected.Name;
                 lvProds.ItemsSource = null;
                 lvProds.ItemsSource = mdbService.GetProdsDeCate(selected.Id);
-                sel_cate_fill= true;
+                sel_cate_fill = true;
             }
             else
             {
-                sel_cate_fill=false;
+                sel_cate_fill = false;
                 if (breadcr.Text.LastIndexOf('/') > 0)
                 {
                     breadcr.Text = breadcr.Text.Remove(breadcr.Text.LastIndexOf('/'));
                 }
                 lvProds.ItemsSource = null;
             }
-
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Gestio_Botiga_Calcat
@@ -211,11 +212,13 @@ namespace Gestio_Botiga_Calcat
                     Color = v["color"].AsString,
                     Preu = v["preu"].AsDouble,
                     DescomptePercent = v["descompte_percent"].AsInt32,
+                    Fotos = v["fotos"].AsBsonArray.Select(f => f.AsString).ToList(),
                     Stock = v["stock"].AsBsonArray.Select(s => new StockMDB
                     {
                         Quantitat = s["num"].AsInt32,
                         Talla = s["talla"].AsInt32
                     }).ToList()
+
                 }).ToList();
                 prod.Variants = variants;
 

@@ -19,8 +19,10 @@
         <TextBlock Text="Inici" Grid.Row="0" FontFamily="Agency FB" x:Name="breadcr"/>
         <Label Content="Bambes Boom" FontSize="35" Grid.Row="1" HorizontalAlignment="Center" FontFamily="Baskerville Old Face" FontWeight="Bold"/>
         <!--<Image Source="/imgs/slider-home-adidas.png" Grid.Row="2"/>-->
-        <StackPanel Orientation="Horizontal" x:Name="spCates" Grid.Row="2" HorizontalAlignment="Center"/>
-        <ListView x:Name="lvFilles" SelectionChanged="lvFilles_SelectionChanged" Grid.Row="3" Margin="10 0 10 10" Visibility="Collapsed">
+        <StackPanel Orientation="Horizontal" x:Name="spCates" Grid.Row="2" HorizontalAlignment="Center"/><!--Botons cate pare-->
+
+        <!-- fills-->
+        <ListView x:Name="lvFilles" SelectionChanged="lvFilles_SelectionChanged" Margin="10 0 10 10" Visibility="Collapsed">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Horizontal"/>
@@ -32,6 +34,8 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        <StackPanel x:Name="spCatesFill" Orientation="Vertical" Grid.Row="3"/>
+
         <ListView x:Name="lvProds" Grid.Row="4" Margin="10">
             <ListView.ItemTemplate>
                 <DataTemplate>
