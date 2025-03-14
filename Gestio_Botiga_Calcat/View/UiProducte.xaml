@@ -31,7 +31,9 @@
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Image Source="{Binding}" Height="50" Width="50"/>
+                    <Border MouseEnter="Border_MouseEnter">
+                        <Image Source="{Binding}" Height="50" Width="50"/>
+                    </Border>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

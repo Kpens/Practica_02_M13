@@ -279,7 +279,72 @@ namespace Gestio_Botiga_Calcat
                 }
             }
 
-            return null; // Return null if no variant is found
+            return null;
         }
+
+        public List<VariantMDB> GetAllVariants()
+        {
+            var collection = _database.GetCollection<BsonDocument>("Producte");
+            var prods = collection.Find(new BsonDocument()).ToList();
+            List<VariantMDB> variants = new List<VariantMDB>();
+            foreach (BsonDocument product in prods)
+            {
+                var vars = product["variants"].AsBsonArray;
+                foreach (var v in vars)
+                {
+                    VariantMDB var = new VariantMDB
+                    {
+                        Color = v["color"].AsString,
+                        Preu = v["preu"].AsDouble,
+                        DescomptePercent = v["descompte_percent"].AsInt32,
+                        Fotos = v["fotos"].AsBsonArray.Select(f => f.AsString).ToList(),
+                        Stock = v["stock"].AsBsonArray.Select(s => new StockMDB
+                        {
+                            Id = ((ObjectId)v["_id"]),
+                            Quantitat = s["num"].AsInt32,
+                            Talla = s["talla"].AsInt32
+                        }).ToList()
+
+                    };
+                    variants.Add(var);
+
+                }
+            }
+
+            return variants;
+        }
+        public List<ProducteMDB> ProdsFiltrats(StockMDB stock, CategoriaMDB cate, int min_preu, int max_preu, string nom)
+        {
+            var collection = _database.GetCollection<BsonDocument>("Producte");
+
+            var filters = new List<FilterDefinition<BsonDocument>>();
+
+            if (!string.IsNullOrEmpty(nom))
+            {
+                filters.Add(Builders<BsonDocument>.Filter.Regex("nom", new BsonRegularExpression(nom, "i")));
+            }
+
+            filters.Add(Builders<BsonDocument>.Filter.Lte("variants.preu", max_preu)); 
+            filters.Add(Builders<BsonDocument>.Filter.Gte("variants.preu", min_preu)); 
+            
+
+            if (cate != null)
+            {
+                filters.Add(Builders<BsonDocument>.Filter.Eq("categories", cate.Id));
+            }
+            if (stock != null)
+            {
+                var stockFilter = Builders<BsonDocument>.Filter.ElemMatch<BsonDocument>("variants.stock", Builders<BsonDocument>.Filter.Eq("talla", stock.Talla));
+                filters.Add(stockFilter);
+            }
+            var combinedFilter = Builders<BsonDocument>.Filter.And(filters);
+
+            var result = collection.Find(combinedFilter).ToList();
+
+            return List_Bson_a_prod(result);
+        }
+
     }
+
+
 }

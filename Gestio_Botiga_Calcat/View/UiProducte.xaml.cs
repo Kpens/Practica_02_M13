@@ -99,12 +99,20 @@ namespace Gestio_Botiga_Calcat.View
 
         }
 
-        private void imgs_variants_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Border_MouseEnter(object sender, MouseEventArgs e)
         {
-            if((imgs_variants.SelectedIndex <= Images.Count)&& (imgs_variants.SelectedIndex >= 0))
+            Border border = sender as Border;
+            if (border != null)
             {
-                Variant_Sel = Variants[imgs_variants.SelectedIndex];
-                carregar_info();
+                var listViewItem = (ListViewItem)imgs_variants.ContainerFromElement(border);
+
+                if (listViewItem != null)
+                {
+                    int index = imgs_variants.ItemContainerGenerator.IndexFromContainer(listViewItem);
+
+                    Variant_Sel = Variants[index];
+                    carregar_info();
+                }
             }
         }
     }

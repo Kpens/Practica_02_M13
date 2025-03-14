@@ -19,6 +19,10 @@ namespace Gestio_Botiga_Calcat
         private Service mdbService;
         private string inici = "Inici";
         private bool sel_cate_fill = false;
+        private CategoriaMDB Cate_select;
+        private StockMDB Stock_select;
+
+        List<VariantMDB> variants = new List<VariantMDB>();
 
         private void carregar_cates_fill(CategoriaMDB cate) {
             List<CategoriaMDB> cates = mdbService.GetCatesFill(cate.Id);
@@ -47,8 +51,7 @@ namespace Gestio_Botiga_Calcat
                 };
                 button.Click += (s, e) =>
                 {
-                    lvProds.ItemsSource = null;
-                    lvProds.ItemsSource = mdbService.GetProdsDeCate(cat.Id);
+                    Cate_select = cat;
                     carregar_cates_fill(cat);
 
                     string cate_an = breadcr.Text.Substring(breadcr.Text.LastIndexOf('/')+1);
@@ -61,9 +64,8 @@ namespace Gestio_Botiga_Calcat
                     {
                         breadcr.Text = breadcr.Text + "/" + cat.Name;
                     }
-                    
-                    lvProds.ItemsSource = null;
-                    lvProds.ItemsSource = mdbService.GetProdsDeCate(cat.Id);
+
+                    carregar_prods();
                 };
 
                 bool trobat = false;
@@ -89,11 +91,12 @@ namespace Gestio_Botiga_Calcat
         {
             InitializeComponent();
             mdbService = new Service("Botiga");
+            variants = mdbService.GetAllVariants();
 
-
+            slMinPreu.ValueChanged += PriceSlider_ValueChanged;
+            slMaxPreu.ValueChanged += PriceSlider_ValueChanged;
             List<CategoriaMDB> cats = mdbService.GetCatesPare();
             spCates.Children.Clear();
-
             foreach (CategoriaMDB cate in cats)
             {
 
@@ -108,15 +111,16 @@ namespace Gestio_Botiga_Calcat
                 };
 
                 button.Click += (s, e) => {
+                    Cate_select = cate;
                     breadcr.Text = inici+"/"+cate.Name;
-                    lvProds.ItemsSource = null;
-                    lvProds.ItemsSource = mdbService.GetProdsDeCate(cate.Id);
+                    carregar_prods();
                     spCatesFill.Children.Clear();
                     carregar_cates_fill(cate);
 
                 };
                 spCates.Children.Add(button);
             }
+            carregar_prods();
 
         }
 
@@ -134,8 +138,7 @@ namespace Gestio_Botiga_Calcat
                     breadcr.Text = breadcr.Text.Remove(breadcr.Text.LastIndexOf('/'));
                 }
                 breadcr.Text = breadcr.Text + "/" + selected.Name;
-                lvProds.ItemsSource = null;
-                lvProds.ItemsSource = mdbService.GetProdsDeCate(selected.Id);
+                carregar_prods();
                 sel_cate_fill = true;
             }
             else
@@ -159,6 +162,118 @@ namespace Gestio_Botiga_Calcat
 
                 newWindow.Show();
             }
+        }
+
+        private void spNom_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (tbNom.Visibility == Visibility.Collapsed)
+            {
+                tbMostrar.Text = "-";
+                tbNom.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                tbMostrar.Text = "+";
+                tbNom.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void spPreu_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (tbpreu.Visibility == Visibility.Collapsed)
+            {
+                tbMostrar2.Text = "-";
+                tbpreu.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                tbMostrar2.Text = "+";
+                tbpreu.Visibility = Visibility.Collapsed;
+            }
+
+        }
+        private void PriceSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            tbMax.Text = slMaxPreu.Value+"€";
+            tbMin.Text = slMinPreu.Value + "€";
+            carregar_prods();
+
+        }
+
+        private void spTalles_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (lvTalles.Visibility == Visibility.Collapsed)
+            {
+                lvTalles.Children.Clear();
+                foreach(VariantMDB variant in variants)
+                {
+                    foreach (StockMDB stock in variant.Stock)
+                    {
+                        var button = new Button
+                        {
+                            Margin = new Thickness(5),
+                            HorizontalAlignment = HorizontalAlignment.Left,
+                            Background = new SolidColorBrush(Colors.White),
+                            Foreground = new SolidColorBrush(Colors.Black),
+                            Padding = new Thickness(5)
+                        };
+                        TextBlock textBlock = new TextBlock
+                        {
+                            Text = stock.Talla + "",
+                            Foreground = new SolidColorBrush(Colors.Black),
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            VerticalAlignment = VerticalAlignment.Center
+                        };
+                        
+                        button.Content = textBlock;
+
+                        button.Click += (s, e) =>
+                        {
+                            foreach(Button but in lvTalles.Children)
+                            {
+                                but.Background = new SolidColorBrush(Colors.White);
+                            }
+
+                            if (Stock_select != stock)
+                            {
+                                button.Background = new SolidColorBrush(Colors.LightGray);
+                                Stock_select = stock;
+                            }
+                            else
+                            {
+                                button.Background = new SolidColorBrush(Colors.White);
+                                Stock_select = null;
+                            }
+                            carregar_prods();
+
+                        };
+
+                        if (!lvTalles.Children.OfType<Button>().Any(b => (b.Content as TextBlock)?.Text == textBlock.Text))
+                        {
+                            lvTalles.Children.Add(button);
+                        }
+
+                    }
+                }
+                tbMostrar3.Text = "-";
+                lvTalles.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                tbMostrar3.Text = "+";
+                lvTalles.Visibility = Visibility.Collapsed;
+            }
+
+        }
+
+        private void tbNom_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            carregar_prods();
+        }
+        void carregar_prods()
+        {
+            lvProds.ItemsSource = null;
+            lvProds.ItemsSource = mdbService.ProdsFiltrats(Stock_select, Cate_select, ((int)slMinPreu.Value), ((int)slMaxPreu.Value), tbNom.Text);
         }
     }
 }

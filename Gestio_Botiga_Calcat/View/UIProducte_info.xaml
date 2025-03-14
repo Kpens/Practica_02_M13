@@ -81,8 +81,6 @@
 
                 <TextBlock x:Name="tbMostrar" Text="+" FontSize="25" Margin="0 0 10 0" FontFamily="Agency FB" VerticalAlignment="Top" Grid.Column="2" HorizontalAlignment="Right"/>
             </Grid>
-
-
             <TextBlock Grid.Row="9" Name="tbDescrip" Text="Este es el texto adicional que se muestra al hacer clic." FontSize="14" VerticalAlignment="Top" Margin="0,5,0,0" Visibility="Collapsed"/>
 
         </Grid>

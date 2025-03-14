@@ -80,27 +80,17 @@ namespace Gestio_Botiga_Calcat.View
                     Foreground = new SolidColorBrush(Colors.Black),
                     Padding = new Thickness(5)
                 };
-                TextBlock textBlock;
-                if (stock.Quantitat > 0)
+                TextBlock textBlock = new TextBlock
                 {
-                    textBlock = new TextBlock
-                    {
-                        Text = stock.Talla+"",
-                        Foreground = new SolidColorBrush(Colors.Black),
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        VerticalAlignment = VerticalAlignment.Center
-                    };
-                }
-                else
-                {
-                    textBlock = new TextBlock
-                    {
-                        Text = stock.Talla + "",
-                        TextDecorations = TextDecorations.Strikethrough,
-                        Foreground = new SolidColorBrush(Colors.Gray),
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        VerticalAlignment = VerticalAlignment.Center
-                    };
+                    Text = stock.Talla + "",
+                    Foreground = new SolidColorBrush(Colors.Black),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
+                };
+                if (stock.Quantitat <= 0)
+                { 
+                    textBlock.Foreground = new SolidColorBrush(Colors.Gray);
+                    textBlock.TextDecorations = TextDecorations.Strikethrough;
                     button.IsEnabled = false;
 
                 }
