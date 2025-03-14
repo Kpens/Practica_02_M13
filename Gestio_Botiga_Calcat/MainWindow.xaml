@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Bambes_Boom" Height="450" Width="800"
         x:Name="usc">
-    <Grid Margin="25">
+    <Grid Margin="10 15 10 30">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -15,8 +15,10 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+
         <TextBlock Text="Inici" FontSize="20" Grid.Row="0" FontFamily="Agency FB" x:Name="breadcr"/>
-        <Label Content="Bambes Boom" FontSize="45" Grid.Row="1" HorizontalAlignment="Center" FontFamily="Agency FB" FontWeight="Bold"/>
+        <Label Content="Bambes Boom" FontSize="45" Grid.Row="0" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Agency FB" FontWeight="Bold"/>
+        <Image x:Name="btnCart" Source="imgs/shopping-cart.png" Grid.Column="1" HorizontalAlignment="Right" Width="30" Height="30" Margin="0 0 20 0"/>
         <StackPanel Orientation="Horizontal" x:Name="spCates" Grid.Row="2" HorizontalAlignment="Center"/>
         
         <ListView x:Name="lvFilles" SelectionChanged="lvFilles_SelectionChanged" Margin="10 0 10 10" Visibility="Collapsed">
@@ -42,6 +44,6 @@
         </ListView>
 
         <ContentControl x:Name="MainContentControl" Grid.RowSpan="5" Grid.Row="4" Margin="10"/>
-
+        
     </Grid>
 </Window>

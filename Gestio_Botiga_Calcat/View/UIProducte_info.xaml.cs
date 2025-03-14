@@ -1,5 +1,6 @@
 ﻿using Gestio_Botiga_Calcat.model;
 using HtmlAgilityPack;
+using SharpCompress.Readers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,18 +67,47 @@ namespace Gestio_Botiga_Calcat.View
         {
             tbBase.Text = Variant_Sel.Preu + "";
             double descompte = (Variant_Sel.Preu * Variant_Sel.DescomptePercent) / 100;
-            tbDesc.Text = (Variant_Sel.Preu - descompte).ToString("F4");
+            tbDesc.Text = (Variant_Sel.Preu - descompte).ToString("F2");
             tbBase.Text = Variant_Sel.Preu + "";
-            List<string> stocks = new List<string>();
-            foreach(StockMDB stock in Variant_Sel.Stock)
+            lvTalles.Children.Clear();
+            foreach (StockMDB stock in Variant_Sel.Stock)
             {
+                var button = new Button
+                {
+                    Margin = new Thickness(5),
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    Background = new SolidColorBrush(Colors.White),
+                    Foreground = new SolidColorBrush(Colors.Black),
+                    Padding = new Thickness(5)
+                };
+                TextBlock textBlock;
                 if (stock.Quantitat > 0)
                 {
-                    stocks.Add(stock.Talla+"");
+                    textBlock = new TextBlock
+                    {
+                        Text = stock.Talla+"",
+                        Foreground = new SolidColorBrush(Colors.Black),
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        VerticalAlignment = VerticalAlignment.Center
+                    };
                 }
-                
+                else
+                {
+                    textBlock = new TextBlock
+                    {
+                        Text = stock.Talla + "",
+                        TextDecorations = TextDecorations.Strikethrough,
+                        Foreground = new SolidColorBrush(Colors.Gray),
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        VerticalAlignment = VerticalAlignment.Center
+                    };
+                    button.IsEnabled = false;
+
+                }
+                button.Content = textBlock;
+                lvTalles.Children.Add(button);
+
             }
-            lvTalles.ItemsSource = stocks;
 
             grFotos.ColumnDefinitions.Clear();
             grFotos.RowDefinitions.Clear();
@@ -107,9 +137,9 @@ namespace Gestio_Botiga_Calcat.View
 
         private void imgs_variants_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (imgs_variants.SelectedIndex is int selected)
+            if ((imgs_variants.SelectedIndex <= Images.Count) && (imgs_variants.SelectedIndex >= 0))
             {
-                Variant_Sel = Variants[selected];
+                Variant_Sel = Variants[imgs_variants.SelectedIndex];
                 carregar_info();
             }
         }

@@ -18,6 +18,7 @@
 
         <Button x:Name="btnBack" Click="btnBack_Click" Content="Back" FontFamily="Agency FB" Foreground="White" Background="Black" HorizontalAlignment="Left" Padding="5" FontSize="20"/>
 
+        <Image x:Name="btnCart" Source="../imgs/shopping-cart.png" Grid.Column="1" HorizontalAlignment="Right" Width="30" Height="30" Margin="0 0 20 0"/>
 
         <Grid Grid.Column="1" Grid.Row="1" Margin="10 0 10 0">
             <Grid.RowDefinitions>
@@ -53,7 +54,8 @@
                 </ListView.ItemTemplate>
             </ListView>
             <TextBlock FontFamily="Agency FB" Margin="0 25 0 0" Text="Talles:" Grid.Row="5" FontSize="20"/>
-            <ListView x:Name="lvTalles" FontFamily="Agency FB" Margin="0 10 0 10" Grid.Column="1" Grid.Row="6" FontSize="20">
+            <StackPanel x:Name="lvTalles" Orientation="Horizontal" Margin="0 10 0 10" Grid.Column="1" Grid.Row="6"/>
+            <!--<ListView x:Name="lvTalles" FontFamily="Agency FB" Margin="0 10 0 10" Grid.Column="1" Grid.Row="6" FontSize="20">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel Orientation="Horizontal"/>
@@ -64,11 +66,11 @@
                         <TextBlock Text="{Binding}"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-            </ListView>
+            </ListView>-->
             <Button Grid.Row="7" Content="Afeguir a la Cistella" FontFamily="Agency FB" Foreground="White" Background="Black" Margin="0,10,0,10" FontSize="25"/>
 
 
-            <Grid Name="spDesc" Grid.Row="8" Cursor="Hand" MouseLeftButtonDown="spDesc_MouseLeftButtonDown" Visibility="Collapsed">
+            <Grid Name="spDesc" Grid.Row="8" Cursor="Hand" MouseLeftButtonDown="spDesc_MouseLeftButtonDown" Background="Transparent" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />

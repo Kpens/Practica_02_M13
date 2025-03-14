@@ -39,7 +39,7 @@ namespace Gestio_Botiga_Calcat
                 var button = new Button
                 {
                     Content = cat.Name,
-                    Margin = new Thickness(10),
+                    Margin = new Thickness(5),
                     HorizontalAlignment = HorizontalAlignment.Left,
                     Background = new SolidColorBrush(Colors.Black),
                     Foreground = new SolidColorBrush(Colors.White),
@@ -50,15 +50,37 @@ namespace Gestio_Botiga_Calcat
                     lvProds.ItemsSource = null;
                     lvProds.ItemsSource = mdbService.GetProdsDeCate(cat.Id);
                     carregar_cates_fill(cat);
-                    if (breadcr.Text.LastIndexOf('/') > 0 && sel_cate_fill)
+
+                    string cate_an = breadcr.Text.Substring(breadcr.Text.LastIndexOf('/')+1);
+
+                    if (breadcr.Text.LastIndexOf('/') > 0 && sel_cate_fill && cate_an.Trim()!= cate.Name.Trim())
                     {
                         breadcr.Text = breadcr.Text.Remove(breadcr.Text.LastIndexOf('/'));
                     }
-                    breadcr.Text = breadcr.Text + "/" + cat.Name;
+                    if (!breadcr.Text.Contains(cat.Name))
+                    {
+                        breadcr.Text = breadcr.Text + "/" + cat.Name;
+                    }
+                    
                     lvProds.ItemsSource = null;
                     lvProds.ItemsSource = mdbService.GetProdsDeCate(cat.Id);
                 };
-                spfilles.Children.Add(button);
+
+                bool trobat = false;
+                foreach (StackPanel sp in spCatesFill.Children)
+                {
+                    if (sp.Children.OfType<Button>().Any(b => b.Content.ToString() == button.Content.ToString()))
+                    {
+                        trobat = true;
+                        break;
+                    }
+                }
+
+                if (!trobat)
+                {
+                    spfilles.Children.Add(button);
+                }
+                
             }
             spCatesFill.Children.Add(spfilles);
             
@@ -78,7 +100,7 @@ namespace Gestio_Botiga_Calcat
                 var button = new Button
                 {
                     Content = cate.Name,
-                    Margin = new Thickness(10),
+                    Margin = new Thickness(5),
                     HorizontalAlignment = HorizontalAlignment.Left,
                     Background = new SolidColorBrush(Colors.Black),
                     Foreground = new SolidColorBrush(Colors.White),

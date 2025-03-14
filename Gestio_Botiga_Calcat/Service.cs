@@ -1,5 +1,6 @@
 ﻿using Gestio_Botiga_Calcat.model;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -175,12 +176,18 @@ namespace Gestio_Botiga_Calcat
         {
             var collection = _database.GetCollection<BsonDocument>("IVA");
             var c = collection.Find(Builders<BsonDocument>.Filter.Eq("_id", oid)).FirstOrDefault();
-           
-                IVA_MDB iva = new IVA_MDB();
-                iva.Id = (ObjectId)c["_id"];
-                iva.Percentatge = (double)c["val"];
+
+            IVA_MDB iva = new IVA_MDB();
+            iva.Id = (ObjectId)c["_id"];
+            iva.Percentatge = (double)c["val"];
 
             return iva;
+        }
+        public ProducteMDB GetProd(ObjectId oid)
+        {
+            var collection = _database.GetCollection<BsonDocument>("Producte");
+            var result = collection.Find(Builders<BsonDocument>.Filter.Eq("_id", oid)).FirstOrDefault();
+            return Bson_a_prod(result);
         }
 
         public List<ProducteMDB> GetAllProds()
@@ -195,39 +202,84 @@ namespace Gestio_Botiga_Calcat
 
             foreach (BsonDocument p in prods)
             {
-                ProducteMDB prod = new ProducteMDB();
-
-                ObjectId id = ((ObjectId)p["_id"]);
-                prod.Id = id;
-                prod.Nom = (string)p["nom"];
-                prod.Marca = (string)p["marca"];
-                prod.Desc = (string)p["desc"];
-
-                var categories = p["categories"].AsBsonArray.Select(c => c.AsObjectId).ToList();
-                prod.Categories = categories;
-
-                prod.Tipus_IVA = p["tipus_IVA"].AsObjectId;
-
-                var variants = p["variants"].AsBsonArray.Select(v => new VariantMDB
-                {
-                    Color = v["color"].AsString,
-                    Preu = v["preu"].AsDouble,
-                    DescomptePercent = v["descompte_percent"].AsInt32,
-                    Fotos = v["fotos"].AsBsonArray.Select(f => f.AsString).ToList(),
-                    Stock = v["stock"].AsBsonArray.Select(s => new StockMDB
-                    {
-                        Quantitat = s["num"].AsInt32,
-                        Talla = s["talla"].AsInt32
-                    }).ToList()
-
-                }).ToList();
-                prod.Variants = variants;
+                ProducteMDB prod = Bson_a_prod(p);
 
                 productes.Add(prod);
             }
 
             return productes;
 
+        }
+
+
+        ProducteMDB Bson_a_prod(BsonDocument p)
+        {
+            ProducteMDB prod = new ProducteMDB();
+
+            prod.Id = ((ObjectId)p["_id"]);
+            prod.Nom = (string)p["nom"];
+            prod.Marca = (string)p["marca"];
+            prod.Desc = (string)p["desc"];
+
+            var categories = p["categories"].AsBsonArray.Select(c => c.AsObjectId).ToList();
+            prod.Categories = categories;
+
+            prod.Tipus_IVA = p["tipus_IVA"].AsObjectId;
+
+            var variants = p["variants"].AsBsonArray.Select(v => new VariantMDB
+            {
+                Color = v["color"].AsString,
+                Preu = v["preu"].AsDouble,
+                DescomptePercent = v["descompte_percent"].AsInt32,
+                Fotos = v["fotos"].AsBsonArray.Select(f => f.AsString).ToList(),
+                Stock = v["stock"].AsBsonArray.Select(s => new StockMDB
+                {
+                    Id = ((ObjectId)v["_id"]),
+                    Quantitat = s["num"].AsInt32,
+                    Talla = s["talla"].AsInt32
+                }).ToList()
+
+            }).ToList();
+            prod.Variants = variants;
+            return prod;
+        }
+
+        public VariantMDB GetVariantByStockId(ObjectId stockId)
+        {
+            var collection = _database.GetCollection<BsonDocument>("Products");
+            var product = collection.Find(Builders<BsonDocument>.Filter.ElemMatch("variants", Builders<BsonDocument>.Filter.Eq("stock._id", stockId))).FirstOrDefault();
+
+            if (product != null)
+            {
+                var variants = product["variants"].AsBsonArray;
+                foreach (var v in variants)
+                {
+                    var stocks = v["stock"].AsBsonArray;
+                    foreach (var stock in stocks)
+                    {
+                        if (stock["_id"] == stockId)
+                        {
+                            VariantMDB var = new VariantMDB
+                            {
+                                Color = v["color"].AsString,
+                                Preu = v["preu"].AsDouble,
+                                DescomptePercent = v["descompte_percent"].AsInt32,
+                                Fotos = v["fotos"].AsBsonArray.Select(f => f.AsString).ToList(),
+                                Stock = v["stock"].AsBsonArray.Select(s => new StockMDB
+                                {
+                                    Id = ((ObjectId)v["_id"]),
+                                    Quantitat = s["num"].AsInt32,
+                                    Talla = s["talla"].AsInt32
+                                }).ToList()
+
+                            };
+                            return var;
+                        }
+                    }
+                }
+            }
+
+            return null; // Return null if no variant is found
         }
     }
 }

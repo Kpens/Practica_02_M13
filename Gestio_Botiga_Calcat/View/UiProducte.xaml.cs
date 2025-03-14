@@ -68,7 +68,7 @@ namespace Gestio_Botiga_Calcat.View
             if (body_desc != null)
             {
 
-                Desc = body_desc.InnerText.Substring(0, 30);
+                Desc = body_desc.InnerText.Substring(2, 28);
 
             }
             else
@@ -94,7 +94,7 @@ namespace Gestio_Botiga_Calcat.View
         {
             imgSel.Source = new BitmapImage(new Uri(Variant_Sel.Fotos.First()));
             double descompte = (Variant_Sel.Preu * Variant_Sel.DescomptePercent) / 100;
-            tbDesc.Text = (Variant_Sel.Preu - descompte).ToString("F4");
+            tbDesc.Text = (Variant_Sel.Preu - descompte).ToString("F2");
             tbBase.Text = Variant_Sel.Preu + "";
 
         }
