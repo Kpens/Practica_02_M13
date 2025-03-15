@@ -26,6 +26,7 @@ namespace Gestio_Botiga_Calcat.View
     {
         ProducteMDB prod_select;
         VariantMDB Variant_Sel;
+        private StockMDB Stock_select;
         List<VariantMDB> Variants { get; set; } = new List<VariantMDB>();
         List<String> Images { get; set; } = new List<String>();
         public UIProducte_info(ProducteMDB prod)
@@ -53,7 +54,7 @@ namespace Gestio_Botiga_Calcat.View
             if (body_desc != null)
             {
                 spDesc.Visibility = Visibility.Visible;
-                tbDescrip.Text = body_desc.InnerText;
+                tbDescrip.Text = body_desc.InnerText.Trim();
 
             }
             else
@@ -70,6 +71,7 @@ namespace Gestio_Botiga_Calcat.View
             tbDesc.Text = (Variant_Sel.Preu - descompte).ToString("F2");
             tbBase.Text = Variant_Sel.Preu + "";
             lvTalles.Children.Clear();
+            tbNom_var.Text = Variant_Sel.Color;
             foreach (StockMDB stock in Variant_Sel.Stock)
             {
                 var button = new Button
@@ -85,7 +87,9 @@ namespace Gestio_Botiga_Calcat.View
                     Text = stock.Talla + "",
                     Foreground = new SolidColorBrush(Colors.Black),
                     HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center
+                    VerticalAlignment = VerticalAlignment.Center,
+                    FontFamily = new FontFamily("Agency FB"),
+                    FontSize = 18
                 };
                 if (stock.Quantitat <= 0)
                 { 
@@ -94,6 +98,26 @@ namespace Gestio_Botiga_Calcat.View
                     button.IsEnabled = false;
 
                 }
+
+                button.Click += (s, e) =>
+                {
+                    foreach (Button but in lvTalles.Children)
+                    {
+                        but.Background = new SolidColorBrush(Colors.White);
+                    }
+
+                    if (Stock_select != stock)
+                    {
+                        button.Background = new SolidColorBrush(Colors.LightGray);
+                        Stock_select = stock;
+                    }
+                    else
+                    {
+                        button.Background = new SolidColorBrush(Colors.White);
+                        Stock_select = null;
+                    }
+
+                };
                 button.Content = textBlock;
                 lvTalles.Children.Add(button);
 
@@ -101,6 +125,7 @@ namespace Gestio_Botiga_Calcat.View
 
             grFotos.ColumnDefinitions.Clear();
             grFotos.RowDefinitions.Clear();
+            grFotos.Children.Clear();
 
             grFotos.ColumnDefinitions.Add(new ColumnDefinition());
             if (Variant_Sel.Fotos.Count > 2) {

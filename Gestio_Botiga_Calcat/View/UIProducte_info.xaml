@@ -40,7 +40,11 @@
                 <TextBlock x:Name="tbDesc" FontWeight="Bold" Margin="0 0 10 0" FontSize="20" FontFamily="Agency FB"/>
                 <TextBlock x:Name="tbBase" Foreground="Gray" TextDecorations="Strikethrough" VerticalAlignment="Center" FontSize="20" FontFamily="Agency FB"/>
             </StackPanel>
-            <TextBlock FontFamily="Agency FB" Margin="0 25 0 0" Text="Color:" Grid.Row="3" FontSize="20"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="0 25 0 0">
+                <TextBlock FontFamily="Agency FB" Text="Color:" FontSize="20" VerticalAlignment="Center"/>
+                <TextBlock x:Name="tbNom_var" FontFamily="Agency FB" Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" Text="Red" FontSize="17"/>
+            </StackPanel>
+            
             <ListView x:Name="imgs_variants" SelectionChanged="imgs_variants_SelectionChanged" Margin="5 10 5 10" Grid.Column="1" Grid.Row="4" FontSize="20">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -54,7 +58,7 @@
                 </ListView.ItemTemplate>
             </ListView>
             <TextBlock FontFamily="Agency FB" Margin="0 25 0 0" Text="Talles:" Grid.Row="5" FontSize="20"/>
-            <StackPanel x:Name="lvTalles" Orientation="Horizontal" Margin="0 10 0 10" Grid.Column="1" Grid.Row="6"/>
+            <WrapPanel x:Name="lvTalles" Orientation="Horizontal" Margin="0 10 0 10" Grid.Column="1" Grid.Row="6"/>
             <!--<ListView x:Name="lvTalles" FontFamily="Agency FB" Margin="0 10 0 10" Grid.Column="1" Grid.Row="6" FontSize="20">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -81,7 +85,7 @@
 
                 <TextBlock x:Name="tbMostrar" Text="+" FontSize="25" Margin="0 0 10 0" FontFamily="Agency FB" VerticalAlignment="Top" Grid.Column="2" HorizontalAlignment="Right"/>
             </Grid>
-            <TextBlock Grid.Row="9" Name="tbDescrip" Text="Este es el texto adicional que se muestra al hacer clic." FontSize="14" VerticalAlignment="Top" Margin="0,5,0,0" Visibility="Collapsed"/>
+            <TextBlock Grid.Row="9" Name="tbDescrip" TextWrapping="Wrap" FontSize="18" FontFamily="Agency FB" VerticalAlignment="Top" Margin="0,15,0,0" Visibility="Collapsed"/>
 
         </Grid>
         <Grid Margin="5" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="grFotos"/>

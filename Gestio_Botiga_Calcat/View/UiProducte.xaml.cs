@@ -68,7 +68,7 @@ namespace Gestio_Botiga_Calcat.View
             if (body_desc != null)
             {
 
-                Desc = body_desc.InnerText.Substring(2, 28);
+                Desc = body_desc.InnerText.Trim();
 
             }
             else

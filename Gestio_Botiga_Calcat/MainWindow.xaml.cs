@@ -120,6 +120,14 @@ namespace Gestio_Botiga_Calcat
                 };
                 spCates.Children.Add(button);
             }
+            List<int> num_prods = new List<int>();
+            for (int i = 10; i <= 40; i+=5)
+            {
+                num_prods.Add(i);
+            }
+            cbNumProds.ItemsSource = num_prods;
+            cbNumProds.SelectedIndex = 0;
+
             carregar_prods();
 
         }
@@ -148,19 +156,7 @@ namespace Gestio_Botiga_Calcat
                 {
                     breadcr.Text = breadcr.Text.Remove(breadcr.Text.LastIndexOf('/'));
                 }
-                lvProds.ItemsSource = null;
-            }
-        }
-
-        private void lvProds_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (lvProds.SelectedValue is ProducteMDB selected)
-            {
-                var newWindow = new UIProducte_info(selected);
-
-                this.Close();
-
-                newWindow.Show();
+                wpProds.Children.Clear();
             }
         }
 
@@ -204,55 +200,62 @@ namespace Gestio_Botiga_Calcat
         {
             if (lvTalles.Visibility == Visibility.Collapsed)
             {
-                lvTalles.Children.Clear();
-                foreach(VariantMDB variant in variants)
+                List<StockMDB> stocks = new List<StockMDB>();
+
+                foreach (VariantMDB variant in variants)
                 {
-                    foreach (StockMDB stock in variant.Stock)
+                    stocks.AddRange(variant.Stock);
+                }
+
+
+                lvTalles.Children.Clear();
+
+                foreach (StockMDB stock in stocks.OrderBy(stock => stock.Talla).ToList())
+                {
+                    var button = new Button
                     {
-                        var button = new Button
-                        {
-                            Margin = new Thickness(5),
-                            HorizontalAlignment = HorizontalAlignment.Left,
-                            Background = new SolidColorBrush(Colors.White),
-                            Foreground = new SolidColorBrush(Colors.Black),
-                            Padding = new Thickness(5)
-                        };
-                        TextBlock textBlock = new TextBlock
-                        {
-                            Text = stock.Talla + "",
-                            Foreground = new SolidColorBrush(Colors.Black),
-                            HorizontalAlignment = HorizontalAlignment.Center,
-                            VerticalAlignment = VerticalAlignment.Center
-                        };
+                        Margin = new Thickness(5),
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        Background = new SolidColorBrush(Colors.White),
+                        Foreground = new SolidColorBrush(Colors.Black),
+                        Padding = new Thickness(5)
+                    };
+                    TextBlock textBlock = new TextBlock
+                    {
+                        Text = stock.Talla + "",
+                        Foreground = new SolidColorBrush(Colors.Black),
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        FontFamily = new FontFamily("Agency FB"),
+                        FontSize = 15
+                    };
                         
-                        button.Content = textBlock;
+                    button.Content = textBlock;
 
-                        button.Click += (s, e) =>
+                    button.Click += (s, e) =>
+                    {
+                        foreach(Button but in lvTalles.Children)
                         {
-                            foreach(Button but in lvTalles.Children)
-                            {
-                                but.Background = new SolidColorBrush(Colors.White);
-                            }
-
-                            if (Stock_select != stock)
-                            {
-                                button.Background = new SolidColorBrush(Colors.LightGray);
-                                Stock_select = stock;
-                            }
-                            else
-                            {
-                                button.Background = new SolidColorBrush(Colors.White);
-                                Stock_select = null;
-                            }
-                            carregar_prods();
-
-                        };
-
-                        if (!lvTalles.Children.OfType<Button>().Any(b => (b.Content as TextBlock)?.Text == textBlock.Text))
-                        {
-                            lvTalles.Children.Add(button);
+                            but.Background = new SolidColorBrush(Colors.White);
                         }
 
+                        if (Stock_select != stock)
+                        {
+                            button.Background = new SolidColorBrush(Colors.LightGray);
+                            Stock_select = stock;
+                        }
+                        else
+                        {
+                            button.Background = new SolidColorBrush(Colors.White);
+                            Stock_select = null;
+                        }
+                        carregar_prods();
+
+                    };
+
+                    if (!lvTalles.Children.OfType<Button>().Any(b => (b.Content as TextBlock)?.Text == textBlock.Text))
+                    {
+                        lvTalles.Children.Add(button);
                     }
                 }
                 tbMostrar3.Text = "-";
@@ -272,8 +275,47 @@ namespace Gestio_Botiga_Calcat
         }
         void carregar_prods()
         {
-            lvProds.ItemsSource = null;
-            lvProds.ItemsSource = mdbService.ProdsFiltrats(Stock_select, Cate_select, ((int)slMinPreu.Value), ((int)slMaxPreu.Value), tbNom.Text);
+            wpProds.Children.Clear();
+            int num_prods = (int)cbNumProds.SelectedValue;
+
+            var products = mdbService.ProdsFiltrats(Stock_select, Cate_select, ((int)slMinPreu.Value), ((int)slMaxPreu.Value), tbNom.Text);
+
+            int prod_pos = 0;
+            foreach (var prod in products)
+            {
+                if (prod_pos >= num_prods) break;
+
+                UiProducte prod_ui = new UiProducte { Prod = prod };
+                prod_ui.MouseLeftButtonDown += (s, e) =>
+                {
+                    ProdSelect(prod);
+                };
+                wpProds.Children.Add(prod_ui);
+
+                prod_pos++;
+            }
+        }
+
+        private void ProdSelect(ProducteMDB product)
+        {
+            var newWindow = new UIProducte_info(product);
+
+            this.Close();
+
+            newWindow.Show();
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            carregar_prods();
+        }
+
+        private void Label_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Cate_select = null;
+            breadcr.Text = inici;
+            carregar_prods();
+            spCatesFill.Children.Clear();
         }
     }
 }
