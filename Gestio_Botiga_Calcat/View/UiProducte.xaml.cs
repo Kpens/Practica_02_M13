@@ -54,13 +54,20 @@ namespace Gestio_Botiga_Calcat.View
             Variants = Prod.Variants;
             Variant_Sel = Variants.First();
 
+            if(Variants.Count > 1)
+            {
+                foreach (VariantMDB variant in Variants) {
+                    Images.Add(variant.Fotos.First());
+                }
 
-            foreach (VariantMDB variant in Variants) {
-                Images.Add(variant.Fotos.First());
+                imgs_variants.ItemsSource= Images;
+            }
+            else
+            {
+                imgs_variants.Visibility = Visibility.Collapsed;
             }
 
-            imgs_variants.ItemsSource= Images;
-            HtmlDocument desc_html = new HtmlDocument();
+                HtmlDocument desc_html = new HtmlDocument();
             desc_html.LoadHtml(Prod.Desc);
 
             var body_desc = desc_html.DocumentNode.SelectSingleNode("//body");
@@ -94,9 +101,16 @@ namespace Gestio_Botiga_Calcat.View
         {
             imgSel.Source = new BitmapImage(new Uri(Variant_Sel.Fotos.First()));
             double descompte = (Variant_Sel.Preu * Variant_Sel.DescomptePercent) / 100;
-            tbDesc.Text = (Variant_Sel.Preu - descompte).ToString("F2");
-            tbBase.Text = Variant_Sel.Preu + "";
-
+            tbDesc.Text = (Variant_Sel.Preu - descompte).ToString("F2")+"€";
+            if(Variant_Sel.DescomptePercent != 0)
+            {
+                tbBase.Text = Variant_Sel.Preu + "€";
+            }
+            else
+            {
+                tbBase.Text = "";
+            }
+            
         }
 
         private void Border_MouseEnter(object sender, MouseEventArgs e)

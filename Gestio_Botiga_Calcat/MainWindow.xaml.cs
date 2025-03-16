@@ -121,7 +121,7 @@ namespace Gestio_Botiga_Calcat
                 spCates.Children.Add(button);
             }
             List<int> num_prods = new List<int>();
-            for (int i = 10; i <= 40; i+=5)
+            for (int i = 4; i <= 20; i+=4)
             {
                 num_prods.Add(i);
             }

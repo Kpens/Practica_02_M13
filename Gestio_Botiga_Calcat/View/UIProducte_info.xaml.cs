@@ -66,10 +66,18 @@ namespace Gestio_Botiga_Calcat.View
         }
         void carregar_info()
         {
-            tbBase.Text = Variant_Sel.Preu + "";
             double descompte = (Variant_Sel.Preu * Variant_Sel.DescomptePercent) / 100;
-            tbDesc.Text = (Variant_Sel.Preu - descompte).ToString("F2");
-            tbBase.Text = Variant_Sel.Preu + "";
+            tbDesc.Text = (Variant_Sel.Preu - descompte).ToString("F2") + "€";
+            if (Variant_Sel.DescomptePercent != 0)
+            {
+                tbBase.Text = Variant_Sel.Preu + "€";
+            }
+            else
+            {
+                tbBase.Text = "";
+            }
+
+
             lvTalles.Children.Clear();
             tbNom_var.Text = Variant_Sel.Color;
             foreach (StockMDB stock in Variant_Sel.Stock)
