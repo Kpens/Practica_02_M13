@@ -21,6 +21,7 @@ namespace Gestio_Botiga_Calcat
         private bool sel_cate_fill = false;
         private CategoriaMDB Cate_select;
         private StockMDB Stock_select;
+        private List<ProducteMDB> prods_act = new List<ProducteMDB>();
 
         List<VariantMDB> variants = new List<VariantMDB>();
 
@@ -192,6 +193,7 @@ namespace Gestio_Botiga_Calcat
         {
             tbMax.Text = slMaxPreu.Value+"€";
             tbMin.Text = slMinPreu.Value + "€";
+            txbnum.Text = "0";
             carregar_prods();
 
         }
@@ -249,6 +251,7 @@ namespace Gestio_Botiga_Calcat
                             button.Background = new SolidColorBrush(Colors.White);
                             Stock_select = null;
                         }
+                        txbnum.Text = "0";
                         carregar_prods();
 
                     };
@@ -271,6 +274,7 @@ namespace Gestio_Botiga_Calcat
 
         private void tbNom_TextChanged(object sender, TextChangedEventArgs e)
         {
+            txbnum.Text = "0";
             carregar_prods();
         }
         void carregar_prods()
@@ -278,21 +282,54 @@ namespace Gestio_Botiga_Calcat
             wpProds.Children.Clear();
             int num_prods = (int)cbNumProds.SelectedValue;
 
-            var products = mdbService.ProdsFiltrats(Stock_select, Cate_select, ((int)slMinPreu.Value), ((int)slMaxPreu.Value), tbNom.Text);
+            prods_act = mdbService.ProdsFiltrats(Stock_select, Cate_select, ((int)slMinPreu.Value), ((int)slMaxPreu.Value), tbNom.Text);
 
             int prod_pos = 0;
-            foreach (var prod in products)
+            List<ProducteMDB> prods = new List<ProducteMDB>();
+            if (prods_act.Count >= num_prods)
             {
-                if (prod_pos >= num_prods) break;
-
-                UiProducte prod_ui = new UiProducte { Prod = prod };
-                prod_ui.MouseLeftButtonDown += (s, e) =>
+                int num = int.Parse(txbnum.Text) * num_prods;
+                if (prods_act.Count == num)
                 {
-                    ProdSelect(prod);
-                };
-                wpProds.Children.Add(prod_ui);
+                    num -= num_prods;
+                    txbnum.Text = (int.Parse(txbnum.Text) - 1).ToString();
+                }
+                for (int i = num; i < ((int.Parse(txbnum.Text) * num_prods) + num_prods); i++)
+                {
+                    if (prods_act.Count <= i)
+                    {
+                        break;
+                    }
+                    prods.Add(prods_act[i]);
 
-                prod_pos++;
+                }
+                foreach (var prod in prods)
+                {
+
+                    UiProducte prod_ui = new UiProducte { Prod = prod };
+                    prod_ui.MouseLeftButtonDown += (s, e) =>
+                    {
+                        ProdSelect(prod);
+                    };
+                    wpProds.Children.Add(prod_ui);
+
+                    prod_pos++;
+                }
+            }
+            else
+            {
+                foreach (var prod in prods_act)
+                {
+
+                    UiProducte prod_ui = new UiProducte { Prod = prod };
+                    prod_ui.MouseLeftButtonDown += (s, e) =>
+                    {
+                        ProdSelect(prod);
+                    };
+                    wpProds.Children.Add(prod_ui);
+
+                    prod_pos++;
+                }
             }
         }
 
@@ -307,6 +344,7 @@ namespace Gestio_Botiga_Calcat
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            txbnum.Text = "0";
             carregar_prods();
         }
 
@@ -316,6 +354,40 @@ namespace Gestio_Botiga_Calcat
             breadcr.Text = inici;
             carregar_prods();
             spCatesFill.Children.Clear();
+        }
+
+
+        private void btnesq_Click(object sender, RoutedEventArgs e)
+        {
+            if (txbnum.Text != "0")
+            {
+                txbnum.Text = (int.Parse(txbnum.Text) - 1).ToString();
+                carregar_prods();
+            }
+
+        }
+
+        private void btnesq_top_Click(object sender, RoutedEventArgs e)
+        {
+            txbnum.Text = "0";
+            carregar_prods();
+        }
+        private void btndret_Click(object sender, RoutedEventArgs e)
+        {
+            int num = prods_act.Count / (int)cbNumProds.SelectedValue;
+            if (int.Parse(txbnum.Text) < num)
+            {
+                txbnum.Text = (int.Parse(txbnum.Text) + 1).ToString();
+                carregar_prods();
+            }
+        }
+
+        private void btndret_top_Click(object sender, RoutedEventArgs e)
+        {
+            int num = prods_act.Count / (int)cbNumProds.SelectedValue;
+            txbnum.Text = num + "";
+            carregar_prods();
+
         }
     }
 }
