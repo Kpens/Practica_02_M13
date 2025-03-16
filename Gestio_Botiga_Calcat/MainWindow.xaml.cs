@@ -22,6 +22,8 @@ namespace Gestio_Botiga_Calcat
         private CategoriaMDB Cate_select;
         private StockMDB Stock_select;
         private List<ProducteMDB> prods_act = new List<ProducteMDB>();
+        private CistellMDB cistell = new CistellMDB();
+        private UsuariMDB usuari = new UsuariMDB();
 
         List<VariantMDB> variants = new List<VariantMDB>();
 
@@ -88,9 +90,8 @@ namespace Gestio_Botiga_Calcat
             spCatesFill.Children.Add(spfilles);
             
         }
-        public MainWindow()
+        void carregar_window()
         {
-            InitializeComponent();
             mdbService = new Service("Botiga");
             variants = mdbService.GetAllVariants();
 
@@ -113,7 +114,7 @@ namespace Gestio_Botiga_Calcat
 
                 button.Click += (s, e) => {
                     Cate_select = cate;
-                    breadcr.Text = inici+"/"+cate.Name;
+                    breadcr.Text = inici + "/" + cate.Name;
                     carregar_prods();
                     spCatesFill.Children.Clear();
                     carregar_cates_fill(cate);
@@ -122,7 +123,7 @@ namespace Gestio_Botiga_Calcat
                 spCates.Children.Add(button);
             }
             List<int> num_prods = new List<int>();
-            for (int i = 4; i <= 20; i+=4)
+            for (int i = 4; i <= 20; i += 4)
             {
                 num_prods.Add(i);
             }
@@ -130,7 +131,20 @@ namespace Gestio_Botiga_Calcat
             cbNumProds.SelectedIndex = 0;
 
             carregar_prods();
+        }
+        public MainWindow()
+        {
+            InitializeComponent();
 
+            carregar_window();
+        }
+        public MainWindow(UsuariMDB usu, CistellMDB cistell)
+        {
+            InitializeComponent();
+
+            carregar_window();
+            usuari = usu;
+            this.cistell = cistell;
         }
 
         private void lvFilles_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -335,7 +349,7 @@ namespace Gestio_Botiga_Calcat
 
         private void ProdSelect(ProducteMDB product)
         {
-            var newWindow = new UIProducte_info(product);
+            var newWindow = new UIProducte_info(product, usuari, cistell);
 
             this.Close();
 
@@ -387,6 +401,16 @@ namespace Gestio_Botiga_Calcat
             int num = prods_act.Count / (int)cbNumProds.SelectedValue;
             txbnum.Text = num + "";
             carregar_prods();
+
+        }
+
+        private void btnCart_Click(object sender, RoutedEventArgs e)
+        {
+            var newWindow = new UICarro(usuari, cistell);
+
+            this.Close();
+
+            newWindow.Show();
 
         }
     }

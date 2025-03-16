@@ -24,16 +24,17 @@ namespace Gestio_Botiga_Calcat.View
     /// </summary>
     public partial class UIProducte_info : Window
     {
-        ProducteMDB prod_select;
-        VariantMDB Variant_Sel;
+        private ProducteMDB prod_select;
+        private VariantMDB Variant_Sel;
         private StockMDB Stock_select;
         List<VariantMDB> Variants { get; set; } = new List<VariantMDB>();
         List<String> Images { get; set; } = new List<String>();
-        public UIProducte_info(ProducteMDB prod)
+        private CistellMDB cistell = new CistellMDB();
+        private UsuariMDB usuari = new UsuariMDB();
+        void carregar_window(ProducteMDB prod)
         {
-            InitializeComponent();
             prod_select = prod;
-            Variants= prod.Variants;
+            Variants = prod.Variants;
             Variant_Sel = Variants.First();
             tbMarca.Text = prod.Marca;
             tbNom.Text = prod.Nom;
@@ -63,6 +64,20 @@ namespace Gestio_Botiga_Calcat.View
             }
 
             carregar_info();
+        }
+        /*public UIProducte_info(ProducteMDB prod)
+        {
+            InitializeComponent();
+            carregar_window(prod);
+
+        }*/
+        public UIProducte_info(ProducteMDB prod, UsuariMDB usu, CistellMDB cistell)
+        {
+            InitializeComponent();
+            carregar_window(prod);
+            this.usuari = usu;
+            this.cistell = cistell;
+
         }
         void carregar_info()
         {
@@ -170,7 +185,7 @@ namespace Gestio_Botiga_Calcat.View
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
 
-            var newWindow = new MainWindow();
+            var newWindow = new MainWindow(usuari, cistell);
 
             this.Close();
 
@@ -190,5 +205,39 @@ namespace Gestio_Botiga_Calcat.View
             }
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if(usuari.Login != null)
+            {
+                cistell.Id_usu = usuari.Id;
+            }
+            if (Stock_select != null && Variant_Sel != null)
+            {
+                Prod_select prod_sel = new Prod_select
+                {
+                    Id = prod_select.Id,
+                    Estoc_id = Stock_select.Id,
+                    Quantitat = 1
+                };
+                if (cistell.Prod_select == null)
+                {
+                    cistell.Prod_select = new List<Prod_select>();
+                }
+                    cistell.Prod_select.Add(prod_sel);
+                
+            }
+
+        }
+
+
+        private void btnCart_Click(object sender, RoutedEventArgs e)
+        {
+            var newWindow = new UICarro(usuari, cistell);
+
+            this.Close();
+
+            newWindow.Show();
+
+        }
     }
 }

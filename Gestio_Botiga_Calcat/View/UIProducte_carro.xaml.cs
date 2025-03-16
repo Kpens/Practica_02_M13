@@ -2,6 +2,7 @@
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,7 @@ namespace Gestio_Botiga_Calcat.View
         private Service mdbService;
         private ProducteMDB Prod_act;
         private VariantMDB Variant_act;
+        private StockMDB Stock_act;
         public UIProducte_carro()
         {
             InitializeComponent();
@@ -50,22 +52,23 @@ namespace Gestio_Botiga_Calcat.View
 
         private void ProductChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Prod_act = mdbService.GetProd(Prod_cist.Id);
+            Prod_act = mdbService.GetProd(Prod_cist.Id); 
             Variant_act = mdbService.GetVariantByStockId(Prod_cist.Estoc_id);
             imgSel.Source = new BitmapImage(new Uri(Variant_act.Fotos.First()));
             tbNom.Text = Prod_act.Nom;
-            HtmlDocument desc_html = new HtmlDocument();
-            desc_html.LoadHtml(Prod_act.Desc);
 
-            var body_desc = desc_html.DocumentNode.SelectSingleNode("//body");
+            Stock_act = mdbService.GetStockById(Prod_cist.Estoc_id);
 
-            if (body_desc != null)
+            tbDescr.Text = "Color: "+Variant_act.Color+", Talla: "+Stock_act.Talla;
+
+
+            if(tbNum.Text == "1")           
             {
-                tbDescr.Text = body_desc.InnerText;
+                btRes.Foreground = new SolidColorBrush(Colors.LightGray);
             }
-            else
+            else if(tbNum.Text == Stock_act.Quantitat.ToString())
             {
-                tbDescr.Text = " ";
+                tbSum.Foreground = new SolidColorBrush(Colors.LightGray);
             }
             carregar_info();
         }
@@ -74,9 +77,70 @@ namespace Gestio_Botiga_Calcat.View
         {
             imgSel.Source = new BitmapImage(new Uri(Variant_act.Fotos.First()));
             double descompte = (Variant_act.Preu * Variant_act.DescomptePercent) / 100;
-            tbDesc.Text = (Variant_act.Preu - descompte).ToString("F2");
-            tbBase.Text = Variant_act.Preu + "";
+            tbDesc.Text = (Variant_act.Preu - descompte).ToString("F2") + "€";
+            if (Variant_act.DescomptePercent != 0)
+            {
+                tbBase.Text = Variant_act.Preu + "€";
+            }
+            else
+            {
+                tbBase.Text = "";
+            }
 
+        }
+
+        private void btRes_Click(object sender, RoutedEventArgs e)
+        {
+            tbSum.Foreground = new SolidColorBrush(Colors.Black);
+            if (int.Parse(tbNum.Text) > 1)
+            {
+                tbNum.Text = (int.Parse(tbNum.Text) - 1).ToString();
+                if (tbNum.Text == "1")
+                {
+                    btRes.Foreground = new SolidColorBrush(Colors.LightGray);
+                }
+                else
+                {
+                    btRes.Foreground = new SolidColorBrush(Colors.Black);
+                }
+            }
+            else
+            {
+                btRes.Foreground = new SolidColorBrush(Colors.LightGray);
+            }
+
+        }
+
+        private void tbSum_Click(object sender, RoutedEventArgs e)
+        {
+            btRes.Foreground = new SolidColorBrush(Colors.Black);
+            if (tbNum.Text != Stock_act.Quantitat.ToString())
+            {
+                tbNum.Text = (int.Parse(tbNum.Text) + 1).ToString();
+                if (tbNum.Text == Stock_act.Quantitat.ToString())
+                {
+                    tbSum.Foreground = new SolidColorBrush(Colors.LightGray);
+                }
+                else
+                {
+                    tbSum.Foreground = new SolidColorBrush(Colors.Black);
+                }
+            }
+            else
+            {
+                tbSum.Foreground = new SolidColorBrush(Colors.LightGray);
+            }
+
+        }
+
+        private void btDel_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Estas segur que vols eliminar aquest producte de la cistella?", "Eliminar", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                MessageBox.Show("Eliminat!");
+            }
         }
     }
 }

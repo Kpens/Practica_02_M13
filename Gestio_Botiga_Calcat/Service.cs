@@ -4,6 +4,7 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -71,6 +72,25 @@ namespace Gestio_Botiga_Calcat
                 cats.Add(c);
             }
             return cats;
+        }
+        public List<Metode_enviamentMDB> GetMetodes_enviament()
+        {
+            var collection = _database.GetCollection<BsonDocument>("Metode_enviament");
+            var cates = collection.Find(new BsonDocument()).ToList();
+            List<Metode_enviamentMDB> metodes = new List<Metode_enviamentMDB>();
+            foreach (var c in cates)
+            {
+                Metode_enviamentMDB metode = new Metode_enviamentMDB();
+                metode.Id = (ObjectId)c["_id"];
+                metode.MinTemps_en_dies = (int)c["min_temps"];
+                metode.MaxTemps_en_dies = (int)c["max_temps"];
+                metode.Nom = (string)c["metode"];
+                metode.Preu_base = (double)c["preu_base"];
+                metode.Preu_min_compra = (double)c["preu_min_compra"];
+                metode.Id_IVA = (ObjectId)c["tipus_IVA"];
+                metodes.Add(metode);
+            }
+            return metodes;
         }
         public CategoriaMDB GetCate(ObjectId oid)
         {
@@ -234,7 +254,7 @@ namespace Gestio_Botiga_Calcat
                 Fotos = v["fotos"].AsBsonArray.Select(f => f.AsString).ToList(),
                 Stock = v["stock"].AsBsonArray.Select(s => new StockMDB
                 {
-                    Id = ((ObjectId)v["_id"]),
+                    Id = ((ObjectId)s["_id"]),
                     Quantitat = s["num"].AsInt32,
                     Talla = s["talla"].AsInt32
                 }).ToList()
@@ -246,34 +266,72 @@ namespace Gestio_Botiga_Calcat
 
         public VariantMDB GetVariantByStockId(ObjectId stockId)
         {
-            var collection = _database.GetCollection<BsonDocument>("Products");
-            var product = collection.Find(Builders<BsonDocument>.Filter.ElemMatch("variants", Builders<BsonDocument>.Filter.Eq("stock._id", stockId))).FirstOrDefault();
+            var collection = _database.GetCollection<BsonDocument>("Producte");
+
+            var product = collection.Find(
+                    Builders<BsonDocument>.Filter.ElemMatch("variants",
+                    Builders<BsonDocument>.Filter.ElemMatch("stock",
+                    Builders<BsonDocument>.Filter.Eq("_id", stockId)))
+                ).FirstOrDefault();
 
             if (product != null)
             {
                 var variants = product["variants"].AsBsonArray;
-                foreach (var v in variants)
+                foreach (BsonDocument variant in variants)
                 {
-                    var stocks = v["stock"].AsBsonArray;
-                    foreach (var stock in stocks)
+                    var sts = variant["stock"].AsBsonArray;
+                    foreach (BsonDocument st in sts)
                     {
-                        if (stock["_id"] == stockId)
+                        if (st["_id"] == stockId)
                         {
-                            VariantMDB var = new VariantMDB
+                            return new VariantMDB
                             {
-                                Color = v["color"].AsString,
-                                Preu = v["preu"].AsDouble,
-                                DescomptePercent = v["descompte_percent"].AsInt32,
-                                Fotos = v["fotos"].AsBsonArray.Select(f => f.AsString).ToList(),
-                                Stock = v["stock"].AsBsonArray.Select(s => new StockMDB
+                                Color = variant["color"].AsString,
+                                Preu = variant["preu"].AsDouble,
+                                DescomptePercent = variant["descompte_percent"].AsInt32,
+                                Fotos = variant["fotos"].AsBsonArray.Select(f => f.AsString).ToList(),
+                                Stock = sts.Select(s => new StockMDB
                                 {
-                                    Id = ((ObjectId)v["_id"]),
+                                    Id = s["_id"].AsObjectId,
                                     Quantitat = s["num"].AsInt32,
                                     Talla = s["talla"].AsInt32
                                 }).ToList()
-
                             };
-                            return var;
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public StockMDB GetStockById(ObjectId stockId)
+        {
+            var collection = _database.GetCollection<BsonDocument>("Producte");
+            BsonDocument product = collection.Find(
+                    Builders<BsonDocument>.Filter.ElemMatch("variants",
+                    Builders<BsonDocument>.Filter.ElemMatch("stock",
+                    Builders<BsonDocument>.Filter.Eq("_id", stockId)))
+                ).FirstOrDefault();
+
+            if (product != null)
+            {
+                var variants = product["variants"].AsBsonArray;
+                foreach (var variant in variants)
+                {
+                    var stocks = variant["stock"].AsBsonArray;
+                    foreach (BsonDocument st in stocks)
+                    {
+                        if (st["_id"] == stockId)
+                        {
+                            StockMDB stock = new StockMDB
+                            {
+                                Id = st["_id"].AsObjectId,
+                                Quantitat = st["num"].AsInt32,
+                                Talla = st["talla"].AsInt32
+                            };
+
+                            return stock;
                         }
                     }
                 }

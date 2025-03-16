@@ -4,22 +4,39 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gestio_Botiga_Calcat.View"
+        xmlns:view="clr-namespace:Gestio_Botiga_Calcat.View"
         mc:Ignorable="d"
         Title="UICarro" Height="450" Width="800">
     <Grid Margin="10 15 10 30">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Button x:Name="btnBack" Click="btnBack_Click" Content="Back" FontFamily="Agency FB" Foreground="White" Background="Black" HorizontalAlignment="Left" Padding="5" FontSize="20"/>
+        <Label x:Name="tbTit" Content="Cistella" Margin="10 0 0 0" Grid.Column="1" Grid.Row="1" FontFamily="Agency FB" FontSize="45" FontWeight="Bold"/>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3">
 
-        <Image x:Name="btnCart" Source="../imgs/shopping-cart.png" Grid.Column="1" HorizontalAlignment="Right" Width="30" Height="30" Margin="0 0 20 0"/>
+            <ListView x:Name="lvProds_cist" Margin="5 40 5 10" FontSize="20" SelectionChanged="lvProds_cist_SelectionChanged">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <view:UIProducte_carro Prod_cist="{Binding}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollViewer>
 
-        <Grid Grid.Row="1">
+        <Grid Grid.Column="3" Grid.Row="3" Margin="20 40 0 0" x:Name="grDetalls" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
@@ -29,10 +46,28 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <Label Content="Cistella" Margin="10 0 0 0" Grid.Column="1" FontFamily="Agency FB" FontSize="45" FontWeight="Bold"/>
-            
-           
+            <Label Content="Detalls de la compra:" FontFamily="Agency FB" FontSize="30" FontWeight="Bold" Grid.Row="0"/>
+            <Label Content="Mètode d'enviament:" Margin="10 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="1"/>
+            <ComboBox Name="cbMetEnv" Margin="15 0 10 0" Grid.Row="2" FontFamily="Agency FB" FontSize="20"/>
+            <StackPanel Orientation="Horizontal" Margin="10 0 0 0" Grid.Row="3">
+                <Label Content="Cost enviament: " FontFamily="Agency FB" FontSize="20"/>
+                <TextBlock x:Name="tbCostEnv" Text="10€" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="10 0 0 0" Grid.Row="4">
+                <Label Content="Bases imposables: " FontFamily="Agency FB" FontSize="20"/>
+                <TextBlock x:Name="tbBasesImp" Text="10€" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Row="5">
+                <Label Content="Total: " FontWeight="Bold" FontFamily="Agency FB" FontSize="25"/>
+                <TextBlock x:Name="tbTotal" Text="10€" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="25"/>
+            </StackPanel>
         </Grid>
-
+        
+        
+        <StackPanel x:Name="spNoProds" Visibility="Collapsed" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Vertical" Grid.RowSpan="4" Grid.ColumnSpan="3" Grid.Row="0" Margin="80 0 0 50">
+            <Label Content="La teva cistella és buida" Grid.Column="1" Grid.Row="1" FontFamily="Agency FB" FontSize="45" FontWeight="Bold"/>
+            <Label Content="Quan afegueixis un producte apareixerà aqui!" FontFamily="Agency FB" Margin="0 30 0 0" FontSize="20"/>
+            <Button Click="btnBack_Click" Content="Tornar a la botiga →" Padding="10" HorizontalAlignment="Left" FontFamily="Agency FB" Foreground="White" Background="Black" Margin="5 20 0 0" FontSize="20"/>
+        </StackPanel>
     </Grid>
 </Window>

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Gestio_Botiga_Calcat.model
 {
-    class UsuariMDB
+    public class UsuariMDB
     {
         public ObjectId Id { get; set; }
         public string Login { get; set; }
