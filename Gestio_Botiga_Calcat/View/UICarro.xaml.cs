@@ -41,6 +41,14 @@ namespace Gestio_Botiga_Calcat.View
                 lvProds_cist.ItemsSource = null;
                 lvProds_cist.ItemsSource = Cistell.Prod_select;
                 grDetalls.Visibility = Visibility.Visible;
+                double bases= 0;
+                foreach (Prod_select prod in Cistell.Prod_select)
+                {
+                    VariantMDB variant = mdbService.GetVariantByStockId(prod.Estoc_id);
+                    double descompte = ((variant.Preu * prod.Quantitat) * variant.DescomptePercent) / 100;
+                    bases += (variant.Preu * prod.Quantitat) - descompte;
+                }
+                tbBasesImp.Text = bases.ToString("F2") + "€";
             }
         }
 
