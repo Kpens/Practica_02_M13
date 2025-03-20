@@ -22,8 +22,8 @@ namespace Gestio_Botiga_Calcat
         private CategoriaMDB Cate_select;
         private StockMDB Stock_select;
         private List<ProducteMDB> prods_act = new List<ProducteMDB>();
-        private CistellMDB cistell = new CistellMDB();
-        private UsuariMDB usuari = new UsuariMDB();
+        private CistellMDB cistell;
+        private UsuariMDB usuari;
 
         List<VariantMDB> variants = new List<VariantMDB>();
 
@@ -137,6 +137,8 @@ namespace Gestio_Botiga_Calcat
             InitializeComponent();
 
             carregar_window();
+            usuari = null;
+            this.cistell = null;
         }
         public MainWindow(UsuariMDB usu, CistellMDB cistell)
         {
@@ -145,6 +147,15 @@ namespace Gestio_Botiga_Calcat
             carregar_window();
             usuari = usu;
             this.cistell = cistell;
+            if(cistell != null)
+            {
+                tbNumProds.Visibility = Visibility.Visible;
+                tbNumProds.Text = cistell.Prod_select.Count + "";
+            }
+            else
+            {
+                tbNumProds.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void lvFilles_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -407,6 +418,16 @@ namespace Gestio_Botiga_Calcat
         private void btnCart_Click(object sender, RoutedEventArgs e)
         {
             var newWindow = new UICarro(usuari, cistell);
+
+            this.Close();
+
+            newWindow.Show();
+
+        }
+
+        private void btLogin_Click(object sender, RoutedEventArgs e)
+        {
+            var newWindow = new UILogin(usuari, cistell);
 
             this.Close();
 

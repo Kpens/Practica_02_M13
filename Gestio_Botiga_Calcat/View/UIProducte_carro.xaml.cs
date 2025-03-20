@@ -56,6 +56,7 @@ namespace Gestio_Botiga_Calcat.View
             Variant_act = mdbService.GetVariantByStockId(Prod_cist.Estoc_id);
             imgSel.Source = new BitmapImage(new Uri(Variant_act.Fotos.First()));
             tbNom.Text = Prod_act.Nom;
+            tbNum.Text = Prod_cist.Quantitat.ToString();
 
             Stock_act = mdbService.GetStockById(Prod_cist.Estoc_id);
 
@@ -76,11 +77,11 @@ namespace Gestio_Botiga_Calcat.View
         private void carregar_info()
         {
             imgSel.Source = new BitmapImage(new Uri(Variant_act.Fotos.First()));
-            double descompte = (Variant_act.Preu * Variant_act.DescomptePercent) / 100;
-            tbDesc.Text = (Variant_act.Preu - descompte).ToString("F2") + "€";
+            double descompte = ((Variant_act.Preu* int.Parse( tbNum.Text)) * Variant_act.DescomptePercent) / 100;
+            tbDesc.Text = ((Variant_act.Preu * int.Parse(tbNum.Text)) - descompte).ToString("F2") + "€";
             if (Variant_act.DescomptePercent != 0)
             {
-                tbBase.Text = Variant_act.Preu + "€";
+                tbBase.Text = (Variant_act.Preu * int.Parse(tbNum.Text)).ToString("F2") + "€";
             }
             else
             {
@@ -108,7 +109,7 @@ namespace Gestio_Botiga_Calcat.View
             {
                 btRes.Foreground = new SolidColorBrush(Colors.LightGray);
             }
-
+            carregar_info();
         }
 
         private void tbSum_Click(object sender, RoutedEventArgs e)
@@ -130,6 +131,7 @@ namespace Gestio_Botiga_Calcat.View
             {
                 tbSum.Foreground = new SolidColorBrush(Colors.LightGray);
             }
+            carregar_info();
 
         }
 

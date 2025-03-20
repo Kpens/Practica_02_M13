@@ -77,6 +77,15 @@ namespace Gestio_Botiga_Calcat.View
             carregar_window(prod);
             this.usuari = usu;
             this.cistell = cistell;
+            if (cistell != null)
+            {
+                tbNumProds.Visibility = Visibility.Visible;
+                tbNumProds.Text = cistell.Prod_select.Count + "";
+            }
+            else
+            {
+                tbNumProds.Visibility = Visibility.Collapsed;
+            }
 
         }
         void carregar_info()
@@ -207,10 +216,6 @@ namespace Gestio_Botiga_Calcat.View
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if(usuari.Login != null)
-            {
-                cistell.Id_usu = usuari.Id;
-            }
             if (Stock_select != null && Variant_Sel != null)
             {
                 Prod_select prod_sel = new Prod_select
@@ -219,11 +224,17 @@ namespace Gestio_Botiga_Calcat.View
                     Estoc_id = Stock_select.Id,
                     Quantitat = 1
                 };
+                if (cistell == null)
+                {
+                    cistell = new CistellMDB();
+                }
                 if (cistell.Prod_select == null)
                 {
                     cistell.Prod_select = new List<Prod_select>();
                 }
-                    cistell.Prod_select.Add(prod_sel);
+                cistell.Prod_select.Add(prod_sel);
+                tbNumProds.Visibility = Visibility.Visible;
+                tbNumProds.Text = cistell.Prod_select.Count + "";
                 
             }
 
@@ -233,6 +244,15 @@ namespace Gestio_Botiga_Calcat.View
         private void btnCart_Click(object sender, RoutedEventArgs e)
         {
             var newWindow = new UICarro(usuari, cistell);
+
+            this.Close();
+
+            newWindow.Show();
+
+        }
+        private void btLogin_Click(object sender, RoutedEventArgs e)
+        {
+            var newWindow = new UILogin(usuari, cistell);
 
             this.Close();
 

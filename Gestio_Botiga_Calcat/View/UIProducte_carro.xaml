@@ -24,8 +24,6 @@
         <TextBlock FontWeight="Bold" TextWrapping="Wrap" x:Name="tbNom" Text="Nike Dunk Low" FontFamily="Agency FB" Grid.Column="1" VerticalAlignment="Center" Grid.Row="0" FontSize="20"/>
         <TextBlock FontFamily="Agency FB" HorizontalAlignment="Left" TextAlignment="Justify" TextWrapping="Wrap" x:Name="tbDescr" Text="Color: Negre, Talla: 36" Margin="0 5 5 5" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" FontSize="15"/>
 
-      
-
         <StackPanel Orientation="Horizontal" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Right">
             <TextBlock x:Name="tbDesc" FontWeight="Bold" VerticalAlignment="Center" Text="120.00€" FontFamily="Agency FB" Margin="0 0 10 0" FontSize="20"/>
             <TextBlock x:Name="tbBase" Foreground="Gray" VerticalAlignment="Center" Text="134.99€" FontFamily="Agency FB" TextDecorations="Strikethrough" FontSize="15"/>

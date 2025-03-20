@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:Gestio_Botiga_Calcat.View"
         xmlns:view="clr-namespace:Gestio_Botiga_Calcat.View"
         mc:Ignorable="d"
-        Title="UICarro" Height="450" Width="800">
+        WindowState="Maximized"
+        Title="UICarro" Height="450" Width="1400">
     <Grid Margin="10 15 10 30">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
@@ -20,6 +21,9 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+
+        <Button Content="&#59259;" x:Name="btLogin" HorizontalAlignment="Right" Grid.Column="3" Click="btLogin_Click" FontFamily="Segoe MDL2 Assets" Foreground="Black" Background="White" BorderBrush="White" Padding="5" FontSize="20" Margin="0 0 10 0"/>
+            
         <Button x:Name="btnBack" Click="btnBack_Click" Content="Back" FontFamily="Agency FB" Foreground="White" Background="Black" HorizontalAlignment="Left" Padding="5" FontSize="20"/>
         <Label x:Name="tbTit" Content="Cistella" Margin="10 0 0 0" Grid.Column="1" Grid.Row="1" FontFamily="Agency FB" FontSize="45" FontWeight="Bold"/>
         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3">
@@ -33,7 +37,7 @@
             </ListView>
         </ScrollViewer>
 
-        <Grid Grid.Column="3" Grid.Row="3" Margin="20 40 0 0" x:Name="grDetalls" Visibility="Collapsed">
+        <Grid Grid.Column="3" Grid.Row="3" Margin="20 40 0 0" x:Name="grDetalls">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
@@ -48,7 +52,7 @@
             </Grid.RowDefinitions>
             <Label Content="Detalls de la compra:" FontFamily="Agency FB" FontSize="30" FontWeight="Bold" Grid.Row="0"/>
             <Label Content="Mètode d'enviament:" Margin="10 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="1"/>
-            <ComboBox Name="cbMetEnv" Margin="15 0 10 0" Grid.Row="2" FontFamily="Agency FB" FontSize="20"/>
+            <ComboBox Name="cbMetEnv" BorderBrush="White" Background="White" Margin="15 0 10 0" Grid.Row="2" FontFamily="Agency FB" FontSize="20"/>
             <StackPanel Orientation="Horizontal" Margin="10 0 0 0" Grid.Row="3">
                 <Label Content="Cost enviament: " FontFamily="Agency FB" FontSize="20"/>
                 <TextBlock x:Name="tbCostEnv" Text="10€" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20"/>

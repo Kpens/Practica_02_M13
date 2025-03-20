@@ -27,13 +27,14 @@ namespace Gestio_Botiga_Calcat.View
         {
             InitializeComponent();
             mdbService = new Service("Botiga");
-            if (usu.Login == null && cistell.Prod_select == null) {
+            if (cistell == null)
+            {
                 lvProds_cist.Visibility = Visibility.Collapsed;
                 spNoProds.Visibility = Visibility.Visible;
                 tbTit.Visibility = Visibility.Collapsed;
                 grDetalls.Visibility = Visibility.Collapsed;
             }
-            else if(cistell.Prod_select != null)
+            else if (cistell != null)
             {
                 lvProds_cist.ItemsSource = null;
                 lvProds_cist.ItemsSource = cistell.Prod_select;
@@ -72,6 +73,15 @@ namespace Gestio_Botiga_Calcat.View
 
                 newWindow.Show();
             }
+        }
+        private void btLogin_Click(object sender, RoutedEventArgs e)
+        {
+            var newWindow = new UILogin(usu, cistell);
+
+            this.Close();
+
+            newWindow.Show();
+
         }
     }
 }

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gestio_Botiga_Calcat.View"
         mc:Ignorable="d"
+        WindowState="Maximized"
         Title="BOOM" Height="450" Width="800">
     <Grid Margin="10 15 10 30">
         <Grid.ColumnDefinitions>
@@ -17,11 +18,15 @@
         </Grid.RowDefinitions>
 
         <Button x:Name="btnBack" Click="btnBack_Click" Content="Back" FontFamily="Agency FB" Foreground="White" Background="Black" HorizontalAlignment="Left" Padding="5" FontSize="20"/>
-        <Button x:Name="btnCart" Click="btnCart_Click" FontFamily="Agency FB" Grid.Column="1" Foreground="Black" Background="White" BorderBrush="White" HorizontalAlignment="Right" Padding="5" FontSize="20">
-            <StackPanel Orientation="Horizontal">
-                <Image Source="../imgs/shopping-cart.png" Width="30" Height="30" Margin="0 0 5 0"/>
-            </StackPanel>
-        </Button>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1">
+            <Button Content="&#59259;" x:Name="btLogin" Click="btLogin_Click" FontFamily="Segoe MDL2 Assets" Foreground="Black" Background="White" BorderBrush="White" Padding="5" FontSize="20" Margin="0 0 10 0"/>
+            <Button x:Name="btnCart" Click="btnCart_Click" FontFamily="Agency FB" Grid.Column="1" Foreground="Black" Background="White" BorderBrush="White" HorizontalAlignment="Right" Padding="5" FontSize="20">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="../imgs/shopping-cart.png" Width="30" Height="30" Margin="0 0 5 0"/>
+                    <TextBlock x:Name="tbNumProds" Text="0" Visibility="Hidden" TextAlignment="Center" Height="20" Width="20" Background="Black" Foreground="White" FontSize="16" VerticalAlignment="Top"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
         <Grid Grid.Column="1" Grid.Row="1" Margin="10 0 10 0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>

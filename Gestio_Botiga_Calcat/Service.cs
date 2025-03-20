@@ -24,26 +24,74 @@ namespace Gestio_Botiga_Calcat
             _database = client.GetDatabase(databaseName);
         }
 
-        public UsuariMDB GetUser(string login)
+        public CistellMDB GetCistell(ObjectId id)
+        {
+            var collection = _database.GetCollection<BsonDocument>("Cistell");
+            var result = collection.Find(Builders<BsonDocument>.Filter.Eq("id_usu", id)).FirstOrDefault();
+
+
+            if (result != null)
+            {
+                return new CistellMDB
+                {
+                    Id = result["_id"].AsObjectId,
+                    Id_usu = result["id_usu"].AsObjectId,
+                    Cost_enviament = result["cost_enviament"].AsInt32,
+                    Metode_enviament = result["metode_enviament"].AsObjectId,
+                    Prod_select = result["prods_select"].AsBsonArray.Select(prod => new Prod_select
+                    {
+                        Id = prod["_id"].AsObjectId,
+                        Estoc_id = prod["estoc_id"].AsObjectId,
+                        Quantitat = prod["qt"].AsInt32
+                    }).ToList()
+                };
+            }
+
+            return null;
+        }
+
+        public UsuariMDB GetUsuari(string login, string contra)
         {
             var collection = _database.GetCollection<BsonDocument>("Usuari");
             var result = collection.Find(Builders<BsonDocument>.Filter.Eq("login", login)).FirstOrDefault();
-            UsuariMDB usuariMDB = new UsuariMDB();
 
-            usuariMDB.Login = login;
-            usuariMDB.Pwd = (string)result["pwd"];
-            usuariMDB.Nom = (string)result["nom"];
-            usuariMDB.Cognom = (string)result["cognom"];
-            usuariMDB.Mail = (string)result["mail"];
-            usuariMDB.Telf = (string)result["telf"];
+            if (result != null) { 
+            
+                UsuariMDB usuariMDB = new UsuariMDB();
 
-            var adreca = result["adreca"].AsBsonDocument;
-            usuariMDB.Carrer = adreca["carrer"].AsString;
-            usuariMDB.CodiPostal = adreca["codi_postal"].AsString;
-            usuariMDB.Municipi = adreca["municipi"].AsString;
-            usuariMDB.Pais = adreca["pais"].AsString;
+                usuariMDB.Login = login;
+                usuariMDB.Pwd = (string)result["pwd"];
 
-            return usuariMDB;
+                string pwd_b64 = usuariMDB.Pwd;
+                string contra_bbdd = Encoding.UTF8.GetString(Convert.FromBase64String(pwd_b64));
+
+                if (contra_bbdd == contra)
+                {
+                    usuariMDB.Id = ((ObjectId)result["_id"]);
+                    usuariMDB.Nom = (string)result["nom"];
+                    usuariMDB.Cognom = (string)result["cognom"];
+                    usuariMDB.Mail = (string)result["mail"];
+                    usuariMDB.Telf = (string)result["telf"];
+
+                    var adreca = result["adreca"].AsBsonDocument;
+                    usuariMDB.Carrer = adreca["carrer"].AsString;
+                    usuariMDB.CodiPostal = adreca["codi_postal"].AsString;
+                    usuariMDB.Municipi = adreca["municipi"].AsString;
+                    usuariMDB.Pais = adreca["pais"].AsString;
+                    return usuariMDB;
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+            else
+            {
+                return null;
+            }
+                
+                
         }
 
         public List<CategoriaMDB> GetAllCates()

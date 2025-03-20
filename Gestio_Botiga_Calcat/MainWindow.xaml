@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gestio_Botiga_Calcat" xmlns:view="clr-namespace:Gestio_Botiga_Calcat.View"
         mc:Ignorable="d"
+        WindowState="Maximized"
         Title="Bambes_Boom" Height="450" Width="800"
         x:Name="usc">
     <Grid Margin="15 15 10 30">
@@ -23,11 +24,16 @@
 
         <TextBlock Text="Inici" FontSize="20" Grid.Row="0" FontFamily="Agency FB" x:Name="breadcr" Grid.ColumnSpan="2"/>
         <Label Grid.ColumnSpan="2" MouseLeftButtonDown="Label_MouseLeftButtonDown" Content="Bambes Boom" FontSize="45" Grid.Row="0" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Agency FB" FontWeight="Bold"/>
-        <Button x:Name="btnCart" Click="btnCart_Click" FontFamily="Agency FB" Grid.Column="1" Foreground="Black" Background="White" BorderBrush="White" HorizontalAlignment="Right" Padding="5" FontSize="20">
-            <StackPanel Orientation="Horizontal">
-                <Image Source="imgs/shopping-cart.png" Width="30" Height="30" Margin="0 0 5 0"/>
-            </StackPanel>
-        </Button>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1">
+            <Button Content="&#59259;" x:Name="btLogin" Click="btLogin_Click" FontFamily="Segoe MDL2 Assets" Foreground="Black" Background="White" BorderBrush="White" Padding="5" FontSize="20" Margin="0 0 10 0"/>
+            <Button x:Name="btnCart" Click="btnCart_Click" FontFamily="Agency FB" Grid.Column="1" Foreground="Black" Background="White" BorderBrush="White" HorizontalAlignment="Right" Padding="5" FontSize="20">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="imgs/shopping-cart.png" Width="30" Height="30" Margin="0 0 5 0"/>
+                    <TextBlock x:Name="tbNumProds" Text="0" Visibility="Hidden" TextAlignment="Center" Height="20" Width="20" Background="Black" Foreground="White" FontSize="16" VerticalAlignment="Top"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
         <StackPanel Orientation="Horizontal" x:Name="spCates" Grid.Row="2" HorizontalAlignment="Center" Grid.ColumnSpan="2"/>
 
         <ListView x:Name="lvFilles" SelectionChanged="lvFilles_SelectionChanged" Margin="10 0 10 10" Visibility="Collapsed" Grid.Column="1">
