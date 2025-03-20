@@ -160,7 +160,7 @@ namespace Gestio_Botiga_Calcat.View
             if (result == MessageBoxResult.Yes)
             {
                 Llista.Remove(Prod_cist);
-                MessageBox.Show("Eliminat!");
+
             }
         }
     }

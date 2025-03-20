@@ -2,6 +2,8 @@
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +29,7 @@ namespace Gestio_Botiga_Calcat.View
         public void carregar_vista()
         {
 
-            if (Cistell == null)
+            if (Cistell.Prod_select.Count ==0)
             {
                 lvProds_cist.Visibility = Visibility.Collapsed;
                 spNoProds.Visibility = Visibility.Visible;
@@ -73,9 +75,13 @@ namespace Gestio_Botiga_Calcat.View
             {
                 cbMetEnv.SelectedIndex = i;
             }
+            Cistell.Prod_select.CollectionChanged += Prod_select_CollectionChanged;
         }
 
-
+        private void Prod_select_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            carregar_vista();
+        }
 
         public CistellMDB Cistell
         {
@@ -86,7 +92,6 @@ namespace Gestio_Botiga_Calcat.View
         // Using a DependencyProperty as the backing store for Cistell.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CistellProperty =
             DependencyProperty.Register("Cistell", typeof(CistellMDB), typeof(UICarro), new PropertyMetadata(null));
-
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {

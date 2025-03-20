@@ -32,7 +32,14 @@ namespace Gestio_Botiga_Calcat.View
             if (cistell != null)
             {
                 tbNumProds.Visibility = Visibility.Visible;
-                tbNumProds.Text = cistell.Prod_select.Count + "";
+                if(cistell.Prod_select.Count > 0)
+                {
+                    tbNumProds.Text = cistell.Prod_select.Count + "";
+                }
+                else
+                {
+                    tbNumProds.Visibility = Visibility.Collapsed;
+                }
             }
             else
             {
