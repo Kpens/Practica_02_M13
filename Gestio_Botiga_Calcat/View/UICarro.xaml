@@ -5,9 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gestio_Botiga_Calcat.View"
         xmlns:view="clr-namespace:Gestio_Botiga_Calcat.View"
+        xmlns:model="clr-namespace:Gestio_Botiga_Calcat.model"
         mc:Ignorable="d"
         WindowState="Maximized"
-        Title="UICarro" Height="450" Width="1400">
+        Title="UICarro" Height="450" Width="1400"
+        x:Name="usc">
     <Grid Margin="10 15 10 30">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
@@ -28,10 +30,11 @@
         <Label x:Name="tbTit" Content="Cistella" Margin="10 0 0 0" Grid.Column="1" Grid.Row="1" FontFamily="Agency FB" FontSize="45" FontWeight="Bold"/>
         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3">
 
-            <ListView x:Name="lvProds_cist" Margin="5 40 5 10" FontSize="20" SelectionChanged="lvProds_cist_SelectionChanged">
+            <ListView x:Name="lvProds_cist" Margin="5 40 5 10" FontSize="20" 
+                      SelectionChanged="lvProds_cist_SelectionChanged">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <view:UIProducte_carro Prod_cist="{Binding}"/>
+                        <view:UIProducte_carro Prod_cist="{Binding}" Llista="{Binding ElementName=usc, Path=Cistell.Prod_select}"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

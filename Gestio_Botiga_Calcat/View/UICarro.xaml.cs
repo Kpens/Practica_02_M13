@@ -22,27 +22,34 @@ namespace Gestio_Botiga_Calcat.View
     public partial class UICarro : Window
     {
         private UsuariMDB usu;
-        private CistellMDB cistell;
         private Service mdbService;
-        public UICarro(UsuariMDB usu, CistellMDB cistell)
+
+        public void carregar_vista()
         {
-            InitializeComponent();
-            mdbService = new Service("Botiga");
-            if (cistell == null)
+
+            if (Cistell == null)
             {
                 lvProds_cist.Visibility = Visibility.Collapsed;
                 spNoProds.Visibility = Visibility.Visible;
                 tbTit.Visibility = Visibility.Collapsed;
                 grDetalls.Visibility = Visibility.Collapsed;
             }
-            else if (cistell != null)
+            else if (Cistell != null)
             {
                 lvProds_cist.ItemsSource = null;
-                lvProds_cist.ItemsSource = cistell.Prod_select;
+                lvProds_cist.ItemsSource = Cistell.Prod_select;
                 grDetalls.Visibility = Visibility.Visible;
             }
+        }
+
+        public UICarro(UsuariMDB usu, CistellMDB Cistell)
+        {
+            DataContext = this;
+            InitializeComponent();
+            mdbService = new Service("Botiga");
             this.usu = usu;
-            this.cistell = cistell;
+            this.Cistell = Cistell;
+            carregar_vista();
 
             List<string> metodes = new List<string>();
             int i = 0;
@@ -51,7 +58,7 @@ namespace Gestio_Botiga_Calcat.View
             {
 
                 metodes.Add(metode.Nom + " (De " + metode.MinTemps_en_dies + " a " + metode.MaxTemps_en_dies + " dies laborals) " + metode.Preu_base + "€");
-                if (cistell != null && cistell.Metode_enviament != ObjectId.Empty && metode.Id == cistell.Metode_enviament)
+                if (Cistell != null && Cistell.Metode_enviament != ObjectId.Empty && metode.Id == Cistell.Metode_enviament)
                 {
                     trobat = true;
                 }
@@ -67,10 +74,24 @@ namespace Gestio_Botiga_Calcat.View
                 cbMetEnv.SelectedIndex = i;
             }
         }
+
+
+
+        public CistellMDB Cistell
+        {
+            get { return (CistellMDB)GetValue(CistellProperty); }
+            set { SetValue(CistellProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Cistell.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CistellProperty =
+            DependencyProperty.Register("Cistell", typeof(CistellMDB), typeof(UICarro), new PropertyMetadata(null));
+
+
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
 
-            var newWindow = new MainWindow(usu, cistell);
+            var newWindow = new MainWindow(usu, Cistell);
 
             this.Close();
 
@@ -83,7 +104,7 @@ namespace Gestio_Botiga_Calcat.View
             {
                 
                 ProducteMDB prod =mdbService.GetProd(selected.Id);
-                var newWindow = new UIProducte_info(prod,usu, cistell);
+                var newWindow = new UIProducte_info(prod,usu, Cistell);
 
                 this.Close();
 
@@ -92,7 +113,7 @@ namespace Gestio_Botiga_Calcat.View
         }
         private void btLogin_Click(object sender, RoutedEventArgs e)
         {
-            var newWindow = new UILogin(usu, cistell);
+            var newWindow = new UILogin(usu, Cistell);
 
             this.Close();
 

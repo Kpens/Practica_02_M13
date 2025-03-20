@@ -2,6 +2,8 @@
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -21,7 +23,7 @@ namespace Gestio_Botiga_Calcat.View
     /// <summary>
     /// Prod_selecteraction logic for UIProducte_carro.xaml
     /// </summary>
-    public partial class UIProducte_carro : UserControl
+    public partial class UIProducte_carro : UserControl 
     {
         private Service mdbService;
         private ProducteMDB Prod_act;
@@ -39,6 +41,18 @@ namespace Gestio_Botiga_Calcat.View
             get { return (Prod_select)GetValue(Prod_cistProperty); }
             set { SetValue(Prod_cistProperty, value); }
         }
+
+        //public ObservableCollection<Prod_select> Llista { get; set; }
+
+        public ObservableCollection<Prod_select> Llista
+        {
+            get { return (ObservableCollection<Prod_select>)GetValue(LlistaProperty); }
+            set { SetValue(LlistaProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Llista.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty LlistaProperty =
+            DependencyProperty.Register("Llista", typeof(ObservableCollection<Prod_select>), typeof(UIProducte_carro), new PropertyMetadata(null));
 
         // Using a DependencyProperty as the backing store for Prod_cist.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty Prod_cistProperty =
@@ -96,6 +110,8 @@ namespace Gestio_Botiga_Calcat.View
             if (int.Parse(tbNum.Text) > 1)
             {
                 tbNum.Text = (int.Parse(tbNum.Text) - 1).ToString();
+                Prod_cist.Quantitat = int.Parse(tbNum.Text);
+                
                 if (tbNum.Text == "1")
                 {
                     btRes.Foreground = new SolidColorBrush(Colors.LightGray);
@@ -104,12 +120,13 @@ namespace Gestio_Botiga_Calcat.View
                 {
                     btRes.Foreground = new SolidColorBrush(Colors.Black);
                 }
+                carregar_info();
             }
             else
             {
                 btRes.Foreground = new SolidColorBrush(Colors.LightGray);
             }
-            carregar_info();
+            
         }
 
         private void tbSum_Click(object sender, RoutedEventArgs e)
@@ -118,6 +135,7 @@ namespace Gestio_Botiga_Calcat.View
             if (tbNum.Text != Stock_act.Quantitat.ToString())
             {
                 tbNum.Text = (int.Parse(tbNum.Text) + 1).ToString();
+                Prod_cist.Quantitat = int.Parse(tbNum.Text);
                 if (tbNum.Text == Stock_act.Quantitat.ToString())
                 {
                     tbSum.Foreground = new SolidColorBrush(Colors.LightGray);
@@ -126,12 +144,12 @@ namespace Gestio_Botiga_Calcat.View
                 {
                     tbSum.Foreground = new SolidColorBrush(Colors.Black);
                 }
+                carregar_info();
             }
             else
             {
                 tbSum.Foreground = new SolidColorBrush(Colors.LightGray);
             }
-            carregar_info();
 
         }
 
@@ -141,6 +159,7 @@ namespace Gestio_Botiga_Calcat.View
 
             if (result == MessageBoxResult.Yes)
             {
+                Llista.Remove(Prod_cist);
                 MessageBox.Show("Eliminat!");
             }
         }

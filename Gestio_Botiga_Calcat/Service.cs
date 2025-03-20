@@ -4,6 +4,7 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
@@ -38,12 +39,13 @@ namespace Gestio_Botiga_Calcat
                     Id_usu = result["id_usu"].AsObjectId,
                     Cost_enviament = result["cost_enviament"].AsInt32,
                     Metode_enviament = result["metode_enviament"].AsObjectId,
-                    Prod_select = result["prods_select"].AsBsonArray.Select(prod => new Prod_select
+                    Prod_select = new ObservableCollection<Prod_select>(
+                    result["prods_select"].AsBsonArray.Select(prod => new Prod_select
                     {
                         Id = prod["_id"].AsObjectId,
                         Estoc_id = prod["estoc_id"].AsObjectId,
                         Quantitat = prod["qt"].AsInt32
-                    }).ToList()
+                    }))
                 };
             }
 

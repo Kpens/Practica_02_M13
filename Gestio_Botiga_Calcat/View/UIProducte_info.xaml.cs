@@ -3,6 +3,7 @@ using HtmlAgilityPack;
 using SharpCompress.Readers;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -230,15 +231,13 @@ namespace Gestio_Botiga_Calcat.View
                 }
                 if (cistell.Prod_select == null)
                 {
-                    cistell.Prod_select = new List<Prod_select>();
+                    cistell.Prod_select = new ObservableCollection<Prod_select>();
                 }
 
                 foreach(Prod_select prod in cistell.Prod_select)
                 {
                     if (prod.Id == prod_sel.Id && prod.Estoc_id == prod_sel.Estoc_id)
                     {
-                        prod.Quantitat++;
-                        tbNumProds.Text = cistell.Prod_select.Count + "";
                         return;
                     }
                 }
