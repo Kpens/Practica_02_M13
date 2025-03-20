@@ -76,13 +76,25 @@ namespace Gestio_Botiga_Calcat.View
             if (usuari != null)
             {
                 CistellMDB cistellUsuari = mdbService.GetCistell(usuari.Id);
+                List<Prod_select> aux = new List<Prod_select>();
                 if(cistell != null && cistellUsuari !=null)
                 {
                     foreach (Prod_select prod in cistell.Prod_select)
                     {
+                        foreach(Prod_select prodUsuari in cistellUsuari.Prod_select)
+                        {
+                            if (!(prod.Id == prodUsuari.Id && prod.Estoc_id == prodUsuari.Estoc_id))
+                            {
+                                aux.Add(prod);
+                            }
+                        }
+                    }
+                    foreach (Prod_select prod in aux)
+                    {
                         cistellUsuari.Prod_select.Add(prod);
                     }
                 }
+
                 cistell = cistellUsuari;
                 cistell.Id_usu = usuari.Id;
                 var newWindow = new MainWindow(usuari, cistell);

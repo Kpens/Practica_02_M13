@@ -232,6 +232,17 @@ namespace Gestio_Botiga_Calcat.View
                 {
                     cistell.Prod_select = new List<Prod_select>();
                 }
+
+                foreach(Prod_select prod in cistell.Prod_select)
+                {
+                    if (prod.Id == prod_sel.Id && prod.Estoc_id == prod_sel.Estoc_id)
+                    {
+                        prod.Quantitat++;
+                        tbNumProds.Text = cistell.Prod_select.Count + "";
+                        return;
+                    }
+                }
+
                 cistell.Prod_select.Add(prod_sel);
                 tbNumProds.Visibility = Visibility.Visible;
                 tbNumProds.Text = cistell.Prod_select.Count + "";

@@ -1,4 +1,5 @@
 ﻿using Gestio_Botiga_Calcat.model;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,12 +45,27 @@ namespace Gestio_Botiga_Calcat.View
             this.cistell = cistell;
 
             List<string> metodes = new List<string>();
+            int i = 0;
+            bool trobat = false;
             foreach (Metode_enviamentMDB metode in mdbService.GetMetodes_enviament())
             {
-                metodes.Add(metode.Nom+" (De "+metode.MinTemps_en_dies+" a "+metode.MaxTemps_en_dies+" dies laborals) "+metode.Preu_base+"€");
+
+                metodes.Add(metode.Nom + " (De " + metode.MinTemps_en_dies + " a " + metode.MaxTemps_en_dies + " dies laborals) " + metode.Preu_base + "€");
+                if (cistell != null && cistell.Metode_enviament != ObjectId.Empty && metode.Id == cistell.Metode_enviament)
+                {
+                    trobat = true;
+                }
+                if (trobat == false) { 
+                    i++;
+                }
+                
             }
 
             cbMetEnv.ItemsSource = metodes;
+            if (trobat)
+            {
+                cbMetEnv.SelectedIndex = i;
+            }
         }
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
