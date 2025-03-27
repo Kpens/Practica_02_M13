@@ -451,6 +451,46 @@ namespace Gestio_Botiga_Calcat
 
             return List_Bson_a_prod(result);
         }
+        public void ActualizarCistell(CistellMDB cistellModificada)
+        {
+            var collection = _database.GetCollection<BsonDocument>("Cistell");
+
+            var cistell = collection.Find(Builders<BsonDocument>.Filter.Eq("_id", cistellModificada.Id)).FirstOrDefault();
+
+            if (cistell == null)
+            {
+                throw new Exception("Cesta no encontrada.");
+            }
+            var existingProducts = cistell["prods_select"].AsBsonArray.ToDictionary(
+                prod => prod["estoc_id"].AsObjectId,
+                prod => prod
+            );
+
+            var updatedProdsArray = new BsonArray();
+
+            foreach (var prod in cistellModificada.Prod_select)
+            {
+                if (existingProducts.TryGetValue(prod.Estoc_id, out var existingProd))
+                {
+                    existingProd["qt"] = prod.Quantitat;
+                    updatedProdsArray.Add(existingProd);
+                }
+                else
+                {
+                    var newProdDoc = new BsonDocument
+                    {
+                        { "_id", prod.Id },
+                        { "estoc_id", prod.Estoc_id },
+                        { "qt", prod.Quantitat }
+                    };
+                    updatedProdsArray.Add(newProdDoc);
+                }
+            }
+
+            var filter = Builders<BsonDocument>.Filter.Eq("_id", cistellModificada.Id);
+            var update = Builders<BsonDocument>.Update.Set("prods_select", updatedProdsArray);
+            collection.UpdateOne(filter, update);
+        }
 
     }
 

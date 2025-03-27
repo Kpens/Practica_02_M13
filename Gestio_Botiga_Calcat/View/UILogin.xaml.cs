@@ -20,8 +20,8 @@ namespace Gestio_Botiga_Calcat.View
     /// </summary>
     public partial class UILogin : Window
     {
-        private CistellMDB cistell;
-        private UsuariMDB usuari;
+        public CistellMDB cistell;
+        public UsuariMDB usuari;
         private Service mdbService;
         public UILogin(UsuariMDB Usuari, CistellMDB cistell)
         {
@@ -29,7 +29,7 @@ namespace Gestio_Botiga_Calcat.View
             mdbService = new Service("Botiga");
             this.cistell = cistell;
             this.usuari = Usuari;
-            if (cistell != null)
+            /*if (cistell != null)
             {
                 tbNumProds.Visibility = Visibility.Visible;
                 if(cistell.Prod_select.Count > 0)
@@ -44,7 +44,7 @@ namespace Gestio_Botiga_Calcat.View
             else
             {
                 tbNumProds.Visibility = Visibility.Collapsed;
-            }
+            }*/
 
             if(Usuari != null)
             {
@@ -100,13 +100,18 @@ namespace Gestio_Botiga_Calcat.View
                     {
                         cistellUsuari.Prod_select.Add(prod);
                     }
+                    cistell.Id = cistellUsuari.Id;
+                    cistell.Id_usu = cistellUsuari.Id_usu;
+                    cistell.Cost_enviament = cistellUsuari.Cost_enviament;
+                    cistell.Metode_enviament = cistellUsuari.Metode_enviament;
+
                 }
 
                 cistell = cistellUsuari;
                 cistell.Id_usu = usuari.Id;
                 var newWindow = new MainWindow(usuari, cistell);
                 this.Close();
-                newWindow.Show();
+                //newWindow.Show();
             }
             else
             {
@@ -117,11 +122,11 @@ namespace Gestio_Botiga_Calcat.View
         private void btSortir_Click(object sender, RoutedEventArgs e)
         {
 
-            var newWindow = new MainWindow();
-
+            //var newWindow = new MainWindow();
+            usuari = null;
             this.Close();
 
-            newWindow.Show();
+            //newWindow.Show();
         }
     }
 }

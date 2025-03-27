@@ -140,19 +140,15 @@ namespace Gestio_Botiga_Calcat
             usuari = null;
             this.cistell = null;
         }
-        public MainWindow(UsuariMDB usu, CistellMDB cistell)
+        void carregarQtProdsCis()
         {
-            InitializeComponent();
 
-            carregar_window();
-            usuari = usu;
-            this.cistell = cistell;
-            if(cistell != null)
+            if (cistell != null)
             {
-                tbNumProds.Visibility = Visibility.Visible;
 
                 if (cistell.Prod_select.Count > 0)
                 {
+                    tbNumProds.Visibility = Visibility.Visible;
                     tbNumProds.Text = cistell.Prod_select.Count + "";
                 }
                 else
@@ -164,6 +160,15 @@ namespace Gestio_Botiga_Calcat
             {
                 tbNumProds.Visibility = Visibility.Collapsed;
             }
+        }
+        public MainWindow(UsuariMDB usu, CistellMDB cistell)
+        {
+            InitializeComponent();
+
+            carregar_window();
+            usuari = usu;
+            this.cistell = cistell;
+            carregarQtProdsCis();
         }
 
         private void lvFilles_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -435,12 +440,38 @@ namespace Gestio_Botiga_Calcat
 
         private void btLogin_Click(object sender, RoutedEventArgs e)
         {
-            var newWindow = new UILogin(usuari, cistell);
+            var winLogin = new UILogin(usuari, cistell);
 
-            this.Close();
+            //this.Close();
+            winLogin.Closed += (s, args) =>
+            {
+                usuari = winLogin.usuari;
 
-            newWindow.Show();
+                if (winLogin.cistell != null)
+                {
+                    if (cistell == null)
+                    {
+                        cistell = new CistellMDB();
+                    }
+                    if (cistell.Prod_select == null)
+                    {
+                        cistell.Prod_select = new System.Collections.ObjectModel.ObservableCollection<Prod_select>();
+                    }
+                    cistell.Id = winLogin.cistell.Id;
+                    cistell.Id_usu = winLogin.cistell.Id_usu;
+                    cistell.Cost_enviament = winLogin.cistell.Cost_enviament;
+                    cistell.Metode_enviament = winLogin.cistell.Metode_enviament;
 
+                    cistell.Prod_select.Clear();
+                    foreach (Prod_select prod in winLogin.cistell.Prod_select)
+                    {
+                        cistell.Prod_select.Add(prod);
+                    }
+                    carregarQtProdsCis();
+                }
+            };
+
+            winLogin.Show();
         }
     }
 }

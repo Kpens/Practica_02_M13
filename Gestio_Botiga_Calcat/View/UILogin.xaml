@@ -5,21 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gestio_Botiga_Calcat.View"
         mc:Ignorable="d"
-        WindowState="Maximized"
-        Title="Login" Height="450" Width="800">
+        ResizeMode="NoResize"
+        Title="Login" Height="500" Width="500">
     <Grid Margin="10 15 10 30">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Button x:Name="btnBack" Click="btnBack_Click" Content="Back" FontFamily="Agency FB" Foreground="White" Background="Black" HorizontalAlignment="Left" Padding="5" FontSize="20"/>
+<!--        <Button x:Name="btnBack" Click="btnBack_Click" Content="Back" FontFamily="Agency FB" Foreground="White" Background="Black" HorizontalAlignment="Left" Padding="5" FontSize="20"/>
 
         <Button x:Name="btnCart" Click="btnCart_Click" FontFamily="Agency FB" Grid.Column="1" Foreground="Black" Background="White" BorderBrush="White" HorizontalAlignment="Right" Padding="5" FontSize="20">
             <StackPanel Orientation="Horizontal">
                 <Image Source="../imgs/shopping-cart.png" Width="30" Height="30" Margin="0 0 5 0"/>
                 <TextBlock x:Name="tbNumProds" Text="0" Visibility="Hidden" TextAlignment="Center" Height="20" Width="20" Background="Black" Foreground="White" FontSize="16" VerticalAlignment="Top"/>
             </StackPanel>
-        </Button>
+        </Button>-->
         <Grid x:Name="grIniSes" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -34,14 +34,14 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <Label Content="Iniciar Sessió" Grid.Column="1" FontFamily="Agency FB" FontSize="45" FontWeight="Bold"/>
+            <Label Content="Iniciar Sessió" Margin="0 30 0 0" Grid.Column="1" FontFamily="Agency FB" FontSize="45" FontWeight="Bold"/>
             <StackPanel Orientation="Horizontal"  Grid.Row="1" Grid.Column="1" Margin="0 30 0 0">
                 <TextBlock Text="Nom: " FontFamily="Agency FB" FontSize="25"/>
                 <TextBox x:Name="tbLogin" Margin="70 0 0 0" BorderThickness="1" BorderBrush="Black" FontFamily="Agency FB" FontSize="25" Width="175"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal"  Grid.Row="2" Grid.Column="1" Margin="0 30 0 0">
                 <TextBlock Text="Contrasenya: " FontFamily="Agency FB" FontSize="25"/>
-                <PasswordBox x:Name="tbContra" Margin="5 0 0 0" BorderThickness="1" BorderBrush="Black" FontFamily="Agency FB" FontSize="25" Width="175"/>
+                <PasswordBox x:Name="tbContra" Margin="5 0 0 0" BorderThickness="1" BorderBrush="Black" FontFamily="Agency FB" FontSize="20" Width="175"/>
             </StackPanel>
             <Button x:Name="btEntrar" Click="btEntrar_Click" Grid.Row="3" Grid.Column="1" Content="Entrar" FontFamily="Agency FB" Foreground="White" Background="Black" Margin="0,100,0,10" FontSize="25"/>
 

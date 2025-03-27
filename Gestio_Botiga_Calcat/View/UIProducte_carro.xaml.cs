@@ -110,6 +110,7 @@ namespace Gestio_Botiga_Calcat.View
             if (int.Parse(tbNum.Text) > 1)
             {
                 tbNum.Text = (int.Parse(tbNum.Text) - 1).ToString();
+                //Llista.ElementAt(Llista.IndexOf(Prod_cist)).Quantitat = int.Parse(tbNum.Text);
                 Prod_cist.Quantitat = int.Parse(tbNum.Text);
                 
                 if (tbNum.Text == "1")
@@ -135,6 +136,7 @@ namespace Gestio_Botiga_Calcat.View
             if (tbNum.Text != Stock_act.Quantitat.ToString())
             {
                 tbNum.Text = (int.Parse(tbNum.Text) + 1).ToString();
+                //Llista.ElementAt(Llista.IndexOf(Prod_cist)).Quantitat = int.Parse(tbNum.Text);
                 Prod_cist.Quantitat = int.Parse(tbNum.Text);
                 if (tbNum.Text == Stock_act.Quantitat.ToString())
                 {
