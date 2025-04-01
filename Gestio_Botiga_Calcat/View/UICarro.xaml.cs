@@ -98,10 +98,23 @@ namespace Gestio_Botiga_Calcat.View
            
             if (usu != null)
             {
-                foreach (var prod in Cistell.Prod_select)
+                if(Cistell != null)
                 {
-                    prod.PropertyChanged += Prod_PropertyChanged;
+                    foreach (var prod in Cistell.Prod_select)
+                    {
+                        prod.PropertyChanged += Prod_PropertyChanged;
+                    }
                 }
+                
+            }
+
+            if (usu != null)
+            {
+                tbNomUsu.Text = "Benvingut " + usu.Nom + "!";
+            }
+            else
+            {
+                tbNomUsu.Text = "";
             }
         }
 
@@ -181,6 +194,15 @@ namespace Gestio_Botiga_Calcat.View
                     }
                 }
 
+
+                if (usu != null)
+                {
+                    tbNomUsu.Text = "Benvingut " + usu.Nom + "!";
+                }
+                else
+                {
+                    tbNomUsu.Text = "";
+                }
                 var newWindow = new UICarro(usu, Cistell);
 
                 this.Close();

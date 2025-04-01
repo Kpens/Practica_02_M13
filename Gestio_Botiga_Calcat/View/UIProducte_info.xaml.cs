@@ -29,6 +29,7 @@ namespace Gestio_Botiga_Calcat.View
         private Service mdbService;
         private VariantMDB Variant_Sel;
         private StockMDB Stock_select;
+        private Button butStockSel;
         List<VariantMDB> Variants { get; set; } = new List<VariantMDB>();
         List<String> Images { get; set; } = new List<String>();
         private CistellMDB cistell = new CistellMDB();
@@ -88,6 +89,15 @@ namespace Gestio_Botiga_Calcat.View
                 tbDescrip.Text = " ";
             }
 
+            if (usuari != null)
+            {
+                tbNomUsu.Text = "Benvingut " + usuari.Nom + "!";
+            }
+            else
+            {
+                tbNomUsu.Text = "";
+            }
+
             carregar_info();
         }
         /*public UIProducte_info(ProducteMDB prod)
@@ -96,13 +106,28 @@ namespace Gestio_Botiga_Calcat.View
             carregar_window(prod);
 
         }*/
+        void carregar_stock()
+        {
+            if (Stock_select == null)
+            {
+                grMagic.Visibility = Visibility.Collapsed;
+                spQtStock.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                spQtStock.Visibility = Visibility.Visible;
+                //magImgSel.Source = new BitmapImage(new Uri(Variant_Sel.Fotos.First()));
+                magDescr.Text = "Color: " + Variant_Sel.Color + ", Talla: " + Stock_select.Talla;
+                magNum.Text = Stock_select.Quantitat + "";
+            }
+        }
         public UIProducte_info(ProducteMDB prod, UsuariMDB usu, CistellMDB cistell)
         {
             InitializeComponent();
             mdbService = new Service("Botiga");
-            carregar_window(prod);
             this.usuari = usu;
             this.cistell = cistell;
+            carregar_window(prod);
 
             carregarQtProdsCis();
 
@@ -119,6 +144,8 @@ namespace Gestio_Botiga_Calcat.View
             {
                 tbBase.Text = "";
             }
+            
+            carregar_stock();
 
 
             lvTalles.Children.Clear();
@@ -130,8 +157,7 @@ namespace Gestio_Botiga_Calcat.View
                     Margin = new Thickness(5),
                     HorizontalAlignment = HorizontalAlignment.Left,
                     Background = new SolidColorBrush(Colors.White),
-                    Foreground = new SolidColorBrush(Colors.Black),
-                    Padding = new Thickness(5)
+                    Foreground = new SolidColorBrush(Colors.Black)
                 };
                 TextBlock textBlock = new TextBlock
                 {
@@ -146,7 +172,7 @@ namespace Gestio_Botiga_Calcat.View
                 { 
                     textBlock.Foreground = new SolidColorBrush(Colors.Gray);
                     textBlock.TextDecorations = TextDecorations.Strikethrough;
-                    button.IsEnabled = false;
+                    textBlock.Background = new SolidColorBrush(Colors.Bisque);
 
                 }
 
@@ -161,12 +187,28 @@ namespace Gestio_Botiga_Calcat.View
                     {
                         button.Background = new SolidColorBrush(Colors.LightGray);
                         Stock_select = stock;
+                        butStockSel = button;
                     }
                     else
                     {
                         button.Background = new SolidColorBrush(Colors.White);
                         Stock_select = null;
+                        butStockSel = null;
                     }
+                    if (Stock_select != null)
+                    {
+                        if (Stock_select.Quantitat <= 0)
+                        {
+                            affCistella.IsEnabled = false;
+                        }
+                        else
+                        {
+                            affCistella.IsEnabled = true;
+                        }
+
+                    }
+                    
+                    carregar_stock();
 
                 };
                 button.Content = textBlock;
@@ -206,6 +248,10 @@ namespace Gestio_Botiga_Calcat.View
             if ((imgs_variants.SelectedIndex <= Images.Count) && (imgs_variants.SelectedIndex >= 0))
             {
                 Variant_Sel = Variants[imgs_variants.SelectedIndex];
+
+                tbMostrar2.Text = "+";
+                Stock_select = null;
+                butStockSel = null;
                 carregar_info();
             }
         }
@@ -315,9 +361,53 @@ namespace Gestio_Botiga_Calcat.View
                     }
                     carregarQtProdsCis();
                 }
+
+                if (usuari != null)
+                {
+                    tbNomUsu.Text = "Benvingut " + usuari.Nom + "!";
+                }
+                else
+                {
+                    tbNomUsu.Text = "";
+                }
             };
 
             winLogin.Show();
+        }
+
+        private void spQtStock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (grMagic.Visibility == Visibility.Collapsed)
+            {
+                tbMostrar2.Text = "-";
+                grMagic.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                tbMostrar2.Text = "+";
+                grMagic.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void magSum_Click(object sender, RoutedEventArgs e)
+        {
+            Stock_select.Quantitat = mdbService.magicDev(Stock_select);
+            carregar_stock();
+
+            if (Stock_select.Quantitat > 0)
+            {
+                if (butStockSel != null)
+                {
+                    butStockSel.Background = new SolidColorBrush(Colors.LightGray);
+                    TextBlock tb = butStockSel.Content as TextBlock;
+                    if (tb != null)
+                    {
+                        tb.Background = null;
+                        tb.Foreground = new SolidColorBrush(Colors.Black);
+                        tb.TextDecorations = null;
+                    }
+                }
+            }
         }
     }
 }

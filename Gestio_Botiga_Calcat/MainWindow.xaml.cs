@@ -169,6 +169,16 @@ namespace Gestio_Botiga_Calcat
             usuari = usu;
             this.cistell = cistell;
             carregarQtProdsCis();
+
+
+            if (usu != null)
+            {
+                tbNomUsu.Text = "Benvingut " + usu.Nom + "!";
+            }
+            else
+            {
+                tbNomUsu.Text = "";
+            }
         }
 
         private void lvFilles_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -468,6 +478,14 @@ namespace Gestio_Botiga_Calcat
                         cistell.Prod_select.Add(prod);
                     }
                     carregarQtProdsCis();
+                }
+                if(usuari != null)
+                {
+                    tbNomUsu.Text = "Benvingut "+usuari.Nom+"!";
+                }
+                else
+                {
+                    tbNomUsu.Text = "";
                 }
             };
 

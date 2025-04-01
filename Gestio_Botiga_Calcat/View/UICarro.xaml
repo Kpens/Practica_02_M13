@@ -24,9 +24,14 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Button Content="&#59259;" x:Name="btLogin" HorizontalAlignment="Right" Grid.Column="3" Click="btLogin_Click" FontFamily="Segoe MDL2 Assets" Foreground="Black" Background="White" BorderBrush="White" Padding="5" FontSize="20" Margin="0 0 10 0"/>
-            
-        <Button x:Name="btnBack" Click="btnBack_Click" Content="Back" FontFamily="Agency FB" Foreground="White" Background="Black" HorizontalAlignment="Left" Padding="5" FontSize="20"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="3">
+            <TextBlock x:Name="tbNomUsu" Margin="0 0 20 0" FontFamily="Agency FB" FontSize="20" VerticalAlignment="Center"/>
+            <Button Content="&#59259;" x:Name="btLogin" HorizontalAlignment="Right" Grid.Column="3" Click="btLogin_Click" FontFamily="Segoe MDL2 Assets" Foreground="Black" Background="White" BorderBrush="White" Padding="5" FontSize="20" Margin="0 0 10 0"/>
+            <!--<TextBlock x:Name="tbNomUsu" Margin="0 0 20 0" FontFamily="Agency FB" FontSize="20" VerticalAlignment="Center"/>-->
+        </StackPanel>
+        <!--<Button Content="&#59259;" x:Name="btLogin" HorizontalAlignment="Right" Grid.Column="3" Click="btLogin_Click" FontFamily="Segoe MDL2 Assets" Foreground="Black" Background="White" BorderBrush="White" Padding="5" FontSize="20" Margin="0 0 10 0"/>
+-->
+        <Button x:Name="btnBack" Click="btnBack_Click" Content="Menú" FontFamily="Agency FB" Foreground="White" Background="Black" HorizontalAlignment="Left" Padding="5" FontSize="20"/>
         <Label x:Name="tbTit" Content="Cistella" Margin="10 0 0 0" Grid.Column="1" Grid.Row="1" FontFamily="Agency FB" FontSize="45" FontWeight="Bold"/>
         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3">
 

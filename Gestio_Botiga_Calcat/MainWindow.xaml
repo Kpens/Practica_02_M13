@@ -26,6 +26,7 @@
         <Label Grid.ColumnSpan="2" MouseLeftButtonDown="Label_MouseLeftButtonDown" Content="Bambes Boom" FontSize="45" Grid.Row="0" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Agency FB" FontWeight="Bold"/>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1">
+            <TextBlock x:Name="tbNomUsu" Margin="0 0 20 0" FontFamily="Agency FB" FontSize="20" VerticalAlignment="Center"/>
             <Button Content="&#59259;" x:Name="btLogin" Click="btLogin_Click" FontFamily="Segoe MDL2 Assets" Foreground="Black" Background="White" BorderBrush="White" Padding="5" FontSize="20" Margin="0 0 10 0"/>
             <Button x:Name="btnCart" Click="btnCart_Click" FontFamily="Agency FB" Grid.Column="1" Foreground="Black" Background="White" BorderBrush="White" HorizontalAlignment="Right" Padding="5" FontSize="20">
                 <StackPanel Orientation="Horizontal">

@@ -318,15 +318,15 @@ namespace Gestio_Botiga_Calcat
         {
             var collection = _database.GetCollection<BsonDocument>("Producte");
 
-            var product = collection.Find(
+            var prod = collection.Find(
                     Builders<BsonDocument>.Filter.ElemMatch("variants",
                     Builders<BsonDocument>.Filter.ElemMatch("stock",
                     Builders<BsonDocument>.Filter.Eq("_id", stockId)))
                 ).FirstOrDefault();
 
-            if (product != null)
+            if (prod != null)
             {
-                var variants = product["variants"].AsBsonArray;
+                var variants = prod["variants"].AsBsonArray;
                 foreach (BsonDocument variant in variants)
                 {
                     var sts = variant["stock"].AsBsonArray;
@@ -358,15 +358,15 @@ namespace Gestio_Botiga_Calcat
         public StockMDB GetStockById(ObjectId stockId)
         {
             var collection = _database.GetCollection<BsonDocument>("Producte");
-            BsonDocument product = collection.Find(
+            BsonDocument prod = collection.Find(
                     Builders<BsonDocument>.Filter.ElemMatch("variants",
                     Builders<BsonDocument>.Filter.ElemMatch("stock",
                     Builders<BsonDocument>.Filter.Eq("_id", stockId)))
                 ).FirstOrDefault();
 
-            if (product != null)
+            if (prod != null)
             {
-                var variants = product["variants"].AsBsonArray;
+                var variants = prod["variants"].AsBsonArray;
                 foreach (var variant in variants)
                 {
                     var stocks = variant["stock"].AsBsonArray;
@@ -395,9 +395,9 @@ namespace Gestio_Botiga_Calcat
             var collection = _database.GetCollection<BsonDocument>("Producte");
             var prods = collection.Find(new BsonDocument()).ToList();
             List<VariantMDB> variants = new List<VariantMDB>();
-            foreach (BsonDocument product in prods)
+            foreach (BsonDocument prod in prods)
             {
-                var vars = product["variants"].AsBsonArray;
+                var vars = prod["variants"].AsBsonArray;
                 foreach (var v in vars)
                 {
                     VariantMDB var = new VariantMDB
@@ -425,74 +425,106 @@ namespace Gestio_Botiga_Calcat
         {
             var collection = _database.GetCollection<BsonDocument>("Producte");
 
-            var filters = new List<FilterDefinition<BsonDocument>>();
+            var fil = new List<FilterDefinition<BsonDocument>>();
 
             if (!string.IsNullOrEmpty(nom))
             {
-                filters.Add(Builders<BsonDocument>.Filter.Regex("nom", new BsonRegularExpression(nom, "i")));
+                fil.Add(Builders<BsonDocument>.Filter.Regex("nom", new BsonRegularExpression(nom, "i")));
             }
 
-            filters.Add(Builders<BsonDocument>.Filter.Lte("variants.preu", max_preu)); 
-            filters.Add(Builders<BsonDocument>.Filter.Gte("variants.preu", min_preu)); 
+            fil.Add(Builders<BsonDocument>.Filter.Lte("variants.preu", max_preu));
+            fil.Add(Builders<BsonDocument>.Filter.Gte("variants.preu", min_preu)); 
             
 
             if (cate != null)
             {
-                filters.Add(Builders<BsonDocument>.Filter.Eq("categories", cate.Id));
+                fil.Add(Builders<BsonDocument>.Filter.Eq("categories", cate.Id));
             }
             if (stock != null)
             {
                 var stockFilter = Builders<BsonDocument>.Filter.ElemMatch<BsonDocument>("variants.stock", Builders<BsonDocument>.Filter.Eq("talla", stock.Talla));
-                filters.Add(stockFilter);
+                fil.Add(stockFilter);
             }
-            var combinedFilter = Builders<BsonDocument>.Filter.And(filters);
+            var combinedFilter = Builders<BsonDocument>.Filter.And(fil);
 
             var result = collection.Find(combinedFilter).ToList();
 
             return List_Bson_a_prod(result);
         }
-        public void ActualizarCistell(CistellMDB cistellModificada)
+        public void ActualizarCistell(CistellMDB cistell_mod)
         {
             var collection = _database.GetCollection<BsonDocument>("Cistell");
 
-            var cistell = collection.Find(Builders<BsonDocument>.Filter.Eq("_id", cistellModificada.Id)).FirstOrDefault();
+            var cistell = collection.Find(Builders<BsonDocument>.Filter.Eq("_id", cistell_mod.Id)).FirstOrDefault();
 
             if (cistell == null)
             {
-                throw new Exception("Cesta no encontrada.");
+                throw new Exception("Cistell no trobat.");
             }
-            var existingProducts = cistell["prods_select"].AsBsonArray.ToDictionary(
+            var prods_existents = cistell["prods_select"].AsBsonArray.ToDictionary(
                 prod => prod["estoc_id"].AsObjectId,
                 prod => prod
             );
 
-            var updatedProdsArray = new BsonArray();
+            var arrModif_prods = new BsonArray();
 
-            foreach (var prod in cistellModificada.Prod_select)
+            foreach (var prod in cistell_mod.Prod_select)
             {
-                if (existingProducts.TryGetValue(prod.Estoc_id, out var existingProd))
+                if (prods_existents.TryGetValue(prod.Estoc_id, out var prod_existent))
                 {
-                    existingProd["qt"] = prod.Quantitat;
-                    updatedProdsArray.Add(existingProd);
+                    prod_existent["qt"] = prod.Quantitat;
+                    arrModif_prods.Add(prod_existent);
                 }
                 else
                 {
-                    var newProdDoc = new BsonDocument
+                    var doc = new BsonDocument
                     {
                         { "_id", prod.Id },
                         { "estoc_id", prod.Estoc_id },
                         { "qt", prod.Quantitat }
                     };
-                    updatedProdsArray.Add(newProdDoc);
+                    arrModif_prods.Add(doc);
                 }
             }
 
-            var filter = Builders<BsonDocument>.Filter.Eq("_id", cistellModificada.Id);
-            var update = Builders<BsonDocument>.Update.Set("prods_select", updatedProdsArray);
-            collection.UpdateOne(filter, update);
+            var fil = Builders<BsonDocument>.Filter.Eq("_id", cistell_mod.Id);
+            var modif = Builders<BsonDocument>.Update.Set("prods_select", arrModif_prods);
+            collection.UpdateOne(fil, modif);
+        }
+        public int magicDev(StockMDB stock)
+        {
+            var collection = _database.GetCollection<BsonDocument>("Producte");
+
+            var prod = collection.Find(
+                    Builders<BsonDocument>.Filter.ElemMatch("variants",
+                    Builders<BsonDocument>.Filter.ElemMatch("stock",
+                    Builders<BsonDocument>.Filter.Eq("_id", stock.Id)))
+                ).FirstOrDefault();
+
+            if (prod != null)
+            {
+                var variants = prod["variants"].AsBsonArray;
+                foreach (BsonDocument variant in variants)
+                {
+                    var sts = variant["stock"].AsBsonArray;
+                    foreach (BsonDocument st in sts)
+                    {
+                        if (st["_id"] == stock.Id)
+                        {
+                            st["num"] = st["num"].AsInt32 + 1;
+
+                            var fil = Builders<BsonDocument>.Filter.Eq("_id", prod["_id"]);
+                            var modif = Builders<BsonDocument>.Update.Set("variants", variants);
+                            collection.UpdateOne(fil, modif);
+
+                            return st["num"].AsInt32;
+                        }
+                    }
+                }
+            }
+            return 0;
         }
 
     }
-
 
 }

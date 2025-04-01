@@ -106,9 +106,12 @@ namespace Gestio_Botiga_Calcat.View
                     cistell.Metode_enviament = cistellUsuari.Metode_enviament;
 
                 }
-
-                cistell = cistellUsuari;
-                cistell.Id_usu = usuari.Id;
+                if (cistellUsuari != null)
+                {
+                    cistell = cistellUsuari;
+                    cistell.Id_usu = usuari.Id;
+                }
+                
                 var newWindow = new MainWindow(usuari, cistell);
                 this.Close();
                 //newWindow.Show();

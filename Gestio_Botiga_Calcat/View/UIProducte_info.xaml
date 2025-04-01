@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Gestio_Botiga_Calcat.View"
         mc:Ignorable="d"
         WindowState="Maximized"
-        Title="BOOM" Height="450" Width="800">
+        Title="BOOM" Height="550" Width="800">
     <Grid Margin="10 15 10 30">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
@@ -17,8 +17,9 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Button x:Name="btnBack" Click="btnBack_Click" Content="Back" FontFamily="Agency FB" Foreground="White" Background="Black" HorizontalAlignment="Left" Padding="5" FontSize="20"/>
+        <Button x:Name="btnBack" Click="btnBack_Click" Content="Menú" FontFamily="Agency FB" Foreground="White" Background="Black" HorizontalAlignment="Left" Padding="5" FontSize="20"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1">
+            <TextBlock x:Name="tbNomUsu" Margin="0 0 20 0" FontFamily="Agency FB" FontSize="20" VerticalAlignment="Center"/>
             <Button Content="&#59259;" x:Name="btLogin" Click="btLogin_Click" FontFamily="Segoe MDL2 Assets" Foreground="Black" Background="White" BorderBrush="White" Padding="5" FontSize="20" Margin="0 0 10 0"/>
             <Button x:Name="btnCart" Click="btnCart_Click" FontFamily="Agency FB" Grid.Column="1" Foreground="Black" Background="White" BorderBrush="White" HorizontalAlignment="Right" Padding="5" FontSize="20">
                 <StackPanel Orientation="Horizontal">
@@ -29,6 +30,8 @@
         </StackPanel>
         <Grid Grid.Column="1" Grid.Row="1" Margin="10 0 10 0">
             <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -78,7 +81,7 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>-->
-            <Button Grid.Row="7" Content="Afeguir a la Cistella" Click="Button_Click" FontFamily="Agency FB" Foreground="White" Background="Black" Margin="0,10,0,10" FontSize="25"/>
+            <Button Grid.Row="7" x:Name="affCistella" Content="Afeguir a la Cistella" Click="Button_Click" FontFamily="Agency FB" Foreground="White" Background="Black" Margin="0,10,0,10" FontSize="25"/>
 
 
             <Grid Name="spDesc" Grid.Row="8" Cursor="Hand" MouseLeftButtonDown="spDesc_MouseLeftButtonDown" Background="Transparent" Visibility="Collapsed">
@@ -94,7 +97,42 @@
             </Grid>
             <TextBlock Grid.Row="9" Name="tbDescrip" TextWrapping="Wrap" FontSize="18" FontFamily="Agency FB" VerticalAlignment="Top" Margin="0,15,0,0" Visibility="Collapsed"/>
 
+            <Grid Name="spQtStock" Margin="0 10 0 0" Grid.Row="10" Cursor="Hand" MouseLeftButtonDown="spQtStock_MouseLeftButtonDown" Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Edició màgica" FontSize="20" FontFamily="Agency FB" VerticalAlignment="Top" Grid.Column="0" />
+
+                <TextBlock x:Name="tbMostrar2" Text="+" FontSize="25" Margin="0 0 10 0" FontFamily="Agency FB" VerticalAlignment="Top" Grid.Column="2" HorizontalAlignment="Right"/>
+            </Grid>
+
+            <Grid Grid.Row="11" x:Name="grMagic" Grid.RowSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock FontFamily="Agency FB" HorizontalAlignment="Left" TextAlignment="Justify" TextWrapping="Wrap" x:Name="magDescr" Text="Color: Negre, Talla: 36" Margin="0 5 5 5"  VerticalAlignment="Top" FontSize="15"/>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
+
+                    <TextBlock x:Name="magNum" Margin="10 0 10 0" FontFamily="Agency FB" Text="1" FontSize="15" VerticalAlignment="Center"/>
+                    <Button x:Name="magSum" Click="magSum_Click" FontFamily="Agency FB" Content="+" Background="White" BorderBrush="White" FontSize="20" Padding="10 3 10 3" VerticalAlignment="Center"/>
+
+                </StackPanel>
+
+            </Grid>
+            
         </Grid>
         <Grid Margin="5" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="grFotos"/>
+        
     </Grid>
 </Window>
