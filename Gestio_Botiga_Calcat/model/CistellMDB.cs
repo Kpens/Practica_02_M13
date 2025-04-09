@@ -18,12 +18,4 @@ namespace Gestio_Botiga_Calcat.model
         public ObservableCollection<Prod_select> Prod_select { get; set; }
     }
 
-    public class Prod_select : INotifyPropertyChanged
-    {
-        public ObjectId Id { get; set; }
-        public ObjectId Estoc_id { get; set; }
-        public int Quantitat { get; set; }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-    }
 }

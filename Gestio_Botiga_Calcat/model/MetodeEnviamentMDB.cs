@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Gestio_Botiga_Calcat.model
 {
-    class Metode_enviamentMDB
+    public class Metode_enviamentMDB
     {
         public ObjectId Id { get; set; }
         public int MinTemps_en_dies { get; set; }

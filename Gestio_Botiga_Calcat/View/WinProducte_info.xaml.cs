@@ -26,25 +26,24 @@ namespace Gestio_Botiga_Calcat.View
     public partial class UIProducte_info : Window
     {
         private ProducteMDB prod_select;
-        private Service mdbService;
         private VariantMDB Variant_Sel;
         private StockMDB Stock_select;
         private Button butStockSel;
         List<VariantMDB> Variants { get; set; } = new List<VariantMDB>();
         List<String> Images { get; set; } = new List<String>();
-        private CistellMDB cistell = new CistellMDB();
-        private UsuariMDB usuari = new UsuariMDB();
+        //private CistellMDB cistell = new CistellMDB();
+        //private UsuariMDB usuari = new UsuariMDB();
 
         void carregarQtProdsCis()
         {
 
-            if (cistell != null)
+            if (Global.cistellManager != null)
             {
 
-                if (cistell.Prod_select.Count > 0)
+                if (Global.cistellManager.GetQtProd() > 0)
                 {
                     tbNumProds.Visibility = Visibility.Visible;
-                    tbNumProds.Text = cistell.Prod_select.Count + "";
+                    tbNumProds.Text = Global.cistellManager.GetQtProd() + "";
                 }
                 else
                 {
@@ -89,9 +88,9 @@ namespace Gestio_Botiga_Calcat.View
                 tbDescrip.Text = " ";
             }
 
-            if (usuari != null)
+            if (Global.Usuari != null)
             {
-                tbNomUsu.Text = "Benvingut " + usuari.Nom + "!";
+                tbNomUsu.Text =  Global.Usuari.Nom;
             }
             else
             {
@@ -121,12 +120,19 @@ namespace Gestio_Botiga_Calcat.View
                 magNum.Text = Stock_select.Quantitat + "";
             }
         }
-        public UIProducte_info(ProducteMDB prod, UsuariMDB usu, CistellMDB cistell)
+        /*public UIProducte_info(ProducteMDB prod, UsuariMDB usu, CistellMDB cistell)
         {
             InitializeComponent();
-            mdbService = new Service("Botiga");
             this.usuari = usu;
             this.cistell = cistell;
+            carregar_window(prod);
+
+            carregarQtProdsCis();
+
+        }*/
+        public UIProducte_info(ProducteMDB prod)
+        {
+            InitializeComponent();
             carregar_window(prod);
 
             carregarQtProdsCis();
@@ -259,11 +265,12 @@ namespace Gestio_Botiga_Calcat.View
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
 
-            var newWindow = new MainWindow(usuari, cistell);
+            //var newWindow = new MainWindow(usuari, cistell);
+            //var newWindow = new MainWindow();
 
             this.Close();
 
-            newWindow.Show();
+            //newWindow.Show();
         }
         private void spDesc_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
@@ -289,32 +296,20 @@ namespace Gestio_Botiga_Calcat.View
                     Estoc_id = Stock_select.Id,
                     Quantitat = 1
                 };
-                if (cistell == null)
+                if (Global.cistellManager == null)
                 {
-                    cistell = new CistellMDB();
+                    Global.cistellManager = new CistellManager();
                 }
-                if (cistell.Prod_select == null)
-                {
-                    cistell.Prod_select = new ObservableCollection<Prod_select>();
-                }
+               
+                Global.cistellManager.AddProd(prod_sel);
 
-                foreach(Prod_select prod in cistell.Prod_select)
+                if (Global.Usuari != null)
                 {
-                    if (prod.Id == prod_sel.Id && prod.Estoc_id == prod_sel.Estoc_id)
-                    {
-                        return;
-                    }
-                }
-
-                cistell.Prod_select.Add(prod_sel);
-
-                if (usuari != null)
-                {
-                    mdbService.ActualizarCistell(cistell);
+                    Global.mdbService.ActualizarCistell();
                 }
 
                 tbNumProds.Visibility = Visibility.Visible;
-                tbNumProds.Text = cistell.Prod_select.Count + "";
+                tbNumProds.Text = Global.cistellManager.GetQtProd() + "";
                 
             }
 
@@ -323,7 +318,8 @@ namespace Gestio_Botiga_Calcat.View
 
         private void btnCart_Click(object sender, RoutedEventArgs e)
         {
-            var newWindow = new UICarro(usuari, cistell);
+            //var newWindow = new UICarro(usuari, cistell);
+            var newWindow = new UICarro();
 
             this.Close();
 
@@ -332,39 +328,51 @@ namespace Gestio_Botiga_Calcat.View
         }
         private void btLogin_Click(object sender, RoutedEventArgs e)
         {
-            var winLogin = new UILogin(usuari, cistell);
+            var winLogin = new UILogin();
 
             //this.Close();
             winLogin.Closed += (s, args) =>
             {
-                usuari = winLogin.usuari;
-
-                if (winLogin.cistell != null)
+                //usuari = winLogin.usuari;
+                /*
+                if (winLogin.cistellWeb != null)
                 {
                     if (cistell == null)
                     {
                         cistell = new CistellMDB();
                     }
-                    if (cistell.Prod_select == null)
+                    if (cistell.Prod_select == null || cistell.Prod_select.Count == 0)
                     {
                         cistell.Prod_select = new System.Collections.ObjectModel.ObservableCollection<Prod_select>();
                     }
-                    cistell.Id = winLogin.cistell.Id;
-                    cistell.Id_usu = winLogin.cistell.Id_usu;
-                    cistell.Cost_enviament = winLogin.cistell.Cost_enviament;
-                    cistell.Metode_enviament = winLogin.cistell.Metode_enviament;
+                    cistell.Id = winLogin.cistellWeb.Id;
+                    cistell.Id_usu = winLogin.cistellWeb.Id_usu;
+                    cistell.Cost_enviament = winLogin.cistellWeb.Cost_enviament;
+                    cistell.Metode_enviament = winLogin.cistellWeb.Metode_enviament;
 
                     cistell.Prod_select.Clear();
-                    foreach (Prod_select prod in winLogin.cistell.Prod_select)
+                    foreach (Prod_select prod in winLogin.cistellWeb.Prod_select)
+                    {
+                        cistell.Prod_select.Add(prod);
+                    }*/
+                /*
+
+                foreach (Prod_select prod in winLogin.cistell.Prod_select)
+                {
+                    if(!cistell.Prod_select.Contains(prod))
                     {
                         cistell.Prod_select.Add(prod);
                     }
-                    carregarQtProdsCis();
                 }
+                 */
 
-                if (usuari != null)
+                //carregar_window(prod_select);
+
+                carregarQtProdsCis();
+                //}
+                if (Global.Usuari != null)
                 {
-                    tbNomUsu.Text = "Benvingut " + usuari.Nom + "!";
+                    tbNomUsu.Text = "Benvingut " + Global.Usuari.Nom + "!";
                 }
                 else
                 {
@@ -391,7 +399,7 @@ namespace Gestio_Botiga_Calcat.View
 
         private void magSum_Click(object sender, RoutedEventArgs e)
         {
-            Stock_select.Quantitat = mdbService.magicDev(Stock_select);
+            Stock_select.Quantitat = Global.mdbService.magicDev(Stock_select);
             carregar_stock();
 
             if (Stock_select.Quantitat > 0)

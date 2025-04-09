@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Gestio_Botiga_Calcat.model
 {
-    class IVA_MDB
+    public class IVA_MDB
     {
         public ObjectId Id { get; set; }
         public double Percentatge { get; set; }

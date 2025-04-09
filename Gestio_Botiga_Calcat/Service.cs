@@ -15,7 +15,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Gestio_Botiga_Calcat
 {
-    class Service
+    public class Service
     {
         private IMongoDatabase _database;
 
@@ -70,8 +70,8 @@ namespace Gestio_Botiga_Calcat
                 if (contra_bbdd == contra)
                 {
                     usuariMDB.Id = ((ObjectId)result["_id"]);
-                    usuariMDB.Nom = (string)result["nom"];
-                    usuariMDB.Cognom = (string)result["cognom"];
+                    usuariMDB.Nom = result["nom"].ToString().ElementAt(0).ToString().ToUpper() +result["nom"].ToString().Substring(1).ToLower();
+                    usuariMDB.Cognom = result["cognom"].ToString().ElementAt(0).ToString().ToUpper() + result["cognom"].ToString().Substring(1).ToLower();
                     usuariMDB.Mail = (string)result["mail"];
                     usuariMDB.Telf = (string)result["telf"];
 
@@ -451,45 +451,64 @@ namespace Gestio_Botiga_Calcat
 
             return List_Bson_a_prod(result);
         }
-        public void ActualizarCistell(CistellMDB cistell_mod)
+        public void ActualizarCistell()
         {
             var collection = _database.GetCollection<BsonDocument>("Cistell");
 
-            var cistell = collection.Find(Builders<BsonDocument>.Filter.Eq("_id", cistell_mod.Id)).FirstOrDefault();
+            var cistell = collection.Find(Builders<BsonDocument>.Filter.Eq("_id", Global.cistellManager.Id_cistell)).FirstOrDefault();
 
             if (cistell == null)
             {
-                throw new Exception("Cistell no trobat.");
+
+                var doc = new BsonDocument
+                {
+                    { "id_usu", Global.Usuari.Id},
+                    { "cost_enviament", Global.cistellManager.Cost_enviament },
+                    { "metode_enviament", Global.cistellManager.Metode_enviament },
+                    { "prods_select", new BsonArray(Global.cistellManager.GetLlistaProds().Select(p => new BsonDocument
+                        {
+                            { "_id", p.Id },
+                            { "estoc_id", p.Estoc_id },
+                            { "qt", p.Quantitat }
+                        }))
+                    }
+                };
+
+                collection.InsertOne(doc);
             }
-            var prods_existents = cistell["prods_select"].AsBsonArray.ToDictionary(
-                prod => prod["estoc_id"].AsObjectId,
-                prod => prod
-            );
-
-            var arrModif_prods = new BsonArray();
-
-            foreach (var prod in cistell_mod.Prod_select)
+            else
             {
-                if (prods_existents.TryGetValue(prod.Estoc_id, out var prod_existent))
-                {
-                    prod_existent["qt"] = prod.Quantitat;
-                    arrModif_prods.Add(prod_existent);
-                }
-                else
-                {
-                    var doc = new BsonDocument
-                    {
-                        { "_id", prod.Id },
-                        { "estoc_id", prod.Estoc_id },
-                        { "qt", prod.Quantitat }
-                    };
-                    arrModif_prods.Add(doc);
-                }
-            }
+                var prods_existents = cistell["prods_select"].AsBsonArray.ToDictionary(
+                    prod => prod["estoc_id"].AsObjectId,
+                    prod => prod
+                );
 
-            var fil = Builders<BsonDocument>.Filter.Eq("_id", cistell_mod.Id);
-            var modif = Builders<BsonDocument>.Update.Set("prods_select", arrModif_prods);
-            collection.UpdateOne(fil, modif);
+                var arrModif_prods = new BsonArray();
+
+                foreach (var prod in Global.cistellManager.GetLlistaProds())
+                {
+                    if (prods_existents.TryGetValue(prod.Estoc_id, out var prod_existent))
+                    {
+                        prod_existent["qt"] = prod.Quantitat;
+                        arrModif_prods.Add(prod_existent);
+                    }
+                    else
+                    {
+                        var doc = new BsonDocument
+                        {
+                            { "_id", prod.Id },
+                            { "estoc_id", prod.Estoc_id },
+                            { "qt", prod.Quantitat }
+                        };
+                        arrModif_prods.Add(doc);
+                    }
+                }
+
+                var fil = Builders<BsonDocument>.Filter.Eq("_id", Global.cistellManager.Id_cistell);
+                var modif = Builders<BsonDocument>.Update.Set("prods_select", arrModif_prods);
+                collection.UpdateOne(fil, modif);
+            }
+               
         }
         public int magicDev(StockMDB stock)
         {

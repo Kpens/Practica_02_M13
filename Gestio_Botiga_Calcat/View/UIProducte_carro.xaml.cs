@@ -25,14 +25,12 @@ namespace Gestio_Botiga_Calcat.View
     /// </summary>
     public partial class UIProducte_carro : UserControl 
     {
-        private Service mdbService;
         private ProducteMDB Prod_act;
         private VariantMDB Variant_act;
         private StockMDB Stock_act;
         public UIProducte_carro()
         {
             InitializeComponent();
-            mdbService = new Service("Botiga");
         }
 
 
@@ -66,13 +64,13 @@ namespace Gestio_Botiga_Calcat.View
 
         private void ProductChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Prod_act = mdbService.GetProd(Prod_cist.Id); 
-            Variant_act = mdbService.GetVariantByStockId(Prod_cist.Estoc_id);
+            Prod_act = Global.mdbService.GetProd(Prod_cist.Id); 
+            Variant_act = Global.mdbService.GetVariantByStockId(Prod_cist.Estoc_id);
             imgSel.Source = new BitmapImage(new Uri(Variant_act.Fotos.First()));
             tbNom.Text = Prod_act.Nom;
             tbNum.Text = Prod_cist.Quantitat.ToString();
 
-            Stock_act = mdbService.GetStockById(Prod_cist.Estoc_id);
+            Stock_act = Global.mdbService.GetStockById(Prod_cist.Estoc_id);
 
             tbDescr.Text = "Color: "+Variant_act.Color+", Talla: "+Stock_act.Talla;
 
@@ -162,6 +160,7 @@ namespace Gestio_Botiga_Calcat.View
             if (result == MessageBoxResult.Yes)
             {
                 Llista.Remove(Prod_cist);
+                Global.cistellManager.RemoveProd(Prod_cist);
 
             }
         }

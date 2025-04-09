@@ -8,7 +8,7 @@
         xmlns:model="clr-namespace:Gestio_Botiga_Calcat.model"
         mc:Ignorable="d"
         WindowState="Maximized"
-        Title="UICarro" Height="450" Width="1400"
+        Title="UICarro" Height="550" Width="1400"
         x:Name="usc">
     <Grid Margin="10 15 10 30">
         <Grid.ColumnDefinitions>
@@ -33,8 +33,7 @@
 -->
         <Button x:Name="btnBack" Click="btnBack_Click" Content="Menú" FontFamily="Agency FB" Foreground="White" Background="Black" HorizontalAlignment="Left" Padding="5" FontSize="20"/>
         <Label x:Name="tbTit" Content="Cistella" Margin="10 0 0 0" Grid.Column="1" Grid.Row="1" FontFamily="Agency FB" FontSize="45" FontWeight="Bold"/>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3">
-
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility=" Disabled" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3">
             <ListView x:Name="lvProds_cist" Margin="5 40 5 10" FontSize="20" 
                       SelectionChanged="lvProds_cist_SelectionChanged">
                 <ListView.ItemTemplate>
@@ -57,6 +56,7 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Label Content="Detalls de la compra:" FontFamily="Agency FB" FontSize="30" FontWeight="Bold" Grid.Row="0"/>
             <Label Content="Mètode d'enviament:" Margin="10 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="1"/>
@@ -73,6 +73,8 @@
                 <Label Content="Total: " FontWeight="Bold" FontFamily="Agency FB" FontSize="25"/>
                 <TextBlock x:Name="tbTotal" Text="10€" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="25"/>
             </StackPanel>
+            <Button x:Name="btnComprar" Click="btnComprar_Click" Grid.Row="6" Grid.Column="0" Content="Comprar" FontFamily="Agency FB" Foreground="White" Background="Black" Margin="0,100,0,10" FontSize="25"/>
+
         </Grid>
         
         

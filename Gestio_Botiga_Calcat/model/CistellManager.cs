@@ -1,0 +1,176 @@
+﻿using MongoDB.Bson;
+
+namespace Gestio_Botiga_Calcat.model
+{
+    public class CistellManager
+    {
+        //public ObjectId Id_usu { get; set; }
+        public ObjectId Id_cistell { get; set; }
+        public ObjectId Metode_enviament { get; set; }
+        public double Cost_enviament { get; set; }
+        public List<Prod_select> Prod_select_no_logged { get; set; }
+        public List<Prod_select> Prod_select_logged { get; set; }
+
+
+        public void loginOk()
+        {
+            CistellMDB cistellBd = Global.mdbService.GetCistell(Global.Usuari.Id);
+            Prod_select_logged = cistellBd.Prod_select.ToList();
+            if(cistellBd!= null)
+            {
+                if(Id_cistell == ObjectId.Empty)
+                {
+                    Id_cistell = cistellBd.Id;
+                    Cost_enviament = cistellBd.Cost_enviament;
+                }
+                if(Metode_enviament == ObjectId.Empty)
+                {
+                    Metode_enviament = cistellBd.Metode_enviament;
+                }
+
+                if (Prod_select_no_logged != null)
+                {
+                    foreach (Prod_select prodWeb in Prod_select_no_logged)
+                    {
+                        int productesIguals = cistellBd.Prod_select.Where(prodBd => prodWeb.Id == prodBd.Id && prodWeb.Estoc_id == prodBd.Estoc_id).Count();
+
+                        if (productesIguals == 0)
+                        {
+                            cistellBd.Prod_select.Add(prodWeb);
+                            Prod_select_logged.Add(prodWeb);
+                        }
+
+                    }
+                }
+            }
+            else
+            {
+                Prod_select_logged = Prod_select_no_logged;
+
+            }
+
+
+                Global.mdbService.ActualizarCistell();
+        }
+
+        public void AddProd(Prod_select prod)
+        {
+            if (Global.Usuari != null)
+            {
+                if (Prod_select_logged == null)
+                {
+                    Prod_select_logged = new List<Prod_select>();
+                }
+                else
+                {
+                    int productesIguals = Prod_select_logged.Where(prodBd => prod.Id == prodBd.Id && prod.Estoc_id == prodBd.Estoc_id).Count();
+                    if (productesIguals > 0)
+                    {
+                        return;
+                    }
+                }
+                 Prod_select_logged.Add(prod);
+            }
+            else
+            {
+                if (Prod_select_no_logged == null)
+                {
+                    Prod_select_no_logged = new List<Prod_select>();
+                }
+                else
+                {
+                    int productesIguals = Prod_select_no_logged.Where(prodBd => prod.Id == prodBd.Id && prod.Estoc_id == prodBd.Estoc_id).Count();
+                    if (productesIguals > 0)
+                    {
+                        return;
+                    }
+                }
+                Prod_select_no_logged.Add(prod);
+            }
+        }
+
+        public void RemoveProd(Prod_select prod)
+        {
+            if (Global.Usuari != null)
+            {
+                if (Prod_select_logged != null)
+                {
+                    Prod_select_logged.Remove(prod);
+                }
+            }
+            else
+            {
+                if (Prod_select_no_logged != null)
+                {
+                    Prod_select_no_logged.Remove(prod);
+                }
+            }
+        }
+
+        public int GetQtProd()
+        {
+            if (Global.Usuari != null)
+            {
+                if (Prod_select_logged != null)
+                {
+                    return Prod_select_logged.Count;
+                }
+            }
+            else
+            {
+                if (Prod_select_no_logged != null)
+                {
+                    return Prod_select_no_logged.Count;
+                }
+            }
+            return 0;
+        }
+
+        public List<Prod_select> GetLlistaProds()
+        {
+            if (Global.Usuari != null)
+            {
+                if (Prod_select_logged != null)
+                {
+                    return Prod_select_logged;
+                }
+            }
+            else
+            {
+                if (Prod_select_no_logged != null)
+                {
+                    return Prod_select_no_logged;
+                }
+            }
+            return new List<Prod_select>();
+        }
+
+        public CistellMDB GetCistell()
+        {
+            CistellMDB cistell = new CistellMDB();
+            cistell.Prod_select = new System.Collections.ObjectModel.ObservableCollection<Prod_select>();
+            if (Global.Usuari != null)
+            {
+                if (Prod_select_logged == null)
+                {
+                    Prod_select_logged = new List<Prod_select>();
+                }
+                cistell.Prod_select = new System.Collections.ObjectModel.ObservableCollection<Prod_select>(Prod_select_logged);
+                cistell.Id_usu = Global.Usuari.Id;
+                cistell.Cost_enviament = Cost_enviament;
+                cistell.Metode_enviament = Metode_enviament;
+            }
+            else
+            {
+
+                if (Prod_select_no_logged == null)
+                {
+                    Prod_select_no_logged = new List<Prod_select>();
+                }
+                cistell.Prod_select = new System.Collections.ObjectModel.ObservableCollection<Prod_select>(Prod_select_no_logged);
+            }
+            return cistell;
+        }
+
+    }
+}

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Gestio_Botiga_Calcat.model
 {
-    class CategoriaMDB
+    public class CategoriaMDB
     {
         public ObjectId Id { get; set; }
         public string Name { get; set; }

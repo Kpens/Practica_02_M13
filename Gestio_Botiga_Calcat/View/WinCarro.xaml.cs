@@ -24,8 +24,7 @@ namespace Gestio_Botiga_Calcat.View
     /// </summary>
     public partial class UICarro : Window
     {
-        private UsuariMDB usu;
-        private Service mdbService;
+        //private UsuariMDB usu;
 
         public void carregar_vista()
         {
@@ -36,21 +35,47 @@ namespace Gestio_Botiga_Calcat.View
                 lvProds_cist.ItemsSource = Cistell.Prod_select;
                 grDetalls.Visibility = Visibility.Visible;
                 spNoProds.Visibility = Visibility.Collapsed;
+                lvProds_cist.Visibility = Visibility.Visible;
+                tbTit.Visibility = Visibility.Visible;
 
-                if (usu != null)
+                if (Global.Usuari != null)
                 {
-                    mdbService.ActualizarCistell(Cistell);
+                    Global.mdbService.ActualizarCistell();
                 }
 
                 double bases = 0;
                 foreach (Prod_select prod in Cistell.Prod_select)
                 {
-                    VariantMDB variant = mdbService.GetVariantByStockId(prod.Estoc_id);
+                    VariantMDB variant = Global.mdbService.GetVariantByStockId(prod.Estoc_id);
                     double descompte = ((variant.Preu * prod.Quantitat) * variant.DescomptePercent) / 100;
                     bases += (variant.Preu * prod.Quantitat) - descompte;
                 }
                 tbBasesImp.Text = bases.ToString("F2") + "€";
-            }else
+
+                List<string> metodes = new List<string>();
+                int i = 0;
+                bool trobat = false;
+                foreach (Metode_enviamentMDB metode in Global.mdbService.GetMetodes_enviament())
+                {
+
+                    metodes.Add(metode.Nom + " (De " + metode.MinTemps_en_dies + " a " + metode.MaxTemps_en_dies + " dies laborals) " + metode.Preu_base + "€");
+                    if (Cistell != null && Cistell.Metode_enviament != ObjectId.Empty && metode.Id == Cistell.Metode_enviament)
+                    {
+                        trobat = true;
+                    }
+                    if (trobat == false)
+                    {
+                        i++;
+                    }
+
+                }
+                cbMetEnv.ItemsSource = metodes;
+                if (trobat)
+                {
+                    cbMetEnv.SelectedIndex = i;
+                }
+            }
+            else
             {
                 lvProds_cist.Visibility = Visibility.Collapsed;
                 spNoProds.Visibility = Visibility.Visible;
@@ -59,19 +84,18 @@ namespace Gestio_Botiga_Calcat.View
             }
         }
 
-        public UICarro(UsuariMDB usu, CistellMDB Cistell)
+        public UICarro()
         {
             InitializeComponent();
             DataContext = this;
-            mdbService = new Service("Botiga");
-            this.usu = usu;
-            this.Cistell = Cistell;
+            //this.usu = usu;
+            this.Cistell = Global.cistellManager.GetCistell();
             carregar_vista();
 
             List<string> metodes = new List<string>();
             int i = 0;
             bool trobat = false;
-            foreach (Metode_enviamentMDB metode in mdbService.GetMetodes_enviament())
+            foreach (Metode_enviamentMDB metode in Global.mdbService.GetMetodes_enviament())
             {
 
                 metodes.Add(metode.Nom + " (De " + metode.MinTemps_en_dies + " a " + metode.MaxTemps_en_dies + " dies laborals) " + metode.Preu_base + "€");
@@ -84,7 +108,6 @@ namespace Gestio_Botiga_Calcat.View
                 }
                 
             }
-
             cbMetEnv.ItemsSource = metodes;
             if (trobat)
             {
@@ -96,7 +119,7 @@ namespace Gestio_Botiga_Calcat.View
 
             }
            
-            if (usu != null)
+            if (Global.Usuari != null)
             {
                 if(Cistell != null)
                 {
@@ -108,9 +131,9 @@ namespace Gestio_Botiga_Calcat.View
                 
             }
 
-            if (usu != null)
+            if (Global.Usuari != null)
             {
-                tbNomUsu.Text = "Benvingut " + usu.Nom + "!";
+                tbNomUsu.Text = Global.Usuari.Nom;
             }
             else
             {
@@ -122,7 +145,7 @@ namespace Gestio_Botiga_Calcat.View
         {
             if (e.PropertyName == nameof(Prod_select.Quantitat))
             {
-                mdbService.ActualizarCistell(Cistell);
+                Global.mdbService.ActualizarCistell();
             }
         }
 
@@ -144,11 +167,12 @@ namespace Gestio_Botiga_Calcat.View
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
 
-            var newWindow = new MainWindow(usu, Cistell);
+            //var newWindow = new MainWindow(usu, Cistell);
+            //var newWindow = new MainWindow();
 
             this.Close();
 
-            newWindow.Show();
+            //newWindow.Show();
         }
 
         private void lvProds_cist_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -156,9 +180,10 @@ namespace Gestio_Botiga_Calcat.View
             if(lvProds_cist.SelectedValue is Prod_select selected)
             {
                 
-                ProducteMDB prod =mdbService.GetProd(selected.Id);
-                var newWindow = new UIProducte_info(prod,usu, Cistell);
+                ProducteMDB prod =Global.mdbService.GetProd(selected.Id);
+                //var newWindow = new UIProducte_info(prod,usu, Cistell);
 
+                var newWindow = new UIProducte_info(prod);
                 this.Close();
 
                 newWindow.Show();
@@ -166,51 +191,67 @@ namespace Gestio_Botiga_Calcat.View
         }
         private void btLogin_Click(object sender, RoutedEventArgs e)
         {
-            var winLogin = new UILogin(usu, Cistell);
+            var winLogin = new UILogin();
 
+            //this.Close();
             winLogin.Closed += (s, args) =>
             {
-                usu = winLogin.usuari;
-                
-                if (winLogin.cistell != null)
+                //usuari = winLogin.usuari;
+                /*
+                if (winLogin.cistellWeb != null)
                 {
-                    if (Cistell == null)
+                    if (cistell == null)
                     {
-                        Cistell = new CistellMDB();
+                        cistell = new CistellMDB();
                     }
-                    if(Cistell.Prod_select == null)
+                    if (cistell.Prod_select == null || cistell.Prod_select.Count == 0)
                     {
-                        Cistell.Prod_select = new System.Collections.ObjectModel.ObservableCollection<Prod_select>();
+                        cistell.Prod_select = new System.Collections.ObjectModel.ObservableCollection<Prod_select>();
                     }
-                    Cistell.Id = winLogin.cistell.Id;
-                    Cistell.Id_usu = winLogin.cistell.Id_usu;
-                    Cistell.Cost_enviament = winLogin.cistell.Cost_enviament;
-                    Cistell.Metode_enviament = winLogin.cistell.Metode_enviament;
+                    cistell.Id = winLogin.cistellWeb.Id;
+                    cistell.Id_usu = winLogin.cistellWeb.Id_usu;
+                    cistell.Cost_enviament = winLogin.cistellWeb.Cost_enviament;
+                    cistell.Metode_enviament = winLogin.cistellWeb.Metode_enviament;
 
-                    Cistell.Prod_select.Clear();
-                    foreach (Prod_select prod in winLogin.cistell.Prod_select)
+                    cistell.Prod_select.Clear();
+                    foreach (Prod_select prod in winLogin.cistellWeb.Prod_select)
                     {
-                        Cistell.Prod_select.Add(prod);
+                        cistell.Prod_select.Add(prod);
+                    }*/
+                /*
+
+                foreach (Prod_select prod in winLogin.cistell.Prod_select)
+                {
+                    if(!cistell.Prod_select.Contains(prod))
+                    {
+                        cistell.Prod_select.Add(prod);
                     }
                 }
-
-
-                if (usu != null)
+                 */
+                //carregarQtProdsCis();
+                //}
+                this.Cistell = Global.cistellManager.GetCistell();
+                carregar_vista();
+                if (Global.Usuari != null)
                 {
-                    tbNomUsu.Text = "Benvingut " + usu.Nom + "!";
+                    tbNomUsu.Text = "Benvingut " + Global.Usuari.Nom + "!";
                 }
                 else
                 {
                     tbNomUsu.Text = "";
                 }
-                var newWindow = new UICarro(usu, Cistell);
-
-                this.Close();
-
-                newWindow.Show();
             };
 
             winLogin.Show();
+        }
+
+        private void btnComprar_Click(object sender, RoutedEventArgs e)
+        {
+            var newWindow = new WinFactura(Global.Usuari, Cistell);
+
+            this.Close();
+
+            newWindow.Show();
         }
     }
 }
