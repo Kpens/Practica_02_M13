@@ -9,12 +9,17 @@
         Title="WinFactura" Height="450" Width="800">
     <Grid Margin="10 15 10 30">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -29,7 +34,24 @@
         <!--<Button Content="&#59259;" x:Name="btLogin" HorizontalAlignment="Right" Grid.Column="3" Click="btLogin_Click" FontFamily="Segoe MDL2 Assets" Foreground="Black" Background="White" BorderBrush="White" Padding="5" FontSize="20" Margin="0 0 10 0"/>
 -->
         <Button x:Name="btnBack" Click="btnBack_Click" Content="Menú" FontFamily="Agency FB" Foreground="White" Background="Black" HorizontalAlignment="Left" Padding="5" FontSize="20"/>
-        <Label x:Name="tbTit" Content="Dades de la compra" Margin="10 0 0 0" Grid.Column="1" Grid.Row="1" FontFamily="Agency FB" FontSize="45" FontWeight="Bold"/>
+        <Label x:Name="tbTit" Content="Dades de la compra" Margin="10 0 0 0" HorizontalAlignment="Center" Grid.ColumnSpan="4" Grid.Row="1" FontFamily="Agency FB" FontSize="45" FontWeight="Bold"/>
+
+
+        <Label Content="Detalls de l'usuari:" Grid.ColumnSpan="2" FontFamily="Agency FB" FontSize="30" FontWeight="Bold" Grid.Row="2"/>
+        <Label Content="Nom:" FontWeight="Bold" Margin="10 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="3"/>
+        <TextBlock Text="Mariona Cegarra" VerticalAlignment="Center" Margin="0 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="3" Grid.Column="1"/>
+        <Label Content="Mail:" FontWeight="Bold" Margin="10 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="4"/>
+        <TextBlock Text="mariona****@gmail.com" Margin="0 0 0 0" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20" Grid.Row="4" Grid.Column="1"/>
+        <Label Content="Telf.:" FontWeight="Bold" Margin="10 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="5"/>
+        <TextBlock Text="734662732" Margin="0 0 0 0" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20" Grid.Row="5" Grid.Column="1"/>
+        <Label Content="Adreça:" FontWeight="Bold" Margin="10 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="6"/>
+        <TextBlock Text="C/ Garça 29, 08700, Barcelona" Margin="0 0 0 0" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20" Grid.Row="6" Grid.Column="1"/>
+
+
+        <Label Content="Dades de pagament:" Grid.ColumnSpan="2" FontFamily="Agency FB" FontSize="30" FontWeight="Bold" Grid.Column="3" Grid.Row="2"/>
+        <Label Content="Nom:" FontWeight="Bold" Margin="10 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="3" Grid.Column="3"/>
+        <TextBlock Text="Mariona Cegarra" VerticalAlignment="Center" Margin="0 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="3" Grid.Column="4"/>
+
 
     </Grid>
 </Window>

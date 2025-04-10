@@ -148,14 +148,14 @@ namespace Gestio_Botiga_Calcat.model
         public CistellMDB GetCistell()
         {
             CistellMDB cistell = new CistellMDB();
-            cistell.Prod_select = new System.Collections.ObjectModel.ObservableCollection<Prod_select>();
+            cistell.Prod_select = new ExtendedObservableCollection<Prod_select>();
             if (Global.Usuari != null)
             {
                 if (Prod_select_logged == null)
                 {
                     Prod_select_logged = new List<Prod_select>();
                 }
-                cistell.Prod_select = new System.Collections.ObjectModel.ObservableCollection<Prod_select>(Prod_select_logged);
+                cistell.Prod_select = new ExtendedObservableCollection<Prod_select>(Prod_select_logged);
                 cistell.Id_usu = Global.Usuari.Id;
                 cistell.Cost_enviament = Cost_enviament;
                 cistell.Metode_enviament = Metode_enviament;
@@ -167,7 +167,7 @@ namespace Gestio_Botiga_Calcat.model
                 {
                     Prod_select_no_logged = new List<Prod_select>();
                 }
-                cistell.Prod_select = new System.Collections.ObjectModel.ObservableCollection<Prod_select>(Prod_select_no_logged);
+                cistell.Prod_select = new ExtendedObservableCollection<Prod_select>(Prod_select_no_logged);
             }
             return cistell;
         }

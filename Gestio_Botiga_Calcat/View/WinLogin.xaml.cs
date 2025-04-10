@@ -129,10 +129,10 @@ namespace Gestio_Botiga_Calcat.View
             InitializeComponent();
             carregar_login(usuari, cistell);
         }*/
-        public UILogin(UsuariMDB usuari, CistellMDB cistell, bool en_factura)
+        public UILogin(bool en_factura)
         {
             InitializeComponent();
-            carregar_login(usuari, cistell);
+            carregar_login();
             this.es_pot_tencar = false;
         }
         /*

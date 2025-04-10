@@ -55,10 +55,15 @@ namespace Gestio_Botiga_Calcat.View
                 List<string> metodes = new List<string>();
                 int i = 0;
                 bool trobat = false;
+                cbMetEnv.ItemsSource=null;
                 foreach (Metode_enviamentMDB metode in Global.mdbService.GetMetodes_enviament())
                 {
-
-                    metodes.Add(metode.Nom + " (De " + metode.MinTemps_en_dies + " a " + metode.MaxTemps_en_dies + " dies laborals) " + metode.Preu_base + "€");
+                    double preu_met = metode.Preu_base;
+                    if (metode.Preu_min_compra <= bases)
+                    {
+                        preu_met = 0;
+                    }
+                    metodes.Add(metode.Nom + " (De " + metode.MinTemps_en_dies + " a " + metode.MaxTemps_en_dies + " dies laborals) " + preu_met  + "€");
                     if (Cistell != null && Cistell.Metode_enviament != ObjectId.Empty && metode.Id == Cistell.Metode_enviament)
                     {
                         trobat = true;
@@ -67,7 +72,6 @@ namespace Gestio_Botiga_Calcat.View
                     {
                         i++;
                     }
-
                 }
                 cbMetEnv.ItemsSource = metodes;
                 if (trobat)
@@ -90,29 +94,10 @@ namespace Gestio_Botiga_Calcat.View
             DataContext = this;
             //this.usu = usu;
             this.Cistell = Global.cistellManager.GetCistell();
+            this.Cistell.Prod_select.ListChanged += Prod_select_ListChanged; 
+
             carregar_vista();
 
-            List<string> metodes = new List<string>();
-            int i = 0;
-            bool trobat = false;
-            foreach (Metode_enviamentMDB metode in Global.mdbService.GetMetodes_enviament())
-            {
-
-                metodes.Add(metode.Nom + " (De " + metode.MinTemps_en_dies + " a " + metode.MaxTemps_en_dies + " dies laborals) " + metode.Preu_base + "€");
-                if (Cistell != null && Cistell.Metode_enviament != ObjectId.Empty && metode.Id == Cistell.Metode_enviament)
-                {
-                    trobat = true;
-                }
-                if (trobat == false) { 
-                    i++;
-                }
-                
-            }
-            cbMetEnv.ItemsSource = metodes;
-            if (trobat)
-            {
-                cbMetEnv.SelectedIndex = i;
-            }
             if (Cistell != null)
             {
                 Cistell.Prod_select.CollectionChanged += Prod_select_CollectionChanged;
@@ -141,6 +126,12 @@ namespace Gestio_Botiga_Calcat.View
             }
         }
 
+        private void Prod_select_ListChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            Global.mdbService.ActualizarCistell();
+            carregar_vista();
+        }
+
         private void Prod_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(Prod_select.Quantitat))
@@ -151,6 +142,7 @@ namespace Gestio_Botiga_Calcat.View
 
         private void Prod_select_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
+            ////Global.mdbService.ActualizarCistell();
             carregar_vista();
         }
 
@@ -247,7 +239,7 @@ namespace Gestio_Botiga_Calcat.View
 
         private void btnComprar_Click(object sender, RoutedEventArgs e)
         {
-            var newWindow = new WinFactura(Global.Usuari, Cistell);
+            var newWindow = new WinFactura();
 
             this.Close();
 

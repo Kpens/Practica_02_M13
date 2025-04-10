@@ -20,26 +20,21 @@ namespace Gestio_Botiga_Calcat.View
     /// </summary>
     public partial class WinFactura : Window
     {
-        private CistellMDB cistell;
-        private UsuariMDB usuari;
-        public WinFactura(UsuariMDB usuari, CistellMDB cistell)
+        public WinFactura()
         {
             InitializeComponent();
-            this.usuari = usuari;
-            this.cistell = cistell;
-            if (usuari != null)
+            if (Global.Usuari != null)
             {
-                tbNomUsu.Text = usuari.Nom;
+                tbNomUsu.Text = Global.Usuari.Nom;
             }
             else
             {
-                var winLogin = new UILogin(usuari, cistell, false);
+                var winLogin = new UILogin(false);
 
                 winLogin.Closed += (s, args) =>
                 {
-                    usuari = winLogin.usuari;
 
-                    tbNomUsu.Text = "Benvingut " + usuari.Nom + "!";
+                    tbNomUsu.Text = "Benvingut " + Global.Usuari.Nom + "!";
                     
                 };
 
@@ -50,7 +45,7 @@ namespace Gestio_Botiga_Calcat.View
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
 
-            //var newWindow = new MainWindow(usuari, cistell);
+            //var newWindow = new MainWindow(Global.Usuari, cistell);
             //var newWindow = new MainWindow();
 
             this.Close();
@@ -64,7 +59,7 @@ namespace Gestio_Botiga_Calcat.View
             //this.Close();
             winLogin.Closed += (s, args) =>
             {
-                //usuari = winLogin.usuari;
+                //Global.Usuari = winLogin.Global.Usuari;
                 /*
                 if (winLogin.cistellWeb != null)
                 {

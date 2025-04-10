@@ -42,15 +42,15 @@ namespace Gestio_Botiga_Calcat.View
 
         //public ObservableCollection<Prod_select> Llista { get; set; }
 
-        public ObservableCollection<Prod_select> Llista
+        public ExtendedObservableCollection<Prod_select> Llista
         {
-            get { return (ObservableCollection<Prod_select>)GetValue(LlistaProperty); }
+            get { return (ExtendedObservableCollection<Prod_select>)GetValue(LlistaProperty); }
             set { SetValue(LlistaProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for Llista.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty LlistaProperty =
-            DependencyProperty.Register("Llista", typeof(ObservableCollection<Prod_select>), typeof(UIProducte_carro), new PropertyMetadata(null));
+            DependencyProperty.Register("Llista", typeof(ExtendedObservableCollection<Prod_select>), typeof(UIProducte_carro), new PropertyMetadata(null));
 
         // Using a DependencyProperty as the backing store for Prod_cist.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty Prod_cistProperty =
@@ -110,7 +110,9 @@ namespace Gestio_Botiga_Calcat.View
                 tbNum.Text = (int.Parse(tbNum.Text) - 1).ToString();
                 //Llista.ElementAt(Llista.IndexOf(Prod_cist)).Quantitat = int.Parse(tbNum.Text);
                 Prod_cist.Quantitat = int.Parse(tbNum.Text);
-                
+                //Global.cistellManager.GetLlistaProds().ElementAt(Global.cistellManager.GetLlistaProds().IndexOf(Prod_cist)).Quantitat = int.Parse(tbNum.Text);
+
+
                 if (tbNum.Text == "1")
                 {
                     btRes.Foreground = new SolidColorBrush(Colors.LightGray);
@@ -119,6 +121,7 @@ namespace Gestio_Botiga_Calcat.View
                 {
                     btRes.Foreground = new SolidColorBrush(Colors.Black);
                 }
+                Global.mdbService.ActualizarCistell();
                 carregar_info();
             }
             else
@@ -136,6 +139,7 @@ namespace Gestio_Botiga_Calcat.View
                 tbNum.Text = (int.Parse(tbNum.Text) + 1).ToString();
                 //Llista.ElementAt(Llista.IndexOf(Prod_cist)).Quantitat = int.Parse(tbNum.Text);
                 Prod_cist.Quantitat = int.Parse(tbNum.Text);
+                //Global.cistellManager.GetLlistaProds().ElementAt(Global.cistellManager.GetLlistaProds().IndexOf(Prod_cist)).Quantitat = int.Parse(tbNum.Text);
                 if (tbNum.Text == Stock_act.Quantitat.ToString())
                 {
                     tbSum.Foreground = new SolidColorBrush(Colors.LightGray);
@@ -144,6 +148,7 @@ namespace Gestio_Botiga_Calcat.View
                 {
                     tbSum.Foreground = new SolidColorBrush(Colors.Black);
                 }
+                Global.mdbService.ActualizarCistell();
                 carregar_info();
             }
             else
@@ -161,6 +166,7 @@ namespace Gestio_Botiga_Calcat.View
             {
                 Llista.Remove(Prod_cist);
                 Global.cistellManager.RemoveProd(Prod_cist);
+                Global.mdbService.ActualizarCistell();
 
             }
         }

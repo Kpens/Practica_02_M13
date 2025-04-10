@@ -15,7 +15,7 @@ namespace Gestio_Botiga_Calcat.model
         public ObjectId Id_usu { get; set; }
         public double Cost_enviament { get; set; }
         public ObjectId Metode_enviament { get; set; }
-        public ObservableCollection<Prod_select> Prod_select { get; set; }
+        public ExtendedObservableCollection<Prod_select> Prod_select { get; set; }
     }
 
 }
