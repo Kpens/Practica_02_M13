@@ -14,10 +14,9 @@ namespace Gestio_Botiga_Calcat.model
 
         public void loginOk()
         {
-            CistellMDB cistellBd = Global.mdbService.GetCistell(Global.Usuari.Id);
-            Prod_select_logged = cistellBd.Prod_select.ToList();
-            if(cistellBd!= null)
-            {
+            CistellMDB cistellBd;
+            if ((cistellBd = Global.mdbService.GetCistell(Global.Usuari.Id))!=null) { 
+                Prod_select_logged = cistellBd.Prod_select.ToList();
                 if(Id_cistell == ObjectId.Empty)
                 {
                     Id_cistell = cistellBd.Id;

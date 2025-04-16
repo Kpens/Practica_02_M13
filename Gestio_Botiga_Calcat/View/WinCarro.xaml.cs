@@ -87,34 +87,32 @@ namespace Gestio_Botiga_Calcat.View
                 grDetalls.Visibility = Visibility.Collapsed;
             }
         }
+        private void gillipollas()
+        {
 
+            this.Cistell.Prod_select.ListChanged += Prod_select_ListChanged;
+
+
+            if (Cistell != null)
+            {
+                Cistell.Prod_select.CollectionChanged += Prod_select_CollectionChanged;
+
+                foreach (var prod in Cistell.Prod_select)
+                {
+                    prod.PropertyChanged += Prod_PropertyChanged;
+                }
+
+            }
+
+        }
         public UICarro()
         {
             InitializeComponent();
             DataContext = this;
             //this.usu = usu;
             this.Cistell = Global.cistellManager.GetCistell();
-            this.Cistell.Prod_select.ListChanged += Prod_select_ListChanged; 
-
+            gillipollas();
             carregar_vista();
-
-            if (Cistell != null)
-            {
-                Cistell.Prod_select.CollectionChanged += Prod_select_CollectionChanged;
-
-            }
-           
-            if (Global.Usuari != null)
-            {
-                if(Cistell != null)
-                {
-                    foreach (var prod in Cistell.Prod_select)
-                    {
-                        prod.PropertyChanged += Prod_PropertyChanged;
-                    }
-                }
-                
-            }
 
             if (Global.Usuari != null)
             {
@@ -137,6 +135,7 @@ namespace Gestio_Botiga_Calcat.View
             if (e.PropertyName == nameof(Prod_select.Quantitat))
             {
                 Global.mdbService.ActualizarCistell();
+                carregar_vista();
             }
         }
 
@@ -222,7 +221,9 @@ namespace Gestio_Botiga_Calcat.View
                  */
                 //carregarQtProdsCis();
                 //}
+
                 this.Cistell = Global.cistellManager.GetCistell();
+                gillipollas();
                 carregar_vista();
                 if (Global.Usuari != null)
                 {

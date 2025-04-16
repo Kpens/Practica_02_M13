@@ -67,7 +67,8 @@
             </StackPanel>-->
             <StackPanel Orientation="Horizontal" Margin="10 0 0 0" Grid.Row="4">
                 <Label Content="Bases imposables: " FontFamily="Agency FB" FontSize="20"/>
-                <TextBlock x:Name="tbBasesImp" Text="10€" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20"/>
+                <TextBlock x:Name="tbBasesImp" Margin="10 0 10 0" FontFamily="Agency FB" Text="1€" FontSize="20" VerticalAlignment="Center"/>
+                <!--<TextBlock x:Name="tbBasesImp" Text="10€" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20"/>-->
             </StackPanel>
             <StackPanel Orientation="Horizontal" Grid.Row="5">
                 <Label Content="Total: " FontWeight="Bold" FontFamily="Agency FB" FontSize="25"/>

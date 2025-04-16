@@ -29,17 +29,32 @@ namespace Gestio_Botiga_Calcat.View
             }
             else
             {
-                var winLogin = new UILogin(false);
+                /*
+                  var winLogin = new UILogin(false);
 
-                winLogin.Closed += (s, args) =>
-                {
+                  winLogin.Closed += (s, args) =>
+                  {
 
-                    tbNomUsu.Text = "Benvingut " + Global.Usuari.Nom + "!";
-                    
-                };
+                      tbNomUsu.Text = "Benvingut " + Global.Usuari.Nom + "!";
 
-                winLogin.Show();
+                  };
+
+                  winLogin.Show();*/
+                win_login();
+                tbNom.Text = Global.Usuari.Nom;
+                tbNomTar.Text = Global.Usuari.Nom;
+                tbMail.Text = Global.Usuari.Mail;
+                tbTelf.Text = Global.Usuari.Telf;
+                tbAdreca.Text = "C/ " + Global.Usuari.Carrer + ", " + Global.Usuari.CodiPostal + ", " + Global.Usuari.Municipi + ", " + Global.Usuari.Pais;
             }
+
+
+        }
+
+        private void tbNumTar_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
@@ -52,47 +67,15 @@ namespace Gestio_Botiga_Calcat.View
 
             //newWindow.Show();
         }
-        private void btLogin_Click(object sender, RoutedEventArgs e)
+
+        private void win_login()
         {
+
             var winLogin = new UILogin();
 
             //this.Close();
             winLogin.Closed += (s, args) =>
             {
-                //Global.Usuari = winLogin.Global.Usuari;
-                /*
-                if (winLogin.cistellWeb != null)
-                {
-                    if (cistell == null)
-                    {
-                        cistell = new CistellMDB();
-                    }
-                    if (cistell.Prod_select == null || cistell.Prod_select.Count == 0)
-                    {
-                        cistell.Prod_select = new System.Collections.ObjectModel.ObservableCollection<Prod_select>();
-                    }
-                    cistell.Id = winLogin.cistellWeb.Id;
-                    cistell.Id_usu = winLogin.cistellWeb.Id_usu;
-                    cistell.Cost_enviament = winLogin.cistellWeb.Cost_enviament;
-                    cistell.Metode_enviament = winLogin.cistellWeb.Metode_enviament;
-
-                    cistell.Prod_select.Clear();
-                    foreach (Prod_select prod in winLogin.cistellWeb.Prod_select)
-                    {
-                        cistell.Prod_select.Add(prod);
-                    }*/
-                /*
-
-                foreach (Prod_select prod in winLogin.cistell.Prod_select)
-                {
-                    if(!cistell.Prod_select.Contains(prod))
-                    {
-                        cistell.Prod_select.Add(prod);
-                    }
-                }
-                 */
-                //carregarQtProdsCis();
-                //}
                 if (Global.Usuari != null)
                 {
                     tbNomUsu.Text = "Benvingut " + Global.Usuari.Nom + "!";
@@ -100,10 +83,17 @@ namespace Gestio_Botiga_Calcat.View
                 else
                 {
                     tbNomUsu.Text = "";
+                    win_login();
                 }
             };
 
             winLogin.Show();
+
+        }
+
+        private void btLogin_Click(object sender, RoutedEventArgs e)
+        {
+            win_login();
         }
     }
 }
