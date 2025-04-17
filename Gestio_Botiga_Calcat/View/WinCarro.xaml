@@ -60,7 +60,7 @@
             </Grid.RowDefinitions>
             <Label Content="Detalls de la compra:" FontFamily="Agency FB" FontSize="30" FontWeight="Bold" Grid.Row="0"/>
             <Label Content="Mètode d'enviament:" Margin="10 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="1"/>
-            <ComboBox Name="cbMetEnv" BorderBrush="White" Background="White" Margin="15 0 10 0" Grid.Row="2" FontFamily="Agency FB" FontSize="20"/>
+            <ComboBox Name="cbMetEnv" SelectionChanged="cbMetEnv_SelectionChanged" BorderBrush="White" Background="White" Margin="15 0 10 0" Grid.Row="2" FontFamily="Agency FB" FontSize="20"/>
             <!--<StackPanel Orientation="Horizontal" Margin="10 0 0 0" Grid.Row="3">
                 <Label Content="Cost enviament: " FontFamily="Agency FB" FontSize="20"/>
                 <TextBlock x:Name="tbCostEnv" Text="10€" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20"/>

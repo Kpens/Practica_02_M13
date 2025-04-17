@@ -6,15 +6,17 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:Gestio_Botiga_Calcat.View"
         mc:Ignorable="d"
+        Closing="Window_Closing"
         WindowState="Maximized"
-        Title="WinFactura" Height="450" Width="800">
-    <Grid Margin="10 15 10 30">
+        Title="WinFactura" Height="550" Width="800">
+    <Grid Margin="20 15 20 30">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="4*"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -27,35 +29,45 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="3">
+       <!-- <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="3">
             <TextBlock x:Name="tbNomUsu" Margin="0 0 20 0" FontFamily="Agency FB" FontSize="20" VerticalAlignment="Center"/>
-            <!--<Button Content="&#59259;" x:Name="btLogin" HorizontalAlignment="Right" Grid.Column="3" Click="btLogin_Click" FontFamily="Segoe MDL2 Assets" Foreground="Black" Background="White" BorderBrush="White" Padding="5" FontSize="20" Margin="0 0 10 0"/>
-            <TextBlock x:Name="tbNomUsu" Margin="0 0 20 0" FontFamily="Agency FB" FontSize="20" VerticalAlignment="Center"/>-->
-        </StackPanel>
+            <Button Content="&#59259;" x:Name="btLogin" HorizontalAlignment="Right" Grid.Column="3" Click="btLogin_Click" FontFamily="Segoe MDL2 Assets" Foreground="Black" Background="White" BorderBrush="White" Padding="5" FontSize="20" Margin="0 0 10 0"/>
+            <TextBlock x:Name="tbNomUsu" Margin="0 0 20 0" FontFamily="Agency FB" FontSize="20" VerticalAlignment="Center"/>
+        </StackPanel>-->
         <!--<Button Content="&#59259;" x:Name="btLogin" HorizontalAlignment="Right" Grid.Column="3" Click="btLogin_Click" FontFamily="Segoe MDL2 Assets" Foreground="Black" Background="White" BorderBrush="White" Padding="5" FontSize="20" Margin="0 0 10 0"/>
 -->
-        <Button x:Name="btnBack" Click="btnBack_Click" Content="Menú" FontFamily="Agency FB" Foreground="White" Background="Black" HorizontalAlignment="Left" Padding="5" FontSize="20"/>
-        <Label x:Name="tbTit" Content="Dades de la compra" Margin="10 0 0 0" HorizontalAlignment="Center" Grid.ColumnSpan="4" Grid.Row="1" FontFamily="Agency FB" FontSize="45" FontWeight="Bold"/>
+        <!--<Button x:Name="btnBack" Margin="-10 0 0 0" Click="btnBack_Click" Content="Menú" FontFamily="Agency FB" Foreground="White" Background="Black" HorizontalAlignment="Left" Padding="5" FontSize="20"/>
+        --><Label x:Name="tbTit" Content="Dades de la compra" Margin="10 0 0 30" HorizontalAlignment="Center" Grid.ColumnSpan="6" Grid.Row="1" FontFamily="Agency FB" FontSize="45" FontWeight="Bold"/>
 
 
         <Label Content="Detalls de l'usuari:" Grid.ColumnSpan="2" FontFamily="Agency FB" FontSize="30" FontWeight="Bold" Grid.Row="2"/>
         <Label Content="Nom:" FontWeight="Bold" Margin="10 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="3"/>
-        <TextBlock x:Name="tbNom" Text="Mariona Cegarra" VerticalAlignment="Center" Margin="0 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="3" Grid.Column="1"/>
+        <TextBlock x:Name="tbNom" VerticalAlignment="Center" Margin="0 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="3" Grid.Column="1"/>
         <Label Content="Mail:" FontWeight="Bold" Margin="10 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="4"/>
-        <TextBlock x:Name="tbMail" Text="mariona****@gmail.com" Margin="0 0 0 0" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20" Grid.Row="4" Grid.Column="1"/>
+        <TextBlock x:Name="tbMail" Margin="0 0 0 0" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20" Grid.Row="4" Grid.Column="1"/>
         <Label Content="Telf.:" FontWeight="Bold" Margin="10 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="5"/>
-        <TextBlock x:Name="tbTelf" Text="734662732" Margin="0 0 0 0" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20" Grid.Row="5" Grid.Column="1"/>
+        <TextBlock x:Name="tbTelf" Margin="0 0 0 0" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20" Grid.Row="5" Grid.Column="1"/>
         <Label Content="Adreça:" FontWeight="Bold" Margin="10 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="6"/>
-        <TextBlock x:Name="tbAdreca" Text="C/ Garça 29, 08700, Barcelona" Margin="0 0 0 0" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20" Grid.Row="6" Grid.Column="1"/>
+        <TextBlock x:Name="tbAdreca" Margin="0 0 0 0" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20" Grid.Row="6" Grid.Column="1"/>
 
 
-        <Label Content="Afegeix una targeta:" Grid.ColumnSpan="2" FontFamily="Agency FB" FontSize="30" FontWeight="Bold" Grid.Column="3" Grid.Row="2"/>
+        <Label Content="Afegeix una targeta:" Grid.ColumnSpan="3" FontFamily="Agency FB" FontSize="30" FontWeight="Bold" Grid.Column="3" Grid.Row="2"/>
         <Label Content="Nom:" FontWeight="Bold" Margin="10 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="3" Grid.Column="3"/>
-        <xctk:WatermarkTextBox 
-            Watermark="Nom"  x:Name="tbNomTar"  Text="Mariona Cegarra" VerticalAlignment="Center" Margin="0 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="3" Grid.Column="4"/>
+        <TextBox x:Name="tbNomTar" FontSize="20" Grid.ColumnSpan="2" FontFamily="Agency FB" TextWrapping="Wrap" VerticalAlignment="Top" Margin="0,5,0,10" Grid.Row="3" Grid.Column="4"/>
         <Label Content="Núm. targeta:" FontWeight="Bold" Margin="10 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="4" Grid.Column="3"/>
-        <xctk:WatermarkTextBox TextChanged="tbNumTar_TextChanged"
-            Watermark="Número de la targeta de crèdit o dèbit"  x:Name="tbNumTar"  Text="**** **** **** ****" VerticalAlignment="Center" Margin="0 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="4" Grid.Column="4"/>
+        <TextBox TextChanged="tbNumTar_TextChanged" Grid.ColumnSpan="2" x:Name="tbNumTar" FontSize="20" FontFamily="Agency FB" TextWrapping="Wrap" VerticalAlignment="Top" Margin="0,5,0,10" Grid.Row="4" Grid.Column="4"/>
 
+        <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="5" Grid.Column="3">
+            <xctk:WatermarkTextBox 
+                Watermark="CVV"  x:Name="tbCSVTar" VerticalAlignment="Center" Margin="0 0 15 0" FontFamily="Agency FB" FontSize="20" Grid.Row="5" Grid.Column="4"/>
+            <xctk:WatermarkTextBox
+                Watermark="MM/AA"  x:Name="tbDataTar" VerticalAlignment="Center" Margin="0 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="5" Grid.Column="4"/>
+        </StackPanel>
+        <Image x:Name="imgTar" Source="/imgs/visa.png" Width="50" Height="50" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="20 0 5 0" Grid.Row="5" Grid.Column="5"/>
+
+        <Button x:Name="btnCancelar" Click="btnCancelar_Click" Grid.Row="7" Grid.Column="3" VerticalAlignment="Center" Content="Cancelar" FontFamily="Agency FB" Foreground="White" Background="Black" Margin="5" FontSize="25"/>
+        <Button x:Name="btnComprar" Click="btnComprar_Click" HorizontalAlignment="Right" IsEnabled="False" Grid.Row="7" Grid.Column="5" VerticalAlignment="Center" Content="Comprar" FontFamily="Agency FB" Foreground="White" Background="Black" Margin="5" FontSize="25"/>
+
+        
     </Grid>
 </Window>

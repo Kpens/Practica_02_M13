@@ -11,6 +11,7 @@ using SharpCompress.Readers;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Windows.Controls.Primitives;
 using Gestio_Botiga_Calcat.View;
+using System.Collections.Specialized;
 
 namespace Gestio_Botiga_Calcat
 {
@@ -21,7 +22,7 @@ namespace Gestio_Botiga_Calcat
         private CategoriaMDB Cate_select;
         private StockMDB Stock_select;
         private List<ProducteMDB> prods_act = new List<ProducteMDB>();
-        //private CistellMDB cistell;
+        private CistellMDB cistell;
         //private UsuariMDB usuari;
 
         List<VariantMDB> variants = new List<VariantMDB>();
@@ -130,6 +131,18 @@ namespace Gestio_Botiga_Calcat
 
             carregar_prods();
         }
+        private void Prod_select_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            carregarQtProdsCis();
+        }
+
+        private void carregar_collectionChanged()
+        {
+
+            cistell = Global.cistellManager.GetCistell();
+            cistell.Prod_select.CollectionChanged += Prod_select_CollectionChanged;
+
+        }
         public MainWindow()
         {
             InitializeComponent();
@@ -140,10 +153,11 @@ namespace Gestio_Botiga_Calcat
 
             carregar_window();
             carregarQtProdsCis();
+            carregar_collectionChanged();
 
             if (Global.Usuari != null)
             {
-                tbNomUsu.Text = Global.Usuari.Nom;
+                tbNomUsu.Text = Global.Usuari.Nom; 
             }
             else
             {
@@ -396,6 +410,11 @@ namespace Gestio_Botiga_Calcat
             //var newWindow = new UIProducte_info(product, usuari, cistell);
             var newWindow = new UIProducte_info(product);
 
+            newWindow.Closed += (s, args) =>
+            {
+                carregar_collectionChanged();
+                carregarQtProdsCis();
+            };
             //this.Close();
 
             newWindow.Show();
@@ -456,7 +475,8 @@ namespace Gestio_Botiga_Calcat
 
             //this.Close();
             newWindow.Closed += (s, args) =>
-            { 
+            {
+                carregar_collectionChanged();
                 carregarQtProdsCis();
                 if (Global.Usuari != null)
                 {
@@ -501,17 +521,19 @@ namespace Gestio_Botiga_Calcat
                     {
                         cistell.Prod_select.Add(prod);
                     }*/
-                    /*
-                     
-                    foreach (Prod_select prod in winLogin.cistell.Prod_select)
+                /*
+
+                foreach (Prod_select prod in winLogin.cistell.Prod_select)
+                {
+                    if(!cistell.Prod_select.Contains(prod))
                     {
-                        if(!cistell.Prod_select.Contains(prod))
-                        {
-                            cistell.Prod_select.Add(prod);
-                        }
+                        cistell.Prod_select.Add(prod);
                     }
-                     */
-                    carregarQtProdsCis();
+                }
+                 */
+
+                carregar_collectionChanged();
+                carregarQtProdsCis();
                 //}
                 if(Global.Usuari != null)
                 {

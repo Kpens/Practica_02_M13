@@ -8,15 +8,21 @@ namespace Gestio_Botiga_Calcat.model
         public ObjectId Id_cistell { get; set; }
         public ObjectId Metode_enviament { get; set; }
         public double Cost_enviament { get; set; }
-        public List<Prod_select> Prod_select_no_logged { get; set; }
-        public List<Prod_select> Prod_select_logged { get; set; }
+        public ExtendedObservableCollection<Prod_select> Prod_select_no_logged { get; set; }
+        public ExtendedObservableCollection<Prod_select> Prod_select_logged { get; set; }
 
 
-        public void loginOk()
+        public void loginOk(bool enfactura)
         {
+            if(enfactura)
+            {
+                Prod_select_logged = Prod_select_no_logged;
+                Global.mdbService.ActualizarCistell();
+                return;
+            }
             CistellMDB cistellBd;
             if ((cistellBd = Global.mdbService.GetCistell(Global.Usuari.Id))!=null) { 
-                Prod_select_logged = cistellBd.Prod_select.ToList();
+                Prod_select_logged = cistellBd.Prod_select;
                 if(Id_cistell == ObjectId.Empty)
                 {
                     Id_cistell = cistellBd.Id;
@@ -49,7 +55,7 @@ namespace Gestio_Botiga_Calcat.model
             }
 
 
-                Global.mdbService.ActualizarCistell();
+            Global.mdbService.ActualizarCistell();
         }
 
         public void AddProd(Prod_select prod)
@@ -58,7 +64,7 @@ namespace Gestio_Botiga_Calcat.model
             {
                 if (Prod_select_logged == null)
                 {
-                    Prod_select_logged = new List<Prod_select>();
+                    Prod_select_logged = new ExtendedObservableCollection<Prod_select>();
                 }
                 else
                 {
@@ -74,7 +80,7 @@ namespace Gestio_Botiga_Calcat.model
             {
                 if (Prod_select_no_logged == null)
                 {
-                    Prod_select_no_logged = new List<Prod_select>();
+                    Prod_select_no_logged = new ExtendedObservableCollection<Prod_select>();
                 }
                 else
                 {
@@ -125,7 +131,7 @@ namespace Gestio_Botiga_Calcat.model
             return 0;
         }
 
-        public List<Prod_select> GetLlistaProds()
+        public ExtendedObservableCollection<Prod_select> GetLlistaProds()
         {
             if (Global.Usuari != null)
             {
@@ -141,7 +147,7 @@ namespace Gestio_Botiga_Calcat.model
                     return Prod_select_no_logged;
                 }
             }
-            return new List<Prod_select>();
+            return new ExtendedObservableCollection<Prod_select>();
         }
 
         public CistellMDB GetCistell()
@@ -152,7 +158,7 @@ namespace Gestio_Botiga_Calcat.model
             {
                 if (Prod_select_logged == null)
                 {
-                    Prod_select_logged = new List<Prod_select>();
+                    Prod_select_logged = new ExtendedObservableCollection<Prod_select>();
                 }
                 cistell.Prod_select = new ExtendedObservableCollection<Prod_select>(Prod_select_logged);
                 cistell.Id_usu = Global.Usuari.Id;
@@ -164,7 +170,7 @@ namespace Gestio_Botiga_Calcat.model
 
                 if (Prod_select_no_logged == null)
                 {
-                    Prod_select_no_logged = new List<Prod_select>();
+                    Prod_select_no_logged = new ExtendedObservableCollection<Prod_select>();
                 }
                 cistell.Prod_select = new ExtendedObservableCollection<Prod_select>(Prod_select_no_logged);
             }

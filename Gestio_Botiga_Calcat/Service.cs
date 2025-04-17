@@ -453,14 +453,16 @@ namespace Gestio_Botiga_Calcat
         }
         public void ActualizarCistell()
         {
-            var collection = _database.GetCollection<BsonDocument>("Cistell");
+            if(Global.Usuari != null) {
 
-            var cistell = collection.Find(Builders<BsonDocument>.Filter.Eq("_id", Global.cistellManager.Id_cistell)).FirstOrDefault();
+                var collection = _database.GetCollection<BsonDocument>("Cistell");
 
-            if (cistell == null)
-            {
+                var cistell = collection.Find(Builders<BsonDocument>.Filter.Eq("_id", Global.cistellManager.Id_cistell)).FirstOrDefault();
 
-                var doc = new BsonDocument
+                if (cistell == null)
+                {
+
+                    var doc = new BsonDocument
                 {
                     { "id_usu", Global.Usuari.Id},
                     { "cost_enviament", Global.cistellManager.Cost_enviament },
@@ -474,41 +476,43 @@ namespace Gestio_Botiga_Calcat
                     }
                 };
 
-                collection.InsertOne(doc);
-            }
-            else
-            {
-                var prods_existents = cistell["prods_select"].AsBsonArray.ToDictionary(
-                    prod => prod["estoc_id"].AsObjectId,
-                    prod => prod
-                );
-
-                var arrModif_prods = new BsonArray();
-
-                foreach (var prod in Global.cistellManager.GetLlistaProds())
+                    collection.InsertOne(doc);
+                }
+                else
                 {
-                    if (prods_existents.TryGetValue(prod.Estoc_id, out var prod_existent))
+                    var prods_existents = cistell["prods_select"].AsBsonArray.ToDictionary(
+                        prod => prod["estoc_id"].AsObjectId,
+                        prod => prod
+                    );
+
+                    var arrModif_prods = new BsonArray();
+
+                    foreach (var prod in Global.cistellManager.GetLlistaProds())
                     {
-                        prod_existent["qt"] = prod.Quantitat;
-                        arrModif_prods.Add(prod_existent);
-                    }
-                    else
-                    {
-                        var doc = new BsonDocument
+                        if (prods_existents.TryGetValue(prod.Estoc_id, out var prod_existent))
+                        {
+                            prod_existent["qt"] = prod.Quantitat;
+                            arrModif_prods.Add(prod_existent);
+                        }
+                        else
+                        {
+                            var doc = new BsonDocument
                         {
                             { "_id", prod.Id },
                             { "estoc_id", prod.Estoc_id },
                             { "qt", prod.Quantitat }
                         };
-                        arrModif_prods.Add(doc);
+                            arrModif_prods.Add(doc);
+                        }
                     }
+
+                    var fil = Builders<BsonDocument>.Filter.Eq("_id", Global.cistellManager.Id_cistell);
+                    var modif = Builders<BsonDocument>.Update.Set("prods_select", arrModif_prods);
+                    collection.UpdateOne(fil, modif);
                 }
 
-                var fil = Builders<BsonDocument>.Filter.Eq("_id", Global.cistellManager.Id_cistell);
-                var modif = Builders<BsonDocument>.Update.Set("prods_select", arrModif_prods);
-                collection.UpdateOne(fil, modif);
             }
-               
+                           
         }
         public int magicDev(StockMDB stock)
         {

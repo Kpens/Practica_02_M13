@@ -9,7 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="imgs\mastercard.png" />
     <None Remove="imgs\shopping-cart.png" />
+    <None Remove="imgs\visa.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,9 +22,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="imgs\mastercard.png" />
     <Resource Include="imgs\shopping-cart.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="imgs\visa.png" />
   </ItemGroup>
 
 </Project>

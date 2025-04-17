@@ -25,6 +25,7 @@ namespace Gestio_Botiga_Calcat.View
     public partial class UICarro : Window
     {
         //private UsuariMDB usu;
+        private List<Metode_enviamentMDB> metodes_Enviament = new List<Metode_enviamentMDB>();
 
         public void carregar_vista()
         {
@@ -56,7 +57,11 @@ namespace Gestio_Botiga_Calcat.View
                 int i = 0;
                 bool trobat = false;
                 cbMetEnv.ItemsSource=null;
-                foreach (Metode_enviamentMDB metode in Global.mdbService.GetMetodes_enviament())
+                if(metodes_Enviament.Count ==0)
+                {
+                    metodes_Enviament = Global.mdbService.GetMetodes_enviament();
+                }
+                foreach (Metode_enviamentMDB metode in metodes_Enviament)
                 {
                     double preu_met = metode.Preu_base;
                     if (metode.Preu_min_compra <= bases)
@@ -87,7 +92,7 @@ namespace Gestio_Botiga_Calcat.View
                 grDetalls.Visibility = Visibility.Collapsed;
             }
         }
-        private void gillipollas()
+        private void carregar_collectionChanged()
         {
 
             this.Cistell.Prod_select.ListChanged += Prod_select_ListChanged;
@@ -111,7 +116,7 @@ namespace Gestio_Botiga_Calcat.View
             DataContext = this;
             //this.usu = usu;
             this.Cistell = Global.cistellManager.GetCistell();
-            gillipollas();
+            carregar_collectionChanged();
             carregar_vista();
 
             if (Global.Usuari != null)
@@ -121,6 +126,16 @@ namespace Gestio_Botiga_Calcat.View
             else
             {
                 tbNomUsu.Text = "";
+            }
+            if (cbMetEnv.SelectedIndex != -1)
+            {
+                Global.cistellManager.Metode_enviament = metodes_Enviament[cbMetEnv.SelectedIndex].Id;
+                btnComprar.IsEnabled = true;
+            }
+            else
+            {
+                Global.cistellManager.Metode_enviament = ObjectId.Empty;
+                btnComprar.IsEnabled = false;
             }
         }
 
@@ -223,7 +238,7 @@ namespace Gestio_Botiga_Calcat.View
                 //}
 
                 this.Cistell = Global.cistellManager.GetCistell();
-                gillipollas();
+                carregar_collectionChanged();
                 carregar_vista();
                 if (Global.Usuari != null)
                 {
@@ -245,6 +260,16 @@ namespace Gestio_Botiga_Calcat.View
             this.Close();
 
             newWindow.Show();
+        }
+
+        private void cbMetEnv_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbMetEnv.SelectedIndex != -1)
+            {
+                Global.cistellManager.Metode_enviament = metodes_Enviament[cbMetEnv.SelectedIndex].Id;
+                btnComprar.IsEnabled = true;
+
+            }
         }
     }
 }

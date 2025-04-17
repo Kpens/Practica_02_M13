@@ -23,50 +23,11 @@ namespace Gestio_Botiga_Calcat.View
         public CistellMDB cistellWeb;
         public CistellMDB cistellUsuari;
         public UsuariMDB usuari;
-        private bool es_pot_tencar = true;
+        private bool enfactura = false;
         void carregar_login(UsuariMDB usuari, CistellMDB cistell)
         {
             this.cistellWeb = cistell;
             this.usuari = usuari;
-            /*
-                        if (cistell != null)
-                        {
-                            if (this.cistell == null)
-                            {
-                                this.cistell = new CistellMDB();
-                            }
-                            if (this.cistell.Prod_select == null)
-                            {
-                                this.cistell.Prod_select = new System.Collections.ObjectModel.ObservableCollection<Prod_select>();
-                            }
-                            this.cistell.Id = cistell.Id;
-                            this.cistell.Id_usu = cistell.Id_usu;
-                            this.cistell.Cost_enviament = cistell.Cost_enviament;
-                            this.cistell.Metode_enviament = cistell.Metode_enviament;
-
-                            this.cistell.Prod_select.Clear();
-                            foreach (Prod_select prod in cistell.Prod_select)
-                            {
-                                this.cistell.Prod_select.Add(prod);
-                            }
-                        }*/
-
-            /*if (cistell != null)
-            {
-                tbNumProds.Visibility = Visibility.Visible;
-                if(cistell.Prod_select.Count > 0)
-                {
-                    tbNumProds.Text = cistell.Prod_select.Count + "";
-                }
-                else
-                {
-                    tbNumProds.Visibility = Visibility.Collapsed;
-                }
-            }
-            else
-            {
-                tbNumProds.Visibility = Visibility.Collapsed;
-            }*/
 
             if (usuari != null)
             {
@@ -81,7 +42,7 @@ namespace Gestio_Botiga_Calcat.View
         }
 
 
-        void tencar()
+        /*void tencar()
         {
             if (es_pot_tencar)
             {
@@ -103,7 +64,7 @@ namespace Gestio_Botiga_Calcat.View
             {
                 e.Cancel = true;
             }
-        }
+        }*/
         void carregar_login()
         {
 
@@ -121,41 +82,15 @@ namespace Gestio_Botiga_Calcat.View
         public UILogin()
         {
             InitializeComponent();
-            carregar_login();
+            carregar_login()
+            this.enfactura = false;
         }
-        /*
-        public UILogin(UsuariMDB usuari, CistellMDB cistell)
-        {
-            InitializeComponent();
-            carregar_login(usuari, cistell);
-        }*/
         public UILogin(bool en_factura)
         {
             InitializeComponent();
             carregar_login();
-            this.es_pot_tencar = false;
+            this.enfactura = true;
         }
-        /*
-        private void btnBack_Click(object sender, RoutedEventArgs e)
-        {
-
-            var newWindow = new MainWindow(usuari, cistell);
-
-            this.Close();
-
-            newWindow.Show();
-        }
-        private void btnCart_Click(object sender, RoutedEventArgs e)
-        {
-            var newWindow = new UICarro(usuari, cistell);
-
-            this.Close();
-
-            newWindow.Show();
-
-
-        }*/
-
 
 
         private void btEntrar_Click(object sender, RoutedEventArgs e)
@@ -164,58 +99,18 @@ namespace Gestio_Botiga_Calcat.View
             {
                 Global.Usuari = Global.mdbService.GetUsuari(tbLogin.Text, tbContra.Password);
             }
-            Global.cistellManager.loginOk();
+            Global.cistellManager.loginOk(enfactura);
 
-            //usuari = Global.mdbService.GetUsuari(tbLogin.Text, tbContra.Password);
-            //if (usuari == null)
-            //{
-            //    MessageBox.Show("Usuari o contrasenya incorrectes");
-            //    return;
-            //}
-
-            //CistellMDB cistellBd = Global.mdbService.GetCistell(usuari.Id);
-
-            //if (cistellWeb != null && cistellBd != null)
-            //{
-            //    foreach (Prod_select prodWeb in cistellWeb.Prod_select)
-            //    {
-            //        int productesIguals = cistellBd.Prod_select.Where(prodBd => prodWeb.Id == prodBd.Id && prodWeb.Estoc_id == prodBd.Estoc_id).Count();
-
-            //        if(productesIguals == 0)
-            //        {
-            //            cistellBd.Prod_select.Add(prodWeb);
-            //        }
-
-            //    }
-
-            //    cistellWeb.Id = cistellBd.Id;
-            //    cistellWeb.Id_usu = cistellBd.Id_usu;
-            //    cistellWeb.Cost_enviament = cistellBd.Cost_enviament;
-            //    cistellWeb.Metode_enviament = cistellBd.Metode_enviament;
-            //    Global.mdbService.ActualizarCistell(cistellBd);
-            //}
-
-            //if (cistellBd != null)
-            //{
-            //    cistellWeb = cistellBd;
-            //    cistellWeb.Id_usu = usuari.Id;
-            //}
-
-            //var newWindow = new MainWindow(usuari, cistellWeb);
-            //var newWindow = new MainWindow();
             this.Close();
         }
 
         private void btSortir_Click(object sender, RoutedEventArgs e)
         {
 
-            //var newWindow = new MainWindow();
-            //Global.Usuari = null;
             Global.cistellManager = null;
             Global.Init();
             this.Close();
 
-            //newWindow.Show();
         }
     }
 }

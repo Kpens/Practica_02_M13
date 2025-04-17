@@ -11,6 +11,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Gestio_Botiga_Calcat.View
@@ -20,12 +21,22 @@ namespace Gestio_Botiga_Calcat.View
     /// </summary>
     public partial class WinFactura : Window
     {
+        private string imgs = "/imgs/";
+        private void carregar_info() {
+
+            tbNom.Text = Global.Usuari.Nom;
+            tbNomTar.Text = Global.Usuari.Nom;
+            tbMail.Text = Global.Usuari.Mail;
+            tbTelf.Text = Global.Usuari.Telf;
+            tbAdreca.Text = Global.Usuari.Carrer + ", " + Global.Usuari.CodiPostal + ", " + Global.Usuari.Municipi + ", " + Global.Usuari.Pais;
+        }
         public WinFactura()
         {
             InitializeComponent();
             if (Global.Usuari != null)
             {
-                tbNomUsu.Text = Global.Usuari.Nom;
+                //tbNomUsu.Text = Global.Usuari.Nom;
+                carregar_info();
             }
             else
             {
@@ -41,11 +52,6 @@ namespace Gestio_Botiga_Calcat.View
 
                   winLogin.Show();*/
                 win_login();
-                tbNom.Text = Global.Usuari.Nom;
-                tbNomTar.Text = Global.Usuari.Nom;
-                tbMail.Text = Global.Usuari.Mail;
-                tbTelf.Text = Global.Usuari.Telf;
-                tbAdreca.Text = "C/ " + Global.Usuari.Carrer + ", " + Global.Usuari.CodiPostal + ", " + Global.Usuari.Municipi + ", " + Global.Usuari.Pais;
             }
 
 
@@ -53,7 +59,7 @@ namespace Gestio_Botiga_Calcat.View
 
         private void tbNumTar_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            imgTar.Source = new BitmapImage(new Uri(imgs + "mastercard.png", UriKind.Relative));
 
         }
 
@@ -78,11 +84,12 @@ namespace Gestio_Botiga_Calcat.View
             {
                 if (Global.Usuari != null)
                 {
-                    tbNomUsu.Text = "Benvingut " + Global.Usuari.Nom + "!";
+                    //tbNomUsu.Text = "Benvingut " + Global.Usuari.Nom + "!";
+                    carregar_info();
                 }
                 else
                 {
-                    tbNomUsu.Text = "";
+                    //tbNomUsu.Text = "";
                     win_login();
                 }
             };
@@ -94,6 +101,28 @@ namespace Gestio_Botiga_Calcat.View
         private void btLogin_Click(object sender, RoutedEventArgs e)
         {
             win_login();
+        }
+
+        private void btnCancelar_Click(object sender, RoutedEventArgs e)
+        {
+            //Global.mdbService.CancelarCompra(factura);
+
+            var newWindow = new UICarro();
+
+            this.Close();
+
+            newWindow.Show();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+        }
+        private void btnComprar_Click(object sender, RoutedEventArgs e)
+        {
+            //Global.mdbService.CrearFactura(factura);
+            MessageBox.Show("Gràcies per la seva compra!", "Compra realitzada", MessageBoxButton.OK, MessageBoxImage.Information);
+
         }
     }
 }
