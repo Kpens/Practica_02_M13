@@ -11,8 +11,8 @@ namespace Gestio_Botiga_Calcat.model
     {
         public ObjectId Id { get; set; }
         public string Codi{ get; set; }
-        public Dades_empresa Emissor { get; set; }
-        public UsuariMDB Destinatari { get; set; }
+        public ObjectId Emissor { get; set; }
+        public ObjectId Destinatari { get; set; }
         public List<Linies> Linies_compra { get; set; }
         public DateTime Data_factura { get; set; }
         public DateTime Data_venciment { get; set; }

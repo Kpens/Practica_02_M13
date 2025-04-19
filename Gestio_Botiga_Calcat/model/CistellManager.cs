@@ -6,7 +6,7 @@ namespace Gestio_Botiga_Calcat.model
     {
         //public ObjectId Id_usu { get; set; }
         public ObjectId Id_cistell { get; set; }
-        public ObjectId Metode_enviament { get; set; }
+        public Metode_enviamentMDB Metode_enviament { get; set; }
         public double Cost_enviament { get; set; }
         public ExtendedObservableCollection<Prod_select> Prod_select_no_logged { get; set; }
         public ExtendedObservableCollection<Prod_select> Prod_select_logged { get; set; }
@@ -29,9 +29,10 @@ namespace Gestio_Botiga_Calcat.model
                     Id_cistell = cistellBd.Id;
                     Cost_enviament = cistellBd.Cost_enviament;
                 }
-                if(Metode_enviament == ObjectId.Empty)
+                if(Metode_enviament.Id == ObjectId.Empty)
                 {
-                    Metode_enviament = cistellBd.Metode_enviament;
+                    Global.mdbService.GetMetode_enviament(cistellBd.Metode_enviament);
+                    Metode_enviament = Global.mdbService.GetMetode_enviament(cistellBd.Metode_enviament);
                 }
 
                 if (Prod_select_no_logged != null)
@@ -164,7 +165,7 @@ namespace Gestio_Botiga_Calcat.model
                 cistell.Prod_select = new ExtendedObservableCollection<Prod_select>(Prod_select_logged);
                 cistell.Id_usu = Global.Usuari.Id;
                 cistell.Cost_enviament = Cost_enviament;
-                cistell.Metode_enviament = Metode_enviament;
+                cistell.Metode_enviament = Metode_enviament.Id;
             }
             else
             {

@@ -11,7 +11,10 @@ namespace Gestio_Botiga_Calcat
     {
         public static Service mdbService = new Service("Botiga");
         public static UsuariMDB Usuari { get; set; }
+        public static Dades_empresa DadesEmpresa { get; set; } 
         public static CistellManager cistellManager { get; set; }
+        public static int QtFactures { get; set; }
+        public static int QtReparacions { get; set; }
 
         public static void Init()
         {

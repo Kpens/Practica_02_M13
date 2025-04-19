@@ -200,12 +200,12 @@ namespace Gestio_Botiga_Calcat.View
             }
             if (cbMetEnv.SelectedIndex != -1)
             {
-                Global.cistellManager.Metode_enviament = metodes_Enviament[cbMetEnv.SelectedIndex].Id;
+                Global.cistellManager.Metode_enviament = metodes_Enviament[cbMetEnv.SelectedIndex];
                 btnComprar.IsEnabled = true;
             }
             else
             {
-                Global.cistellManager.Metode_enviament = ObjectId.Empty;
+                Global.cistellManager.Metode_enviament = null;
                 btnComprar.IsEnabled = false;
             }
         }
@@ -327,14 +327,9 @@ namespace Gestio_Botiga_Calcat.View
         private void btnComprar_Click(object sender, RoutedEventArgs e)
         {
             var newWindow = new WinFactura();
-            if(Global.Usuari != null)
-            {
-                Global.cistellManager.Prod_select_comprar = Global.cistellManager.Prod_select_logged.ToList();
-            }
-            else
-            {
-                Global.cistellManager.Prod_select_comprar = Global.cistellManager.Prod_select_no_logged.ToList();
-            }
+           
+            Global.cistellManager.Prod_select_comprar = Global.cistellManager.GetLlistaProds().ToList();
+            
             //this.Close();
 
             newWindow.Show();
@@ -352,7 +347,7 @@ namespace Gestio_Botiga_Calcat.View
                 {
                     tbTotal.Text = (total + metodes_Enviament[cbMetEnv.SelectedIndex].Preu_base).ToString("F2") + "€";
                 }
-                Global.cistellManager.Metode_enviament = metodes_Enviament[cbMetEnv.SelectedIndex].Id;
+                Global.cistellManager.Metode_enviament = metodes_Enviament[cbMetEnv.SelectedIndex];
                 btnComprar.IsEnabled = true;
 
             }

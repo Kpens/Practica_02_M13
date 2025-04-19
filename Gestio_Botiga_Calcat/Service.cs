@@ -123,6 +123,18 @@ namespace Gestio_Botiga_Calcat
             }
             return cats;
         }
+        private Metode_enviamentMDB doc_a_metode(BsonDocument c)
+        {
+            Metode_enviamentMDB metode = new Metode_enviamentMDB();
+            metode.Id = (ObjectId)c["_id"];
+            metode.MinTemps_en_dies = (int)c["min_temps"];
+            metode.MaxTemps_en_dies = (int)c["max_temps"];
+            metode.Nom = (string)c["metode"];
+            metode.Preu_base = (double)c["preu_base"];
+            metode.Preu_min_compra = (double)c["preu_min_compra"];
+            metode.Id_IVA = (ObjectId)c["tipus_IVA"];
+            return metode;
+        }
         public List<Metode_enviamentMDB> GetMetodes_enviament()
         {
             var collection = _database.GetCollection<BsonDocument>("Metode_enviament");
@@ -130,17 +142,18 @@ namespace Gestio_Botiga_Calcat
             List<Metode_enviamentMDB> metodes = new List<Metode_enviamentMDB>();
             foreach (var c in cates)
             {
-                Metode_enviamentMDB metode = new Metode_enviamentMDB();
-                metode.Id = (ObjectId)c["_id"];
-                metode.MinTemps_en_dies = (int)c["min_temps"];
-                metode.MaxTemps_en_dies = (int)c["max_temps"];
-                metode.Nom = (string)c["metode"];
-                metode.Preu_base = (double)c["preu_base"];
-                metode.Preu_min_compra = (double)c["preu_min_compra"];
-                metode.Id_IVA = (ObjectId)c["tipus_IVA"];
-                metodes.Add(metode);
+                metodes.Add(doc_a_metode(c));
             }
             return metodes;
+        }
+        public Metode_enviamentMDB GetMetode_enviament(ObjectId oid)
+        {
+            var collection = _database.GetCollection<BsonDocument>("Metode_enviament");
+            var metode = collection.Find(Builders<BsonDocument>.Filter.Eq("_id", oid)).FirstOrDefault();
+            
+            
+            
+            return doc_a_metode(metode);
         }
         public CategoriaMDB GetCate(ObjectId oid)
         {
@@ -466,7 +479,7 @@ namespace Gestio_Botiga_Calcat
                 {
                     { "id_usu", Global.Usuari.Id},
                     { "cost_enviament", Global.cistellManager.Cost_enviament },
-                    { "metode_enviament", Global.cistellManager.Metode_enviament },
+                    { "metode_enviament", Global.cistellManager.Metode_enviament.Id },
                     { "prods_select", new BsonArray(Global.cistellManager.GetLlistaProds().Select(p => new BsonDocument
                         {
                             { "_id", p.Id },
@@ -554,6 +567,39 @@ namespace Gestio_Botiga_Calcat
                 }
             }
             return 0;
+        }
+        public void crear_factura(FacturaMDB factura)
+        {
+            var collection = _database.GetCollection<FacturaMDB>("Factura");
+            collection.InsertOne(factura);
+        }
+        public void GetNumFactura()
+        {
+            var collection = _database.GetCollection<BsonDocument>("Comptador");
+            var prods = collection.Find(new BsonDocument()).First();
+
+            Global.QtFactures = prods["factura"].AsInt32;
+            Global.QtReparacions = prods["reparacions"].AsInt32;
+        }
+        public Dades_empresa GetEmpresa()
+        {
+            Dades_empresa empresa = new Dades_empresa();
+            var collection = _database.GetCollection<BsonDocument>("Dades_empresa");
+            var prods = collection.Find(new BsonDocument()).First();
+
+            empresa.Id = prods["_id"].AsObjectId;
+            empresa.Nom = prods["nom"].AsString;
+            empresa.Mail = prods["mail"].AsString;
+            empresa.Telf = prods["telf"].AsString;
+            empresa.CIF = prods["CIF"].AsString;
+
+            var adreca = prods["adreca"].AsBsonDocument;
+
+            empresa.Carrer = adreca["Carrer"].AsString;
+            empresa.CodiPostal = adreca["Codi_postal"].AsString;
+            empresa.Municipi = adreca["Municipi"].AsString;
+            empresa.Pais = adreca["Pais"].AsString;
+            return empresa;
         }
 
     }

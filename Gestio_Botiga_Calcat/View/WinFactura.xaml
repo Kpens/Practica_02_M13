@@ -19,7 +19,7 @@
                 <Button Click="btnBack_Click" Content="Tornar a la botiga →" Padding="10" HorizontalAlignment="Left" FontFamily="Agency FB" Foreground="White" Background="Black" Margin="5 20 0 0" FontSize="20"/>
             </StackPanel>
         </Grid>
-        <Grid Margin="20 15 20 30" x:Name="grUsu">
+        <Grid Margin="50 15 50 30" x:Name="grUsu">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="4*"/>
@@ -48,7 +48,7 @@
 -->
             <!--<Button x:Name="btnBack" Margin="-10 0 0 0" Click="btnBack_Click" Content="Menú" FontFamily="Agency FB" Foreground="White" Background="Black" HorizontalAlignment="Left" Padding="5" FontSize="20"/>
         -->
-            <Label x:Name="tbTit" Content="Dades de la compra" Margin="10 0 0 30" HorizontalAlignment="Center" Grid.ColumnSpan="6" Grid.Row="1" FontFamily="Agency FB" FontSize="45" FontWeight="Bold"/>
+            <Label x:Name="tbTit" Content="Dades de la compra" Margin="10 0 0 65" HorizontalAlignment="Center" Grid.ColumnSpan="6" Grid.Row="1" FontFamily="Agency FB" FontSize="45" FontWeight="Bold"/>
 
 
             <Label Content="Detalls de l'usuari:" Grid.ColumnSpan="2" FontFamily="Agency FB" FontSize="30" FontWeight="Bold" Grid.Row="2"/>
@@ -70,11 +70,11 @@
 
             <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="5" Grid.Column="3">
                 <xctk:WatermarkTextBox 
-                Watermark="CVV"  x:Name="tbCSVTar" VerticalAlignment="Center" Margin="0 0 15 0" FontFamily="Agency FB" FontSize="20" Grid.Row="5" Grid.Column="4"/>
+                Watermark="CVV" TextChanged="tbDataTar_TextChanged" x:Name="tbCSVTar" VerticalAlignment="Center" Margin="0 0 15 0" FontFamily="Agency FB" FontSize="20" Grid.Row="5" Grid.Column="4"/>
                 <xctk:WatermarkTextBox
-                Watermark="MM/AA"  x:Name="tbDataTar" VerticalAlignment="Center" Margin="0 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="5" Grid.Column="4"/>
+                Watermark="MM/AA" TextChanged="tbDataTar_TextChanged" x:Name="tbDataTar" VerticalAlignment="Center" Margin="0 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="5" Grid.Column="4"/>
             </StackPanel>
-            <Image x:Name="imgTar" Source="/imgs/visa.png" Width="50" Height="50" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="20 0 5 0" Grid.Row="5" Grid.Column="5"/>
+            <Image Visibility="Hidden" x:Name="imgTar" Source="/imgs/visa.png" Width="50" Height="50" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="20 0 5 0" Grid.Row="5" Grid.Column="5"/>
 
             <Button x:Name="btnCancelar" Click="btnCancelar_Click" Grid.Row="7" Grid.Column="3" VerticalAlignment="Center" Content="Cancelar" FontFamily="Agency FB" Foreground="White" Background="Black" Margin="5" FontSize="25"/>
             <Button x:Name="btnComprar" Click="btnComprar_Click" HorizontalAlignment="Right" IsEnabled="False" Grid.Row="7" Grid.Column="5" VerticalAlignment="Center" Content="Comprar" FontFamily="Agency FB" Foreground="White" Background="Black" Margin="5" FontSize="25"/>
