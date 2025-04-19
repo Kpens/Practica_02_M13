@@ -79,7 +79,8 @@ namespace Gestio_Botiga_Calcat.View
             {
                 btRes.Foreground = new SolidColorBrush(Colors.LightGray);
             }
-            else if(tbNum.Text == Stock_act.Quantitat.ToString())
+            
+            if(tbNum.Text == Stock_act.Quantitat.ToString())
             {
                 tbSum.Foreground = new SolidColorBrush(Colors.LightGray);
             }
@@ -104,6 +105,12 @@ namespace Gestio_Botiga_Calcat.View
 
         private void btRes_Click(object sender, RoutedEventArgs e)
         {
+
+            if (tbNum.Text == Stock_act.Quantitat.ToString())
+            {
+                return;
+            }
+
             tbSum.Foreground = new SolidColorBrush(Colors.Black);
             if (int.Parse(tbNum.Text) > 1)
             {
@@ -113,14 +120,17 @@ namespace Gestio_Botiga_Calcat.View
                 //Global.cistellManager.GetLlistaProds().ElementAt(Global.cistellManager.GetLlistaProds().IndexOf(Prod_cist)).Quantitat = int.Parse(tbNum.Text);
 
 
+
                 if (tbNum.Text == "1")
                 {
                     btRes.Foreground = new SolidColorBrush(Colors.LightGray);
                 }
                 else
                 {
+
                     btRes.Foreground = new SolidColorBrush(Colors.Black);
                 }
+
                 Global.mdbService.ActualizarCistell();
                 carregar_info();
             }
@@ -128,11 +138,17 @@ namespace Gestio_Botiga_Calcat.View
             {
                 btRes.Foreground = new SolidColorBrush(Colors.LightGray);
             }
-            
+
+
         }
 
         private void tbSum_Click(object sender, RoutedEventArgs e)
         {
+            if (tbNum.Text == Stock_act.Quantitat.ToString())
+            {
+                return;
+            }
+
             btRes.Foreground = new SolidColorBrush(Colors.Black);
             if (tbNum.Text != Stock_act.Quantitat.ToString())
             {
@@ -164,8 +180,8 @@ namespace Gestio_Botiga_Calcat.View
 
             if (result == MessageBoxResult.Yes)
             {
-                //Llista.Remove(Prod_cist);
-                Global.cistellManager.RemoveProd(Prod_cist);
+                Llista.Remove(Prod_cist);
+                //Global.cistellManager.RemoveProd(Prod_cist);
                 Global.mdbService.ActualizarCistell();
 
             }

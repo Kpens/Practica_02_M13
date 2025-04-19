@@ -82,7 +82,7 @@ namespace Gestio_Botiga_Calcat.View
         public UILogin()
         {
             InitializeComponent();
-            carregar_login()
+            carregar_login();
             this.enfactura = false;
         }
         public UILogin(bool en_factura)

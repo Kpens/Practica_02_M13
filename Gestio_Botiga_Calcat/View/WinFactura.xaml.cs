@@ -22,38 +22,33 @@ namespace Gestio_Botiga_Calcat.View
     public partial class WinFactura : Window
     {
         private string imgs = "/imgs/";
-        private void carregar_info() {
+        private bool es_pot_tencar = false;
+        UILogin winLogin;
+        private void carregar_info()
+        {
 
-            tbNom.Text = Global.Usuari.Nom;
-            tbNomTar.Text = Global.Usuari.Nom;
-            tbMail.Text = Global.Usuari.Mail;
-            tbTelf.Text = Global.Usuari.Telf;
-            tbAdreca.Text = Global.Usuari.Carrer + ", " + Global.Usuari.CodiPostal + ", " + Global.Usuari.Municipi + ", " + Global.Usuari.Pais;
+            if (Global.Usuari != null)
+            {
+                tbNom.Text = Global.Usuari.Nom;
+                tbNomTar.Text = Global.Usuari.Nom;
+                tbMail.Text = Global.Usuari.Mail;
+                tbTelf.Text = Global.Usuari.Telf;
+                tbAdreca.Text = Global.Usuari.Carrer + ", " + Global.Usuari.CodiPostal + ", " + Global.Usuari.Municipi + ", " + Global.Usuari.Pais;
+                grUsu.Visibility = Visibility.Visible;
+                spNoProds.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                grUsu.Visibility = Visibility.Collapsed;
+                spNoProds.Visibility = Visibility.Visible;
+                win_login();
+
+            }
         }
         public WinFactura()
         {
             InitializeComponent();
-            if (Global.Usuari != null)
-            {
-                //tbNomUsu.Text = Global.Usuari.Nom;
-                carregar_info();
-            }
-            else
-            {
-                /*
-                  var winLogin = new UILogin(false);
-
-                  winLogin.Closed += (s, args) =>
-                  {
-
-                      tbNomUsu.Text = "Benvingut " + Global.Usuari.Nom + "!";
-
-                  };
-
-                  winLogin.Show();*/
-                win_login();
-            }
-
+            carregar_info();
 
         }
 
@@ -68,7 +63,8 @@ namespace Gestio_Botiga_Calcat.View
 
             //var newWindow = new MainWindow(Global.Usuari, cistell);
             //var newWindow = new MainWindow();
-
+            es_pot_tencar = true;
+            winLogin.Close();
             this.Close();
 
             //newWindow.Show();
@@ -77,20 +73,18 @@ namespace Gestio_Botiga_Calcat.View
         private void win_login()
         {
 
-            var winLogin = new UILogin();
+            winLogin = new UILogin();
 
             //this.Close();
             winLogin.Closed += (s, args) =>
             {
-                if (Global.Usuari != null)
+                if(es_pot_tencar)
                 {
-                    //tbNomUsu.Text = "Benvingut " + Global.Usuari.Nom + "!";
-                    carregar_info();
+                    this.Close();
                 }
                 else
                 {
-                    //tbNomUsu.Text = "";
-                    win_login();
+                    carregar_info();
                 }
             };
 
@@ -107,16 +101,23 @@ namespace Gestio_Botiga_Calcat.View
         {
             //Global.mdbService.CancelarCompra(factura);
 
-            var newWindow = new UICarro();
-
+            //var newWindow = new UICarro();
+            es_pot_tencar = true;
             this.Close();
 
-            newWindow.Show();
+            //newWindow.Show();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            e.Cancel = true;
+            if (es_pot_tencar)
+            {
+                e.Cancel = false;
+            }
+            else
+            {
+                e.Cancel = true;
+            }
         }
         private void btnComprar_Click(object sender, RoutedEventArgs e)
         {

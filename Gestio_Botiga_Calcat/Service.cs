@@ -480,10 +480,18 @@ namespace Gestio_Botiga_Calcat
                 }
                 else
                 {
-                    var prods_existents = cistell["prods_select"].AsBsonArray.ToDictionary(
-                        prod => prod["estoc_id"].AsObjectId,
-                        prod => prod
-                    );
+                    var prods_existents = new Dictionary<ObjectId, BsonValue>();
+
+                    foreach (var prod in cistell["prods_select"].AsBsonArray)
+                    {
+                        var estocId = prod["estoc_id"].AsObjectId;
+
+                        if (!prods_existents.ContainsKey(estocId))
+                        {
+                            prods_existents.Add(estocId, prod);
+                        }
+                    }
+
 
                     var arrModif_prods = new BsonArray();
 

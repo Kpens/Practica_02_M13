@@ -26,7 +26,7 @@ namespace Gestio_Botiga_Calcat.View
     {
         //private UsuariMDB usu;
         private List<Metode_enviamentMDB> metodes_Enviament = new List<Metode_enviamentMDB>();
-
+        private double total = 0;
         public void carregar_vista()
         {
             
@@ -43,15 +43,79 @@ namespace Gestio_Botiga_Calcat.View
                 {
                     Global.mdbService.ActualizarCistell();
                 }
-
-                double bases = 0;
+                total = 0;
+                double[] bases = new double[3];
+                ObjectId[] ives = new ObjectId[3];
                 foreach (Prod_select prod in Cistell.Prod_select)
                 {
                     VariantMDB variant = Global.mdbService.GetVariantByStockId(prod.Estoc_id);
                     double descompte = ((variant.Preu * prod.Quantitat) * variant.DescomptePercent) / 100;
-                    bases += (variant.Preu * prod.Quantitat) - descompte;
+                    ProducteMDB producte = Global.mdbService.GetProd(prod.Id);
+                    if (ives[0] != ObjectId.Empty && ives[0] == producte.Tipus_IVA)
+                    {
+                        bases[0] += (variant.Preu * prod.Quantitat) - descompte;
+                    }
+                    else if (ives[1] != ObjectId.Empty && ives[1] == producte.Tipus_IVA)
+                    {
+                        bases[1] += (variant.Preu * prod.Quantitat) - descompte;
+                    }
+                    else if (ives[2] != ObjectId.Empty && ives[2] == producte.Tipus_IVA)
+                    {
+                        bases[2] += (variant.Preu * prod.Quantitat) - descompte;
+                    }
+                    else
+                    {
+                        if (ives[0] == ObjectId.Empty)
+                        {
+                            ives[0] = producte.Tipus_IVA;
+                            bases[0] += (variant.Preu * prod.Quantitat) - descompte;
+                        }
+                        else if (ives[1] == ObjectId.Empty)
+                        {
+                            ives[1] = producte.Tipus_IVA;
+                            bases[1] += (variant.Preu * prod.Quantitat) - descompte;
+                        }
+                        else if (ives[2] == ObjectId.Empty)
+                        {
+                            ives[2] = producte.Tipus_IVA;
+                            bases[2] += (variant.Preu * prod.Quantitat) - descompte;
+                        }
+                    }
+
                 }
-                tbBasesImp.Text = bases.ToString("F2") + "€";
+                tbBasesImp1.Text = bases[0].ToString("F2") + "€";
+                tbPercentatge1.Text = Global.mdbService.GetIVA(ives[0]).Percentatge.ToString("F2") + "%:";
+
+                total += bases[0];
+
+                if (ives[1] != ObjectId.Empty)
+                {
+                    tbBasesImp2.Text = bases[1].ToString("F2") + "€";
+                    total += bases[1];
+                    tbPercentatge2.Text = Global.mdbService.GetIVA(ives[1]).Percentatge.ToString("F2") + "%:";
+                    spBases2.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    tbBasesImp2.Text = "0.00€";
+                    tbPercentatge2.Text = "0.00%:";
+                    spBases3.Visibility = Visibility.Collapsed;
+                }
+
+                if (ives[2] != ObjectId.Empty)
+                {
+                    tbBasesImp3.Text = bases[2].ToString("F2") + "€";
+                    total += bases[2];
+                    tbPercentatge3.Text = Global.mdbService.GetIVA(ives[2]).Percentatge.ToString("F2") + "%:";
+                    spBases3.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    tbBasesImp3.Text = "0.00€";
+                    tbPercentatge3.Text = "0.00%:";
+                    spBases3.Visibility = Visibility.Collapsed;
+                }   
+                    
 
                 List<string> metodes = new List<string>();
                 int i = 0;
@@ -64,7 +128,7 @@ namespace Gestio_Botiga_Calcat.View
                 foreach (Metode_enviamentMDB metode in metodes_Enviament)
                 {
                     double preu_met = metode.Preu_base;
-                    if (metode.Preu_min_compra <= bases)
+                    if (metode.Preu_min_compra <= total)
                     {
                         preu_met = 0;
                     }
@@ -82,6 +146,13 @@ namespace Gestio_Botiga_Calcat.View
                 if (trobat)
                 {
                     cbMetEnv.SelectedIndex = i;
+
+                    tbTotal.Text = (total + metodes_Enviament[i].Preu_base).ToString("F2") + "€";
+                }
+                else
+                {
+                    tbTotal.Text = total.ToString("F2") + "€";
+
                 }
             }
             else
@@ -256,8 +327,15 @@ namespace Gestio_Botiga_Calcat.View
         private void btnComprar_Click(object sender, RoutedEventArgs e)
         {
             var newWindow = new WinFactura();
-
-            this.Close();
+            if(Global.Usuari != null)
+            {
+                Global.cistellManager.Prod_select_comprar = Global.cistellManager.Prod_select_logged.ToList();
+            }
+            else
+            {
+                Global.cistellManager.Prod_select_comprar = Global.cistellManager.Prod_select_no_logged.ToList();
+            }
+            //this.Close();
 
             newWindow.Show();
         }
@@ -266,6 +344,14 @@ namespace Gestio_Botiga_Calcat.View
         {
             if (cbMetEnv.SelectedIndex != -1)
             {
+                if (metodes_Enviament[cbMetEnv.SelectedIndex].Preu_min_compra <= total)
+                {
+                    tbTotal.Text = total.ToString("F2") + "€";
+                }
+                else
+                {
+                    tbTotal.Text = (total + metodes_Enviament[cbMetEnv.SelectedIndex].Preu_base).ToString("F2") + "€";
+                }
                 Global.cistellManager.Metode_enviament = metodes_Enviament[cbMetEnv.SelectedIndex].Id;
                 btnComprar.IsEnabled = true;
 

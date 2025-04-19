@@ -57,6 +57,8 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Label Content="Detalls de la compra:" FontFamily="Agency FB" FontSize="30" FontWeight="Bold" Grid.Row="0"/>
             <Label Content="Mètode d'enviament:" Margin="10 0 0 0" FontFamily="Agency FB" FontSize="20" Grid.Row="1"/>
@@ -66,15 +68,28 @@
                 <TextBlock x:Name="tbCostEnv" Text="10€" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20"/>
             </StackPanel>-->
             <StackPanel Orientation="Horizontal" Margin="10 0 0 0" Grid.Row="4">
-                <Label Content="Bases imposables: " FontFamily="Agency FB" FontSize="20"/>
-                <TextBlock x:Name="tbBasesImp" Margin="10 0 10 0" FontFamily="Agency FB" Text="1€" FontSize="20" VerticalAlignment="Center"/>
+                <Label Content="Bases imposables " FontFamily="Agency FB" FontSize="20"/>
+                <TextBlock x:Name="tbPercentatge1" Text="21%: " VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20"/>
+                <TextBlock x:Name="tbBasesImp1" Margin="10 0 10 0" FontFamily="Agency FB" Text="1€" FontSize="20" VerticalAlignment="Center"/>
                 <!--<TextBlock x:Name="tbBasesImp" Text="10€" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20"/>-->
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Grid.Row="5">
+            <StackPanel x:Name="spBases2" Visibility="Collapsed" Orientation="Horizontal" Margin="10 0 0 0" Grid.Row="5">
+                <Label Content="Bases imposables " FontFamily="Agency FB" FontSize="20"/>
+                <TextBlock x:Name="tbPercentatge2" Text="21%: " VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20"/>
+                <TextBlock x:Name="tbBasesImp2" Margin="10 0 10 0" FontFamily="Agency FB" Text="1€" FontSize="20" VerticalAlignment="Center"/>
+                <!--<TextBlock x:Name="tbBasesImp" Text="10€" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20"/>-->
+            </StackPanel>
+            <StackPanel x:Name="spBases3" Visibility="Collapsed" Orientation="Horizontal" Margin="10 0 0 0" Grid.Row="6">
+                <Label Content="Bases imposables " FontFamily="Agency FB" FontSize="20"/>
+                <TextBlock x:Name="tbPercentatge3" Text="21%: " VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20"/>
+                <TextBlock x:Name="tbBasesImp3" Margin="10 0 10 0" FontFamily="Agency FB" Text="1€" FontSize="20" VerticalAlignment="Center"/>
+                <!--<TextBlock x:Name="tbBasesImp" Text="10€" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="20"/>-->
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Row="7">
                 <Label Content="Total: " FontWeight="Bold" FontFamily="Agency FB" FontSize="25"/>
                 <TextBlock x:Name="tbTotal" Text="10€" VerticalAlignment="Center" FontFamily="Agency FB" FontSize="25"/>
             </StackPanel>
-            <Button x:Name="btnComprar" Click="btnComprar_Click" Grid.Row="6" Grid.Column="0" Content="Comprar" FontFamily="Agency FB" Foreground="White" Background="Black" Margin="0,100,0,10" FontSize="25"/>
+            <Button x:Name="btnComprar" Click="btnComprar_Click" Grid.Row="8" Grid.Column="0" Content="Comprar" FontFamily="Agency FB" Foreground="White" Background="Black" Margin="0,100,0,10" FontSize="25"/>
 
         </Grid>
         

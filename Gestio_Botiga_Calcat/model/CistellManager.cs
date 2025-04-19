@@ -10,6 +10,7 @@ namespace Gestio_Botiga_Calcat.model
         public double Cost_enviament { get; set; }
         public ExtendedObservableCollection<Prod_select> Prod_select_no_logged { get; set; }
         public ExtendedObservableCollection<Prod_select> Prod_select_logged { get; set; }
+        public List<Prod_select> Prod_select_comprar{ get; set; }
 
 
         public void loginOk(bool enfactura)
