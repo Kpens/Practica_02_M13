@@ -37,7 +37,7 @@ namespace Gestio_Botiga_Calcat
                 {
                     Id = result["_id"].AsObjectId,
                     Id_usu = result["id_usu"].AsObjectId,
-                    Cost_enviament = result["cost_enviament"].AsInt32,
+                    Cost_enviament = result["cost_enviament"].AsDouble,
                     Metode_enviament = result["metode_enviament"].AsObjectId,
                     Prod_select = new ExtendedObservableCollection<Prod_select>(
                     result["prods_select"].AsBsonArray.Select(prod => new Prod_select
@@ -78,7 +78,8 @@ namespace Gestio_Botiga_Calcat
                     var adreca = result["adreca"].AsBsonDocument;
                     usuariMDB.Carrer = adreca["carrer"].AsString;
                     usuariMDB.CodiPostal = adreca["codi_postal"].AsString;
-                    usuariMDB.Municipi = adreca["municipi"].AsString;
+                    usuariMDB.Ciutat = adreca["Ciutat"].AsString;
+                    usuariMDB.Municipi = adreca["Municipi"].AsString;
                     usuariMDB.Pais = adreca["pais"].AsString;
                     return usuariMDB;
                 }
@@ -474,7 +475,7 @@ namespace Gestio_Botiga_Calcat
 
                 if (cistell == null)
                 {
-
+                    Global.cistellManager.Metode_enviament = new Metode_enviamentMDB();
                     var doc = new BsonDocument
                 {
                     { "id_usu", Global.Usuari.Id},
@@ -570,8 +571,18 @@ namespace Gestio_Botiga_Calcat
         }
         public void crear_factura(FacturaMDB factura)
         {
-            var collection = _database.GetCollection<FacturaMDB>("Factura");
-            collection.InsertOne(factura);
+            var collection_factura = _database.GetCollection<FacturaMDB>("Factura");
+            collection_factura.InsertOne(factura);
+
+            var collection_compt = _database.GetCollection<BsonDocument>("Comptador");
+
+            var filter = Builders<BsonDocument>.Filter.Exists("factura");
+            var update = Builders<BsonDocument>.Update.Inc("factura", 1);
+
+            collection_compt.UpdateOne(filter, update);
+
+            var updatedDoc = collection_compt.Find(new BsonDocument()).First();
+            Global.QtFactures = updatedDoc["factura"].AsInt32;
         }
         public void GetNumFactura()
         {
@@ -579,7 +590,7 @@ namespace Gestio_Botiga_Calcat
             var prods = collection.Find(new BsonDocument()).First();
 
             Global.QtFactures = prods["factura"].AsInt32;
-            Global.QtReparacions = prods["reparacions"].AsInt32;
+            Global.QtReparacions = prods["reparacio"].AsInt32;
         }
         public Dades_empresa GetEmpresa()
         {
@@ -597,9 +608,53 @@ namespace Gestio_Botiga_Calcat
 
             empresa.Carrer = adreca["Carrer"].AsString;
             empresa.CodiPostal = adreca["Codi_postal"].AsString;
-            empresa.Municipi = adreca["Municipi"].AsString;
+            empresa.Ciutat = adreca["Ciutat"].AsString;
             empresa.Pais = adreca["Pais"].AsString;
             return empresa;
+        }
+
+        public void ActualitzarQtProdsFactura(List<Prod_select> prods)
+        {
+            var collection = _database.GetCollection<BsonDocument>("Producte");
+            foreach (var prod in prods)
+            {
+                var filter = Builders<BsonDocument>.Filter.ElemMatch("variants",
+                    Builders<BsonDocument>.Filter.ElemMatch("stock",
+                    Builders<BsonDocument>.Filter.Eq("_id", prod.Estoc_id)));
+                var update = Builders<BsonDocument>.Update.Inc("variants.$[].stock.$[stock].num", -prod.Quantitat);
+                var options = new UpdateOptions
+                {
+                    ArrayFilters = new List<ArrayFilterDefinition<BsonDocument>>
+                    {
+                        new BsonDocumentArrayFilterDefinition<BsonDocument>(
+                            new BsonDocument("stock._id", prod.Estoc_id)
+                        )
+                    }
+                };
+                collection.UpdateOne(filter, update, options);
+            }
+
+        }
+        public void RetornarQtProdsFactura(List<Prod_select> prods)
+        {
+            var collection = _database.GetCollection<BsonDocument>("Producte");
+            foreach (var prod in prods)
+            {
+                var filter = Builders<BsonDocument>.Filter.ElemMatch("variants",
+                    Builders<BsonDocument>.Filter.ElemMatch("stock",
+                    Builders<BsonDocument>.Filter.Eq("_id", prod.Estoc_id)));
+                var update = Builders<BsonDocument>.Update.Inc("variants.$[].stock.$[stock].num", prod.Quantitat);
+                var options = new UpdateOptions
+                {
+                    ArrayFilters = new List<ArrayFilterDefinition<BsonDocument>>
+                    {
+                        new BsonDocumentArrayFilterDefinition<BsonDocument>(
+                            new BsonDocument("stock._id", prod.Estoc_id)
+                        )
+                    }
+                };
+                collection.UpdateOne(filter, update, options);
+            }
         }
 
     }

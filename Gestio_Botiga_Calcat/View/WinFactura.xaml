@@ -14,8 +14,8 @@
         <Grid>
 
             <StackPanel x:Name="spNoProds" Visibility="Collapsed" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Vertical" Grid.RowSpan="4" Grid.ColumnSpan="3" Grid.Row="0" Margin="80 0 0 50">
-                <Label Content="Identificat per a continuar" Grid.Column="1" Grid.Row="1" FontFamily="Agency FB" FontSize="45" FontWeight="Bold"/>
-                <Label Content="Recorda que per efectuar l'enviament necessitem les vostres dades!" FontFamily="Agency FB" Margin="0 30 0 0" FontSize="20"/>
+                <TextBlock x:Name="tbTitNoProds" Text="Identificat per a continuar" Grid.Column="1" Grid.Row="1" FontFamily="Agency FB" FontSize="45" FontWeight="Bold"/>
+                <Label x:Name="lbNoProds" Content="Recorda que per efectuar l'enviament necessitem les vostres dades!" FontFamily="Agency FB" Margin="0 30 0 0" FontSize="20"/>
                 <Button Click="btnBack_Click" Content="Tornar a la botiga →" Padding="10" HorizontalAlignment="Left" FontFamily="Agency FB" Foreground="White" Background="Black" Margin="5 20 0 0" FontSize="20"/>
             </StackPanel>
         </Grid>

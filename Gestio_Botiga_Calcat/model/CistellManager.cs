@@ -29,11 +29,11 @@ namespace Gestio_Botiga_Calcat.model
                     Id_cistell = cistellBd.Id;
                     Cost_enviament = cistellBd.Cost_enviament;
                 }
-                if(Metode_enviament.Id == ObjectId.Empty)
+                /*if(Metode_enviament == null)
                 {
                     Global.mdbService.GetMetode_enviament(cistellBd.Metode_enviament);
                     Metode_enviament = Global.mdbService.GetMetode_enviament(cistellBd.Metode_enviament);
-                }
+                }*/
 
                 if (Prod_select_no_logged != null)
                 {
@@ -158,6 +158,10 @@ namespace Gestio_Botiga_Calcat.model
             cistell.Prod_select = new ExtendedObservableCollection<Prod_select>();
             if (Global.Usuari != null)
             {
+                if (Global.cistellManager.Metode_enviament == null)
+                {
+                    Global.cistellManager.Metode_enviament = new Metode_enviamentMDB();
+                }
                 if (Prod_select_logged == null)
                 {
                     Prod_select_logged = new ExtendedObservableCollection<Prod_select>();

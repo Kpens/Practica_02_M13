@@ -19,7 +19,7 @@ namespace Gestio_Botiga_Calcat.model
         public string CodiPostal { get; set; }
         public string Carrer { get; set; }
         public string Pais { get; set; }
-        public string Municipi { get; set; }
+        public string Ciutat { get; set; }
         //public ObservableCollection<ProducteMDB> Productes { get; set; }
     }
 }

@@ -18,7 +18,12 @@ namespace Gestio_Botiga_Calcat.model
         public DateTime Data_venciment { get; set; }
         public double Cost_enviament { get; set; }
         public string Metode_pagament { get; set; }
-        public double Preu_base { get; set; }
+        public double Preu_base1 { get; set; }
+        public double Preu_base2 { get; set; }
+        public double Preu_base3 { get; set; }
+        public double iva1 { get; set; }
+        public double iva2 { get; set; }
+        public double iva3 { get; set; }
         public double Total { get; set; }
 
     }

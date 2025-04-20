@@ -16,6 +16,8 @@ using System.Windows.Shapes;
 using System.Net.Mail;
 using System.Net;
 using MongoDB.Bson;
+using ZstdSharp.Unsafe;
+using System.Diagnostics.Contracts;
 
 namespace Gestio_Botiga_Calcat.View
 {
@@ -40,20 +42,121 @@ namespace Gestio_Botiga_Calcat.View
                 }
 
                 factura.Id = ObjectId.GenerateNewId();
-                factura.Codi = DateTime.Now.Year.ToString() + (Global.QtFactures+1);
+                factura.Codi = "FAC"+DateTime.Now.Year.ToString() + (Global.QtFactures+1);
                 factura.Emissor = Global.DadesEmpresa.Id;
                 factura.Destinatari = Global.Usuari.Id;
 
+
                 factura.Data_factura = DateTime.Now;
                 factura.Data_venciment = DateTime.Now.AddDays(30);
-                //factura.Cost_enviament = Global.cistellManager.Metode_enviament.;
+                double total = 0, desc = 0;
+                double[] bases = new double[3];
+                int[] ives = new int[3];
+                ives[0] = -1;
+                ives[1] = -1;
+                ives[2] = -1;
+                if (factura.Linies_compra == null)
+                {
+                    factura.Linies_compra = new List<Linies>();  
+                }
+                foreach(Prod_select prod in Global.cistellManager.Prod_select_comprar)
+                {
+                    VariantMDB variant = Global.mdbService.GetVariantByStockId(prod.Estoc_id);
+                    ProducteMDB producte = Global.mdbService.GetProd(prod.Id);
+                    IVA_MDB iva = Global.mdbService.GetIVA(producte.Tipus_IVA);
+                    Linies linia = new Linies();
+                    linia.Nom = producte.Nom;
+                    linia.Descompte = variant.DescomptePercent;
+                    linia.Preu_base = variant.Preu;
+                    linia.Estoc = prod.Estoc_id;
+                    linia.Quantitat = prod.Quantitat;
+                    linia.tipus_IVA = producte.Tipus_IVA;
+                    linia.perc_IVA = ((int)iva.Percentatge);
 
+                    double descompte = ((variant.Preu * prod.Quantitat) * variant.DescomptePercent) / 100;
+                    linia.Bases_imposables = descompte;
+                    linia.Total = (linia.Preu_base -descompte)*((iva.Percentatge/100.0)+1);
+                    factura.Linies_compra.Add(linia);
+                    desc += descompte;
+                    //total += linia.Total;
+
+                    if (ives[0] != -1 &&ives[0] == ((int)iva.Percentatge))
+                    {
+                        bases[0] += (variant.Preu * prod.Quantitat) - descompte;
+                    }
+                    else if (ives[1] != -1 && ives[1] == ((int)iva.Percentatge))
+                    {
+                        bases[1] += (variant.Preu * prod.Quantitat) - descompte;
+                    }
+                    else if (ives[2] != -1 && ives[2] == ((int)iva.Percentatge))
+                    {
+                        bases[2] += (variant.Preu * prod.Quantitat) - descompte;
+                    }
+                    else
+                    {
+                        if (ives[0] == -1)
+                        {
+                            ives[0] = (int)iva.Percentatge;
+                            bases[0] += (variant.Preu * prod.Quantitat) - descompte;
+                        }
+                        else if (ives[1] == -1)
+                        {
+                            ives[1] = (int)iva.Percentatge;
+                            bases[1] += (variant.Preu * prod.Quantitat) - descompte;
+                        }
+                        else if (ives[2] == -1)
+                        {
+                            ives[2] = (int)iva.Percentatge;
+                            bases[2] += (variant.Preu * prod.Quantitat) - descompte;
+                        }
+                    }
+                }
+
+                total += bases[0];
+                factura.iva1 = ives[0];
+                factura.Preu_base1 = bases[0];
+
+                if (ives[1] != -1)
+                {
+                    total += bases[1];
+                    factura.iva2 = ives[1];
+                    factura.Preu_base2 = bases[1];
+                }
+                else{
+
+                    factura.iva2 = -1;
+                    factura.Preu_base2 = -1;
+                }
+
+                if (ives[2] != -1)
+                {
+                    total += bases[2];
+                    factura.iva3 = -1;
+                    factura.Preu_base3 = -1;
+                }
+
+                if (total >= Global.cistellManager.Metode_enviament.Preu_min_compra)
+                {
+                    factura.Cost_enviament = 0;
+                }
+                else
+                {
+                    factura.Cost_enviament = Global.cistellManager.Metode_enviament.Preu_base;
+                }
+                factura.Metode_pagament = Global.cistellManager.Metode_enviament.Nom + " (De " + Global.cistellManager.Metode_enviament.MinTemps_en_dies + " a " + Global.cistellManager.Metode_enviament.MaxTemps_en_dies + " dies laborals) " + Global.cistellManager.Metode_enviament.Preu_base + "€";
+                //factura.Preu_base = desc;
+
+                
+
+                factura.Total = total + factura.Cost_enviament;
+
+                Global.mdbService.ActualitzarQtProdsFactura(Global.cistellManager.Prod_select_comprar);
 
                 tbNom.Text = Global.Usuari.Nom;
                 tbNomTar.Text = Global.Usuari.Nom;
                 tbMail.Text = Global.Usuari.Mail;
                 tbTelf.Text = Global.Usuari.Telf;
-                tbAdreca.Text = Global.Usuari.Carrer + ", " + Global.Usuari.CodiPostal + ", " + Global.Usuari.Municipi + ", " + Global.Usuari.Pais;
+                tbAdreca.Text = Global.Usuari.Carrer + ", " + Global.Usuari.CodiPostal + ", " + Global.Usuari.Ciutat + ", " + Global.Usuari.Pais;
                 grUsu.Visibility = Visibility.Visible;
                 spNoProds.Visibility = Visibility.Collapsed;
             }
@@ -155,7 +258,11 @@ namespace Gestio_Botiga_Calcat.View
             //var newWindow = new MainWindow(Global.Usuari, cistell);
             //var newWindow = new MainWindow();
             es_pot_tencar = true;
-            winLogin.Close();
+            if (winLogin != null)
+            {
+                winLogin.Close();
+            }
+           
             this.Close();
 
             //newWindow.Show();
@@ -193,6 +300,8 @@ namespace Gestio_Botiga_Calcat.View
             //Global.mdbService.CancelarCompra(factura);
 
             //var newWindow = new UICarro();
+
+            Global.mdbService.RetornarQtProdsFactura(Global.cistellManager.Prod_select_comprar);
             es_pot_tencar = true;
             this.Close();
 
@@ -212,20 +321,27 @@ namespace Gestio_Botiga_Calcat.View
         }
         private void btnComprar_Click(object sender, RoutedEventArgs e)
         {
-            //Global.mdbService.CrearFactura(factura);
-            var smtp = new SmtpClient("smtp.gmail.com", 587)
+            Global.mdbService.crear_factura(factura);
+
+
+            string pwd_b64 = Global.DadesEmpresa.Pwd_Mail;
+            string contra_bbdd = Encoding.UTF8.GetString(Convert.FromBase64String(pwd_b64));
+
+
+            var smtpClient = new SmtpClient("smtp.gmail.com")
             {
-                Credentials = new NetworkCredential("tuemail@gmail.com", "tu_contraseña"),
+                Port = 587,
+                Credentials = new NetworkCredential(Global.DadesEmpresa.Mail, "ijonjtbfymibtbqm"),
                 EnableSsl = true
             };
 
-            var mensaje = new MailMessage("tuemail@gmail.com", "destinatario@correo.com", "Hola!", "Este es un correo enviado desde C#");
-
-            smtp.Send(mensaje);
-
-
-            MessageBox.Show("Gràcies per la seva compra!", "Compra realitzada", MessageBoxButton.OK, MessageBoxImage.Information);
-
+            var mail = new MailMessage(Global.DadesEmpresa.Mail, Global.Usuari.Mail, "Factura", "Aquí tens la teva factura");
+            smtpClient.Send(mail);
+            es_pot_tencar = true;
+            grUsu.Visibility = Visibility.Collapsed;
+            spNoProds.Visibility = Visibility.Visible;
+            tbTitNoProds.Text = "Gràcies per la vostra compra!";
+            lbNoProds.Visibility = Visibility.Hidden;
 
         }
 
