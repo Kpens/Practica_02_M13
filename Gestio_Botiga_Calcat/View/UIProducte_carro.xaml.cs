@@ -180,8 +180,8 @@ namespace Gestio_Botiga_Calcat.View
 
             if (result == MessageBoxResult.Yes)
             {
-                Llista.Remove(Prod_cist);
-                //Global.cistellManager.RemoveProd(Prod_cist);
+                //Llista.Remove(Prod_cist);
+                Global.cistellManager.RemoveProd(Prod_cist);
                 Global.mdbService.ActualizarCistell();
 
             }

@@ -15,9 +15,12 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Net.Mail;
 using System.Net;
+using System.IO;
 using MongoDB.Bson;
 using ZstdSharp.Unsafe;
 using System.Diagnostics.Contracts;
+using System.Net.Http.Headers;
+using System.Net.Http;
 
 namespace Gestio_Botiga_Calcat.View
 {
@@ -321,29 +324,61 @@ namespace Gestio_Botiga_Calcat.View
         }
         private void btnComprar_Click(object sender, RoutedEventArgs e)
         {
-            Global.mdbService.crear_factura(factura);
-
-
-            string pwd_b64 = Global.DadesEmpresa.Pwd_Mail;
-            string contra_bbdd = Encoding.UTF8.GetString(Convert.FromBase64String(pwd_b64));
-
-
-            var smtpClient = new SmtpClient("smtp.gmail.com")
+            Task.Run(async () =>
             {
-                Port = 587,
-                Credentials = new NetworkCredential(Global.DadesEmpresa.Mail, "ijonjtbfymibtbqm"),
-                EnableSsl = true
-            };
+                try
+                {
+                    Global.mdbService.crear_factura(factura);
 
-            var mail = new MailMessage(Global.DadesEmpresa.Mail, Global.Usuari.Mail, "Factura", "Aquí tens la teva factura");
-            smtpClient.Send(mail);
-            es_pot_tencar = true;
-            grUsu.Visibility = Visibility.Collapsed;
-            spNoProds.Visibility = Visibility.Visible;
-            tbTitNoProds.Text = "Gràcies per la vostra compra!";
-            lbNoProds.Visibility = Visibility.Hidden;
+                    string url = "http://localhost:8080/jasperserver/rest_v2/reports/ReportsFactura/Factura01.pdf?Codi=" +factura.Codi;
+                    string usu = "jasperadmin";
+                    string pwd = "bitnami";
 
+                    using (var client = new HttpClient())
+                    {
+                        var byteArray = System.Text.Encoding.ASCII.GetBytes(usu+":"+pwd);
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+
+                        var response = await client.GetAsync(url);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string outputFile = "Factura_"+factura.Codi+".pdf";
+                            byte[] content = await response.Content.ReadAsByteArrayAsync();
+                            File.WriteAllBytes(outputFile, content);
+
+                            var smtpClient = new SmtpClient("smtp.gmail.com")
+                            {
+                                Port = 587,
+                                Credentials = new NetworkCredential(Global.DadesEmpresa.Mail, "ijonjtbfymibtbqm"),
+                                EnableSsl = true
+                            };
+
+                            var mail = new MailMessage(Global.DadesEmpresa.Mail, Global.Usuari.Mail, "Factura", "Aquí tens la teva factura");
+                            mail.Attachments.Add(new Attachment(outputFile));
+                            smtpClient.Send(mail);
+
+                            Dispatcher.Invoke(() =>
+                            {
+                                es_pot_tencar = true;
+                                grUsu.Visibility = Visibility.Collapsed;
+                                spNoProds.Visibility = Visibility.Visible;
+                                tbTitNoProds.Text = "Gràcies per la vostra compra!";
+                                lbNoProds.Visibility = Visibility.Hidden;
+                            });
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error al descarregar el reports");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error al descarregar el reports");
+                }
+            });
         }
+
 
         private bool CVV_es_correcte()
         {
