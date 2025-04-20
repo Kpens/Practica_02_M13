@@ -342,8 +342,16 @@ namespace Gestio_Botiga_Calcat.View
 
         private void btnComprar_Click(object sender, RoutedEventArgs e)
         {
-            Global.cistellManager.Prod_select_comprar = Global.cistellManager.GetLlistaProds().ToList();
-            var newWindow = new WinFactura();
+            if (Global.Usuari != null)
+            {
+                Global.cistellManager.ab_logged = true;
+            }
+            else
+            {
+                Global.cistellManager.ab_logged = false;
+            }
+
+        var newWindow = new WinFactura();
            
             
             this.Close();

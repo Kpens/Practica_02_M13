@@ -314,7 +314,7 @@ namespace Gestio_Botiga_Calcat
             {
                 Color = v["color"].AsString,
                 Preu = v["preu"].AsDouble,
-                DescomptePercent = v["descompte_percent"].AsInt32,
+                DescomptePercent = v["descompte_percent"].AsDouble,
                 Fotos = v["fotos"].AsBsonArray.Select(f => f.AsString).ToList(),
                 Stock = v["stock"].AsBsonArray.Select(s => new StockMDB
                 {
@@ -352,7 +352,7 @@ namespace Gestio_Botiga_Calcat
                             {
                                 Color = variant["color"].AsString,
                                 Preu = variant["preu"].AsDouble,
-                                DescomptePercent = variant["descompte_percent"].AsInt32,
+                                DescomptePercent = variant["descompte_percent"].AsDouble,
                                 Fotos = variant["fotos"].AsBsonArray.Select(f => f.AsString).ToList(),
                                 Stock = sts.Select(s => new StockMDB
                                 {
@@ -418,7 +418,7 @@ namespace Gestio_Botiga_Calcat
                     {
                         Color = v["color"].AsString,
                         Preu = v["preu"].AsDouble,
-                        DescomptePercent = v["descompte_percent"].AsInt32,
+                        DescomptePercent = v["descompte_percent"].AsDouble,
                         Fotos = v["fotos"].AsBsonArray.Select(f => f.AsString).ToList(),
                         Stock = v["stock"].AsBsonArray.Select(s => new StockMDB
                         {
@@ -584,13 +584,14 @@ namespace Gestio_Botiga_Calcat
             var updatedDoc = collection_compt.Find(new BsonDocument()).First();
             Global.QtFactures = updatedDoc["factura"].AsInt32;
         }
-        public void GetNumFactura()
+        public int GetNumFactura()
         {
             var collection = _database.GetCollection<BsonDocument>("Comptador");
             var prods = collection.Find(new BsonDocument()).First();
 
             Global.QtFactures = prods["factura"].AsInt32;
             Global.QtReparacions = prods["reparacio"].AsInt32;
+            return prods["num_decimals_admesos"].AsInt32;
         }
         public Dades_empresa GetEmpresa()
         {

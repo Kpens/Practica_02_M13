@@ -33,12 +33,22 @@ namespace Gestio_Botiga_Calcat.View
         private bool es_pot_tencar = false;
         UILogin winLogin;
         private FacturaMDB factura = new FacturaMDB();
+        List<Prod_select> prods;
+        private int qtDecimals = 0;
         private void carregar_info()
         {
 
             if (Global.Usuari != null)
             {
-                Global.mdbService.GetNumFactura();
+                if (Global.cistellManager.ab_logged)
+                {
+                    prods = Global.cistellManager.Prod_select_logged.ToList();
+                }
+                else
+                {
+                    prods = Global.cistellManager.Prod_select_no_logged.ToList();
+                }
+                qtDecimals =Global.mdbService.GetNumFactura();
                 if(Global.DadesEmpresa == null)
                 {
                     Global.DadesEmpresa = Global.mdbService.GetEmpresa();
@@ -62,23 +72,23 @@ namespace Gestio_Botiga_Calcat.View
                 {
                     factura.Linies_compra = new List<Linies>();  
                 }
-                foreach(Prod_select prod in Global.cistellManager.Prod_select_comprar)
+                foreach(Prod_select prod in prods)
                 {
                     VariantMDB variant = Global.mdbService.GetVariantByStockId(prod.Estoc_id);
                     ProducteMDB producte = Global.mdbService.GetProd(prod.Id);
                     IVA_MDB iva = Global.mdbService.GetIVA(producte.Tipus_IVA);
                     Linies linia = new Linies();
                     linia.Nom = producte.Nom;
-                    linia.Descompte = variant.DescomptePercent;
-                    linia.Preu_base = variant.Preu;
+                    linia.Descompte = Math.Round(variant.DescomptePercent, qtDecimals);
+                    linia.Preu_base = Math.Round(variant.Preu, qtDecimals);
                     linia.Estoc = prod.Estoc_id;
                     linia.Quantitat = prod.Quantitat;
                     linia.tipus_IVA = producte.Tipus_IVA;
                     linia.perc_IVA = ((int)iva.Percentatge);
 
                     double descompte = ((variant.Preu * prod.Quantitat) * variant.DescomptePercent) / 100;
-                    linia.Bases_imposables = descompte;
-                    linia.Total = (linia.Preu_base -descompte)*((iva.Percentatge/100.0)+1);
+                    linia.Bases_imposables = Math.Round(linia.Preu_base - descompte, qtDecimals);
+                    linia.Total = Math.Round((linia.Preu_base -descompte)*((iva.Percentatge/100.0)+1), qtDecimals);
                     factura.Linies_compra.Add(linia);
                     desc += descompte;
                     //total += linia.Total;
@@ -117,13 +127,13 @@ namespace Gestio_Botiga_Calcat.View
 
                 total += bases[0];
                 factura.iva1 = ives[0];
-                factura.Preu_base1 = bases[0];
+                factura.Preu_base1 = Math.Round(bases[0], qtDecimals);
 
                 if (ives[1] != -1)
                 {
                     total += bases[1];
                     factura.iva2 = ives[1];
-                    factura.Preu_base2 = bases[1];
+                    factura.Preu_base2 = Math.Round(bases[1], qtDecimals);
                 }
                 else{
 
@@ -134,6 +144,11 @@ namespace Gestio_Botiga_Calcat.View
                 if (ives[2] != -1)
                 {
                     total += bases[2];
+                    factura.iva3 = ives[2];
+                    factura.Preu_base3 = Math.Round(bases[2], qtDecimals);
+                }
+                else
+                {
                     factura.iva3 = -1;
                     factura.Preu_base3 = -1;
                 }
@@ -144,16 +159,21 @@ namespace Gestio_Botiga_Calcat.View
                 }
                 else
                 {
-                    factura.Cost_enviament = Global.cistellManager.Metode_enviament.Preu_base;
+                    factura.Cost_enviament = Math.Round(Global.cistellManager.Metode_enviament.Preu_base, qtDecimals);
                 }
                 factura.Metode_pagament = Global.cistellManager.Metode_enviament.Nom + " (De " + Global.cistellManager.Metode_enviament.MinTemps_en_dies + " a " + Global.cistellManager.Metode_enviament.MaxTemps_en_dies + " dies laborals) " + Global.cistellManager.Metode_enviament.Preu_base + "€";
                 //factura.Preu_base = desc;
 
                 
 
-                factura.Total = total + factura.Cost_enviament;
-
-                Global.mdbService.ActualitzarQtProdsFactura(Global.cistellManager.Prod_select_comprar);
+                factura.Total = Math.Round(total + factura.Cost_enviament, qtDecimals);
+                if(total < 0)
+                {
+                    MessageBox.Show("El total surt negatiu, no es pot efectuar la factura");
+                    this.Close();
+                    return;
+                }
+                Global.mdbService.ActualitzarQtProdsFactura(prods);
 
                 tbNom.Text = Global.Usuari.Nom;
                 tbNomTar.Text = Global.Usuari.Nom;
@@ -304,7 +324,7 @@ namespace Gestio_Botiga_Calcat.View
 
             //var newWindow = new UICarro();
 
-            Global.mdbService.RetornarQtProdsFactura(Global.cistellManager.Prod_select_comprar);
+            Global.mdbService.RetornarQtProdsFactura(prods);
             es_pot_tencar = true;
             this.Close();
 
@@ -360,6 +380,11 @@ namespace Gestio_Botiga_Calcat.View
                             Dispatcher.Invoke(() =>
                             {
                                 es_pot_tencar = true;
+                                if(Global.cistellManager.ab_logged)
+                                {
+                                    Global.cistellManager.Prod_select_logged.Clear();
+                                    Global.mdbService.ActualitzarQtProdsFactura(new List<Prod_select>());
+                                }
                                 grUsu.Visibility = Visibility.Collapsed;
                                 spNoProds.Visibility = Visibility.Visible;
                                 tbTitNoProds.Text = "Gràcies per la vostra compra!";

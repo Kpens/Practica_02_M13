@@ -15,7 +15,7 @@ namespace Gestio_Botiga_Calcat.model
 
         public List<string> Fotos { get; set; } = new List<string>();
 
-        public int DescomptePercent { get; set; }
+        public double DescomptePercent { get; set; }
 
         public List<StockMDB> Stock { get; set; } = new List<StockMDB>();
     }

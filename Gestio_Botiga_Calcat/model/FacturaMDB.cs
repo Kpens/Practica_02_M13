@@ -31,7 +31,7 @@ namespace Gestio_Botiga_Calcat.model
     public class Linies
     {
         public string Nom { get; set; }
-        public int Descompte { get; set; }
+        public double Descompte { get; set; }
         public double Preu_base { get; set; }
         public ObjectId tipus_IVA { get; set; }
         public int perc_IVA { get; set; }
