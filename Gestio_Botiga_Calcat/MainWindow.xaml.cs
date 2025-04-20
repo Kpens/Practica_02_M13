@@ -27,13 +27,15 @@ namespace Gestio_Botiga_Calcat
 
         List<VariantMDB> variants = new List<VariantMDB>();
 
-        private void carregar_cates_fill(CategoriaMDB cate) {
+        private void carregar_cates_fill(CategoriaMDB cate)
+        {
             List<CategoriaMDB> cates = Global.mdbService.GetCatesFill(cate.Id);
 
             StackPanel spfilles = new StackPanel();
             spfilles.Orientation = Orientation.Horizontal;
 
-            if (spCatesFill.Children.Count == 1) {
+            if (spCatesFill.Children.Count == 1)
+            {
                 sel_cate_fill = false;
             }
             else
@@ -57,9 +59,9 @@ namespace Gestio_Botiga_Calcat
                     Cate_select = cat;
                     carregar_cates_fill(cat);
 
-                    string cate_an = breadcr.Text.Substring(breadcr.Text.LastIndexOf('/')+1);
+                    string cate_an = breadcr.Text.Substring(breadcr.Text.LastIndexOf('/') + 1);
 
-                    if (breadcr.Text.LastIndexOf('/') > 0 && sel_cate_fill && cate_an.Trim()!= cate.Name.Trim())
+                    if (breadcr.Text.LastIndexOf('/') > 0 && sel_cate_fill && cate_an.Trim() != cate.Name.Trim())
                     {
                         breadcr.Text = breadcr.Text.Remove(breadcr.Text.LastIndexOf('/'));
                     }
@@ -85,10 +87,10 @@ namespace Gestio_Botiga_Calcat
                 {
                     spfilles.Children.Add(button);
                 }
-                
+
             }
             spCatesFill.Children.Add(spfilles);
-            
+
         }
         void carregar_window()
         {
@@ -157,7 +159,7 @@ namespace Gestio_Botiga_Calcat
 
             if (Global.Usuari != null)
             {
-                tbNomUsu.Text = Global.Usuari.Nom; 
+                tbNomUsu.Text = Global.Usuari.Nom;
             }
             else
             {
@@ -170,15 +172,15 @@ namespace Gestio_Botiga_Calcat
             /*if (Global.cistellManager != null)
             {*/
 
-                if (Global.cistellManager.GetQtProd() > 0)
-                {
-                    tbNumProds.Visibility = Visibility.Visible;
-                    tbNumProds.Text = Global.cistellManager.GetQtProd() + "";
-                }
-                else
-                {
-                    tbNumProds.Visibility = Visibility.Collapsed;
-                }
+            if (Global.cistellManager.GetQtProd() > 0)
+            {
+                tbNumProds.Visibility = Visibility.Visible;
+                tbNumProds.Text = Global.cistellManager.GetQtProd() + "";
+            }
+            else
+            {
+                tbNumProds.Visibility = Visibility.Collapsed;
+            }
             /*}
             else
             {
@@ -263,7 +265,7 @@ namespace Gestio_Botiga_Calcat
         }
         private void PriceSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            tbMax.Text = slMaxPreu.Value+"€";
+            tbMax.Text = slMaxPreu.Value + "€";
             tbMin.Text = slMinPreu.Value + "€";
             txbnum.Text = "0";
             carregar_prods();
@@ -303,12 +305,12 @@ namespace Gestio_Botiga_Calcat
                         FontFamily = new FontFamily("Agency FB"),
                         FontSize = 15
                     };
-                        
+
                     button.Content = textBlock;
 
                     button.Click += (s, e) =>
                     {
-                        foreach(Button but in lvTalles.Children)
+                        foreach (Button but in lvTalles.Children)
                         {
                             but.Background = new SolidColorBrush(Colors.White);
                         }
@@ -535,9 +537,9 @@ namespace Gestio_Botiga_Calcat
                 carregar_collectionChanged();
                 carregarQtProdsCis();
                 //}
-                if(Global.Usuari != null)
+                if (Global.Usuari != null)
                 {
-                    tbNomUsu.Text = "Benvingut "+ Global.Usuari.Nom+"!";
+                    tbNomUsu.Text = "Benvingut " + Global.Usuari.Nom + "!";
                 }
                 else
                 {

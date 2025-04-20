@@ -30,8 +30,9 @@ namespace Gestio_Botiga_Calcat.View
         public void carregar_vista()
         {
             
-            if (Cistell != null && Cistell.Prod_select.Count >0)
+            if (Global.cistellManager.GetLlistaProds() != new ExtendedObservableCollection<Prod_select>() && Global.cistellManager.GetLlistaProds().Count >0)
             {
+                Cistell.Prod_select = Global.cistellManager.GetLlistaProds();
                 lvProds_cist.ItemsSource = null;
                 lvProds_cist.ItemsSource = Cistell.Prod_select;
                 grDetalls.Visibility = Visibility.Visible;
@@ -46,7 +47,7 @@ namespace Gestio_Botiga_Calcat.View
                 total = 0;
                 double[] bases = new double[3];
                 ObjectId[] ives = new ObjectId[3];
-                foreach (Prod_select prod in Cistell.Prod_select)
+                foreach (Prod_select prod in Global.cistellManager.GetLlistaProds())
                 {
                     VariantMDB variant = Global.mdbService.GetVariantByStockId(prod.Estoc_id);
                     double descompte = ((variant.Preu * prod.Quantitat) * variant.DescomptePercent) / 100;
@@ -212,15 +213,22 @@ namespace Gestio_Botiga_Calcat.View
 
         private void Prod_select_ListChanged(object? sender, PropertyChangedEventArgs e)
         {
-            Global.mdbService.ActualizarCistell();
-            carregar_vista();
+            foreach (Prod_select prod in Global.cistellManager.GetLlistaProds())
+            {
+                if (prod.Quantitat == 0)
+                {
+                    Global.cistellManager.RemoveProd(prod);
+                    Global.mdbService.ActualizarCistell();
+                    carregar_vista();
+                    break;
+                }
+            }
         }
 
         private void Prod_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(Prod_select.Quantitat))
             {
-                Global.mdbService.ActualizarCistell();
                 carregar_vista();
             }
         }
@@ -228,6 +236,14 @@ namespace Gestio_Botiga_Calcat.View
         private void Prod_select_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             ////Global.mdbService.ActualizarCistell();
+            /*foreach(Prod_select prod in Global.cistellManager.GetLlistaProds())
+            {
+                if(prod.Quantitat == 0)
+                {
+                    Global.cistellManager.RemoveProd(prod);
+                    Global.mdbService.ActualizarCistell();
+                }
+            }*/
             carregar_vista();
         }
 
