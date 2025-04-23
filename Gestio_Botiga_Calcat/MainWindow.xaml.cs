@@ -501,39 +501,6 @@ namespace Gestio_Botiga_Calcat
             //this.Close();
             winLogin.Closed += (s, args) =>
             {
-                //usuari = winLogin.usuari;
-                /*
-                if (winLogin.cistellWeb != null)
-                {
-                    if (cistell == null)
-                    {
-                        cistell = new CistellMDB();
-                    }
-                    if (cistell.Prod_select == null || cistell.Prod_select.Count == 0)
-                    {
-                        cistell.Prod_select = new System.Collections.ObjectModel.ObservableCollection<Prod_select>();
-                    }
-                    cistell.Id = winLogin.cistellWeb.Id;
-                    cistell.Id_usu = winLogin.cistellWeb.Id_usu;
-                    cistell.Cost_enviament = winLogin.cistellWeb.Cost_enviament;
-                    cistell.Metode_enviament = winLogin.cistellWeb.Metode_enviament;
-
-                    cistell.Prod_select.Clear();
-                    foreach (Prod_select prod in winLogin.cistellWeb.Prod_select)
-                    {
-                        cistell.Prod_select.Add(prod);
-                    }*/
-                /*
-
-                foreach (Prod_select prod in winLogin.cistell.Prod_select)
-                {
-                    if(!cistell.Prod_select.Contains(prod))
-                    {
-                        cistell.Prod_select.Add(prod);
-                    }
-                }
-                 */
-
                 carregar_collectionChanged();
                 carregarQtProdsCis();
                 //}

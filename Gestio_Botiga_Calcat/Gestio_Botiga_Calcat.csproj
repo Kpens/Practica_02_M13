@@ -6,12 +6,17 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>imgs\logo_app.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="imgs\mastercard.png" />
     <None Remove="imgs\shopping-cart.png" />
     <None Remove="imgs\visa.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="imgs\logo_app.ico" />
   </ItemGroup>
 
   <ItemGroup>
