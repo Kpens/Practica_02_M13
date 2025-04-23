@@ -95,32 +95,32 @@ namespace Gestio_Botiga_Calcat.View
 
                     if (ives[0] != -1 &&ives[0] == ((int)iva.Percentatge))
                     {
-                        bases[0] += (variant.Preu * prod.Quantitat) - descompte;
+                        bases[0] +=  Math.Round((variant.Preu * prod.Quantitat) - descompte, qtDecimals);;
                     }
                     else if (ives[1] != -1 && ives[1] == ((int)iva.Percentatge))
                     {
-                        bases[1] += (variant.Preu * prod.Quantitat) - descompte;
+                        bases[1] +=  Math.Round((variant.Preu * prod.Quantitat) - descompte, qtDecimals);;
                     }
                     else if (ives[2] != -1 && ives[2] == ((int)iva.Percentatge))
                     {
-                        bases[2] += (variant.Preu * prod.Quantitat) - descompte;
+                        bases[2] +=  Math.Round((variant.Preu * prod.Quantitat) - descompte, qtDecimals);;
                     }
                     else
                     {
                         if (ives[0] == -1)
                         {
                             ives[0] = (int)iva.Percentatge;
-                            bases[0] += (variant.Preu * prod.Quantitat) - descompte;
+                            bases[0] +=  Math.Round((variant.Preu * prod.Quantitat) - descompte, qtDecimals);;
                         }
                         else if (ives[1] == -1)
                         {
                             ives[1] = (int)iva.Percentatge;
-                            bases[1] += (variant.Preu * prod.Quantitat) - descompte;
+                            bases[1] +=  Math.Round((variant.Preu * prod.Quantitat) - descompte, qtDecimals);;
                         }
                         else if (ives[2] == -1)
                         {
                             ives[2] = (int)iva.Percentatge;
-                            bases[2] += (variant.Preu * prod.Quantitat) - descompte;
+                            bases[2] +=  Math.Round((variant.Preu * prod.Quantitat) - descompte, qtDecimals);;
                         }
                     }
                 }
