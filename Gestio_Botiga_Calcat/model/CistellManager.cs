@@ -43,7 +43,7 @@ namespace Gestio_Botiga_Calcat.model
 
                         if (productesIguals == 0)
                         {
-                            cistellBd.Prod_select.Add(prodWeb);
+                            //cistellBd.Prod_select.Add(prodWeb);
                             Prod_select_logged.Add(prodWeb);
                         }
 

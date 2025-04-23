@@ -477,18 +477,18 @@ namespace Gestio_Botiga_Calcat
                 {
                     Global.cistellManager.Metode_enviament = new Metode_enviamentMDB();
                     var doc = new BsonDocument
-                {
-                    { "id_usu", Global.Usuari.Id},
-                    { "cost_enviament", Global.cistellManager.Cost_enviament },
-                    { "metode_enviament", Global.cistellManager.Metode_enviament.Id },
-                    { "prods_select", new BsonArray(Global.cistellManager.GetLlistaProds().Select(p => new BsonDocument
-                        {
-                            { "_id", p.Id },
-                            { "estoc_id", p.Estoc_id },
-                            { "qt", p.Quantitat }
-                        }))
-                    }
-                };
+                    {
+                        { "id_usu", Global.Usuari.Id},
+                        { "cost_enviament", Global.cistellManager.Cost_enviament },
+                        { "metode_enviament", Global.cistellManager.Metode_enviament.Id },
+                        { "prods_select", new BsonArray(Global.cistellManager.GetLlistaProds().Select(p => new BsonDocument
+                            {
+                                { "_id", p.Id },
+                                { "estoc_id", p.Estoc_id },
+                                { "qt", p.Quantitat }
+                            }))
+                        }
+                    };
 
                     collection.InsertOne(doc);
                 }
@@ -519,11 +519,11 @@ namespace Gestio_Botiga_Calcat
                         else
                         {
                             var doc = new BsonDocument
-                        {
-                            { "_id", prod.Id },
-                            { "estoc_id", prod.Estoc_id },
-                            { "qt", prod.Quantitat }
-                        };
+                            {
+                                { "_id", prod.Id },
+                                { "estoc_id", prod.Estoc_id },
+                                { "qt", prod.Quantitat }
+                            };
                             arrModif_prods.Add(doc);
                         }
                     }
