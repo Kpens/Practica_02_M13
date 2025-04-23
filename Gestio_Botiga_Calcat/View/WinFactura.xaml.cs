@@ -384,6 +384,7 @@ namespace Gestio_Botiga_Calcat.View
                                 {
                                     Global.cistellManager.Prod_select_logged.Clear();
                                     Global.mdbService.ActualitzarQtProdsFactura(new List<Prod_select>());
+                                    Global.mdbService.ActualizarCistell();
                                 }
                                 grUsu.Visibility = Visibility.Collapsed;
                                 spNoProds.Visibility = Visibility.Visible;
@@ -424,9 +425,17 @@ namespace Gestio_Botiga_Calcat.View
             }
 
             anny += 2000;
-
-            DateTime expiration = new DateTime(anny, mes, 1).AddMonths(1).AddDays(-1);
-            return expiration >= DateTime.Now && mes >= 1 && mes <= 12;
+            try
+            {
+                DateTime expiration = new DateTime(anny, mes, 1).AddMonths(1).AddDays(-1);
+                return expiration >= DateTime.Now && mes >= 1 && mes <= 12;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            
+            
         }
         private void comprar()
         {
