@@ -294,7 +294,7 @@ namespace Gestio_Botiga_Calcat.View
         private void win_login()
         {
 
-            winLogin = new UILogin();
+            winLogin = new UILogin(true);
 
             //this.Close();
             winLogin.Closed += (s, args) =>

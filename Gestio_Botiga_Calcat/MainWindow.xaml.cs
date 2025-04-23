@@ -496,7 +496,7 @@ namespace Gestio_Botiga_Calcat
 
         private void btLogin_Click(object sender, RoutedEventArgs e)
         {
-            var winLogin = new UILogin();
+            var winLogin = new UILogin(false);
 
             //this.Close();
             winLogin.Closed += (s, args) =>

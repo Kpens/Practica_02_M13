@@ -79,17 +79,11 @@ namespace Gestio_Botiga_Calcat.View
                 grIniSes.Visibility = Visibility.Visible;
             }
         }
-        public UILogin()
-        {
-            InitializeComponent();
-            carregar_login();
-            this.enfactura = false;
-        }
         public UILogin(bool en_factura)
         {
             InitializeComponent();
             carregar_login();
-            this.enfactura = true;
+            this.enfactura = en_factura;
         }
 
 
